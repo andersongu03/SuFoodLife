@@ -1,0 +1,134 @@
+/*--------title--------*/
+.general-order h4{
+    font-weight:bold;
+    margin-bottom: 60px;
+    color: #555555;
+}
+
+/*--------search bar--------*/
+.search{
+    display: flex;
+    max-width: 200px;
+    position: relative;
+}
+
+.search-bar{
+    width:100%;
+    height:32px;
+    font-size:16px;
+    border:2px solid gray;
+    border-radius: 10px;
+    position: relative;
+}
+
+.search-btn{
+    height:32px;
+    border: none;
+    position: absolute;
+    right: 3px;
+    top: 3px;
+    background-color: transparent;
+}
+
+.wrap{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+   /* margin-bottom: 1rem;*/
+}
+
+.order__container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 35%;
+}
+
+
+/*--------general order---------*/
+.general-order table {
+    border-bottom: solid 5px;
+    border-color: white;
+    text-align: center;
+}
+
+.general-order tr {
+    background-color: #4f8180;
+    color: white;
+}
+
+.general-order th {
+    border-top: solid 5px;
+    border-color: white;
+}
+
+td{
+    border-top:solid 5px;
+    border-color: white;
+    
+}
+
+.order__container h5{
+    font-size: 1.3rem;
+}
+
+
+.orderdetail-btn{
+    height: 24px;
+    font-size:13px;
+    background-color: #97a7a7;
+    border-radius: 10px;
+    border:none;
+    color:white;
+   
+}
+
+.orderdetail-btn:hover {
+    background-color: #646d6d;
+    box-shadow: 0 2px #808080;
+    transform: translateY(1px);
+}
+
+.modal-body{
+    text-align:left;
+}
+
+.general-order a{
+    color:black;
+}
+
+.general-order a:hover{
+    color:#0a9090;
+}
+
+.general-order i{
+    font-size: 1.2rem;
+}
+
+.delete-item{
+    border: none;
+    background-color: transparent;
+}
+
+.delete-item:hover{
+    color:#cc2a2a;
+}
+
+/*--------paging---------*/
+.pagination{
+    display: flex;
+    justify-content: end;
+}
+
+
+
+.page-link{
+    color:#759188;
+    background-color: rgb(255, 255, 255);
+}
+
+.page-link:hover{
+    color:#546861;
+    font-weight: bold;
+    
+}

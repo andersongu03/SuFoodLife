@@ -9,6 +9,111 @@
 
         <div class="col-10 user__management-content">
             <!-- 內容 -->
+                <div class="col-6">
+                    <div class="">
+                        <h2>個人資料</h2>
+                    </div>
+                    <form id="form-edit-profile" action="" method="post">
+                        <input name="" type="hidden" value="">
+                        <div class="form row">
+                            <div class="col-3">
+                            <label for="accountId">會員編號：</label>
+                            </div>
+                            <div class="col-9">
+                            <input type="text" value="" name="accountId" id="accountId" v-model="accountId" disabled>
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                            <label for="account1">會員帳號：</label>
+                            </div>
+                            <div class="col-9">
+                            <input type="text" value="" name="account1" id="account1" v-model="account1" disabled>
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">會員姓名：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="text" name="" id="lastname" required size="4">
+                                <input class="" type="text" name="" id="firstname" required size="4">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">性別：</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="radio" name="gender" id="" value="male">男
+                                <input type="radio" name="gender" id="" value="female">女
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">生日：</label>
+                            </div>
+                            <div class="col-9">
+                                <input type="date" name="" id="">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">手機號碼：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="tel" name="" id="" required>
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">市話：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="tel" name="" id="">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">信用卡號：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="text" name="" id="" size="4">
+                                <input class="" type="text" name="" id="" size="4">
+                                <input class="" type="text" name="" id="" size="4">
+                                <input class="" type="text" name="" id="" size="4">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">持有人：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="text" name="" id="" size="3">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">郵遞區號：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="text" name="" id="" size="6">
+                            </div>
+                        </div>
+                        <div class="form row">
+                            <div class="col-3">
+                                <label for="">聯絡地址：</label>
+                            </div>
+                            <div class="col-9">
+                                <input class="" type="text" name="" id="" required size="30">
+                            </div>
+                        </div>
+                        <div>
+                            <input type="submit" class="" value="儲存">
+                            <input type="button" class="" value="取消">
+                        </div>
+                    </form>
+                </div>
 
         </div>
     </div>

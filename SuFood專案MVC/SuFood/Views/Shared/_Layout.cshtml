@@ -8,34 +8,6 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link href="~/css/homePageMain.css" rel="stylesheet" />
-    @*引用區*@
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Amatic+SC:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-          rel="stylesheet" />
-
-    <!-- Vendor CSS Files -->
-    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
-    <link href="~/assets/vendor/aos/aos.css" rel="stylesheet" />
-    <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
-    <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-    <link href="~/assets/css/main.css" rel="stylesheet" />
-    <!-- 零售用到的 -->
-    <link rel="stylesheet" href="~/商品明細用到的/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/templatemo.css" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/custom.css" />
-
-    <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/fontawesome.min.css" />
-    <!-- jimmy's css && font-awsome -->
-    <link rel="stylesheet" href="~/商品明細用到的/css/myStyle.css" />
-    <script src="https://kit.fontawesome.com/6c09e4a88d.js"
-            crossorigin="anonymous"></script>
-    <!-- vue -->
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
@@ -58,8 +30,8 @@
                         <li><a asp-area="BackStage" asp-controller="BackHome" asp-action="Index">後台(測試用)</a></li>
                         <li><a asp-area="" asp-controller="#" asp-action="#">零售</a></li>
                         <li><a asp-area="" asp-controller="FreeChoice" asp-action="FreeChoice">自由選</a></li>
-                        <li><a asp-area="" asp-controller="#" asp-action="#">幫你選</a></li>
-
+                        <li><a asp-area="" asp-controller="#" asp-action="#">幫你選</a></li> 
+                        
                         @*首頁的頁簽*@
                         <li><a href="#testimonials">會員評價</a></li>
                         <li><a href="#gallery">熱門商品</a></li>
@@ -76,105 +48,21 @@
                         <div class="users__info">
                             <a asp-area="" asp-controller="Members" asp-action="PersonalInfo"><span>帳戶資料</span> </a>
                             <hr>
-                            <a asp-area="" asp-controller="Member" asp-action="#"><span>變更密碼</span></a>
+                            <a asp-area="" asp-controller="Members" asp-action="#"><span>變更密碼</span></a>
                             <hr>
-                            <a asp-area="" asp-controller="Members" asp-action="Comment"><span>測試編輯評論</span></a>
+                            <a asp-area="" asp-controller="Members" asp-action="Coupon"><span>我的優惠券</span></a>
                             <hr>
-                            <a asp-area="" asp-controller="Member" asp-action="#"><span>我的優惠券</span></a>
+                            <a asp-area="" asp-controller="Members" asp-action="#"><span>我的訂單</span></a>
                             <hr>
-                            <a asp-area="" asp-controller="Member" asp-action="#"><span>我的訂單</span></a>
-                            <hr>
-                            <a asp-area="" asp-controller="Member" asp-action="#"><span>登入</span> </a>
+                            <a asp-area="" asp-controller="Members" asp-action="#"><span>登入</span> </a>
                             <!-- 如果是登入狀態顯示這個 -->
                             <!-- <hr>
                                       <a href="#"><span>登出</span> </a> -->
                         </div>
                     </div>
-                    @*壞掉的購物*@
-                    <div class="cartsBox iconBox"
-                         data-bs-toggle="offcanvas"
-                         data-bs-target="#offcanvasWithBothOptions"
-                         aria-controls="offcanvasWithBothOptions">
-                        <i class="bx bx-cart icon"></i>
-                    </div>
-
-                    <div class="offcanvas offcanvas-end"
-                         data-bs-scroll="true"
-                         tabindex="-1"
-                         id="offcanvasWithBothOptions"
-                         aria-labelledby="offcanvasWithBothOptionsLabel"
-                         style="width: 800px">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title"
-                                id="offcanvasWithBothOptionsLabel">
-                                購物車
-                            </h5>
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="offcanvas"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <table class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">商品名稱</th>
-                                        <th scope="col">商品照片</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">數量</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">單價</th>
-                                        <th scope="col">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="cartTb">
-                                    <tr class="cartTr">
-                                        <th scope="row">1</th>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <button class="fa-solid fa-plus"
-                                                    style="
-                              color: #d52029;
-                              border: 0;
-                              background-color: white;
-                            "></button>
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            <button class="fa-solid fa-minus"
-                                                    style="
-                              color: #d52029;
-                              border: 0;
-                              background-color: white;
-                            "></button>
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            <button class="trashCan">
-                                                <i class="fa-solid fa-trash fa-sm"
-                                                   style="color: #511f2b"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="cartFooter">
-                                <div class="buyBtn">
-                                    <a href="#about" class="btn-book-a-table">
-                                        前往購買<i class="fa-solid fa-arrow-right"></i>
-                                    </a>
-                                    <div>商品總價：</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="cartsBox iconBox"><i class='bx bx-cart icon'></i></div>
                 </div>
             </div>
-
-
-
         </div>
     </header><!-- End Header -->
     <main role="main" class="pb-3">

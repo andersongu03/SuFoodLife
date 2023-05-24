@@ -1,0 +1,473 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+.container {
+    width: 100vw;
+    padding-bottom: 150px;
+}
+
+.coupon {
+    display: grid;
+    grid-template-rows: 1fr 1fr auto;
+    max-width: fit-content;
+    max-height: fit-content;
+    padding-top: 30px;
+}
+
+/*===== VARIABLES CSS =====*/
+:root {
+    --header-height: 3rem;
+    /*========== Colors ==========*/
+    /* Change favorite color */
+    --hue-color: 250;
+    /*Purple 250 - Green 142 - Blue 230 - Pink 340*/
+    /* HSL color mode */
+    --first-color: hsl(var(--hue-color), 69%, 61%);
+    --first-color-second: hsl(var(--hue-color), 69%, 61%);
+    --first-color-alt: hsl(var(--hue-color), 57%, 53%);
+    --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
+    --title-color: hsl(var(--hue-color), 8%, 15%);
+    --text-color: hsl(var(--hue-color), 8%, 45%);
+    --text-color-light: hsl(var(--hue-color), 8%, 65%);
+    --input-color: hsl(var(--hue-color), 70%, 96%);
+    --body-color: hsl(var(--hue-color), 60%, 99%);
+    --container-color: #fff;
+    --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
+    --scroll-thumb-color: hsl(var(--hue-color), 12%, 80%);
+    /*========== Font and typography ==========*/
+    --body-font: 'Mukta', sans-serif;
+    ;
+    /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+    --big-font-size: 2rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1.125rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
+    --smaller-font-size: .75rem;
+    /*========== Font weight ==========*/
+    --font-medium: 500;
+    --font-semi-bold: 600;
+    /*========== Margenes Bottom ==========*/
+    /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
+    --mb-0-25: .25rem;
+    --mb-0-5: .5rem;
+    --mb-0-75: .75rem;
+    --mb-1: 1rem;
+    --mb-1-5: 1.5rem;
+    --mb-2: 2rem;
+    --mb-2-5: 2.5rem;
+    --mb-3: 3rem;
+    /*========== z index ==========*/
+    --z-tooltip: 10;
+    --z-fixed: 100;
+    --z-modal: 1000;
+}
+
+/* Font size for large devices */
+@media screen and (min-width: 968px) {
+    :root {
+        --big-font-size: 3rem;
+        --h1-font-size: 2.25rem;
+        --h2-font-size: 1.5rem;
+        --h3-font-size: 1.25rem;
+        --normal-font-size: 1rem;
+        --small-font-size: .875rem;
+        --smaller-font-size: .813rem;
+    }
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+a {
+    list-style: none;
+    text-decoration: none;
+    color: #000;
+}
+
+body {
+    position: relative;
+    padding: 0 1rem;
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+    transition: .5s;
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.couponManagement {
+    margin-top: 2rem;
+    font-family: 'Mukta';
+}
+
+.couponManagement table {
+        width: 100%;
+        border-radius: 1rem;
+        padding: 5rem;
+        transition: all .3s ease;
+        background: #fff;
+        box-shadow: 5px 5px 15px #e1e1e1, -5px -5px 15px #ffffff;
+        font-weight: bold;
+}
+
+.table__container {
+    height: 600px;
+    overflow: auto;
+}
+
+    .table__container h1 {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+
+table thead {
+    position: sticky;
+    top: 0;
+}
+
+    table thead tr {
+        border-bottom: 1px solid #000;
+        height: 4rem;
+    }
+
+        table thead tr th {
+            background: #f2f2f2;
+            text-align: center;
+            padding-left: 1rem;
+        }
+
+table td {
+    padding: 1rem;
+    text-align: center;
+}
+
+    table td:nth-last-child(2) > span {
+        display: inline-block;
+    }
+
+table thead tr th {
+    min-width: 5rem;
+}
+
+table tbody tr {
+    height: 2.8rem;
+    border-bottom: 1px solid rgb(128, 128, 128);
+}
+
+    table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    table tbody tr:hover {
+        background: #e1e1e1;
+        cursor: pointer;
+    }
+
+.Recent-order a {
+    text-align: center;
+    display: block;
+    margin: 1rem auto;
+    color: cornflowerblue;
+}
+
+/* Table Function */
+.tableFunction {
+    padding: 1rem;
+    border-radius: .6rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 15px;
+    background: #f2f2f2;
+    box-shadow: 5px 5px 15px #e1e1e1, -5px -5px 15px #ffffff;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.title {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+}
+
+.content {
+    width: 100%;
+}
+
+.searchBar .inputSearch,
+select {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.inputWrapper,
+.StatusBar {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.searchIcon {
+    font-size: 20px;
+    margin-right: .5rem;
+}
+
+.tableIcon {
+    font-size: 1.5rem;
+}
+
+/* Product Image */
+.productImg {
+    max-width: 5rem;
+    max-height: 5rem;
+}
+
+/* Status */
+.active {
+    background: green;
+    color: #fff;
+    width: fit-content;
+    height: 100%;
+    border-radius: 26px;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+.frozen {
+    background: rgb(218, 14, 14);
+    color: #fff;
+    width: fit-content;
+    height: 100%;
+    border-radius: 26px;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+/* Sort Icon */
+.sortIcon:hover {
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+/*===== Scrollbar =====*/
+
+/* 調整滾動條的寬度 */
+/* 調整滾動條的寬度 */
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+/* 調整滾動條的背景顏色 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/*===== Arrow =====*/
+.arrow-down {
+    width: 100%;
+}
+
+    .arrow-down i {
+        background-color: #e1e1e1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        border-radius: 0 0 1rem 1rem;
+    }
+
+/*===== UploadFile input =====*/
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload-container {
+    margin: 1rem 0 0 0;
+}
+
+.custom-file-upload {
+    padding: 1rem;
+    width: 60%;
+    height: 100%;
+    background: var(--first-color-second);
+    color: #fff;
+    border-radius: 30px;
+    cursor: pointer;
+    gap: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+    .custom-file-upload i {
+        font-size: 1.5rem;
+    }
+
+.imgPreview {
+    border: 3px dashed #e1e1e1;
+    width: 300px;
+    height: 300px;
+    max-width: 300px;
+    max-height: 300px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .imgPreview .icon {
+        font-size: 5rem;
+    }
+
+    .imgPreview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.imgPreview-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Model Product */
+.model__product {
+    margin-bottom: 1rem;
+}
+
+.productItemInp {
+    width: 80%;
+    border: none;
+    outline: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
+    padding: 1rem;
+    border-radius: 1rem;
+}
+
+.productDetail__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    .productDetail__container > div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+/* 狀態下拉選單 */
+.form-select {
+    width: 15%;
+}
+
+/* 編輯BUTTON */
+.insertBtn {
+    padding: 10px 50px;
+}
+
+    .insertBtn:hover {
+        transform: scale(1.1);
+    }
+
+/* Popup Form */
+.cardContent {
+    position: absolute;
+    height: 600px;
+    width: 600px;
+    background: #fff;
+    border-radius: 6px;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+    z-index: 1;
+}
+
+.cardPopup-body {
+    border-radius: 10px;
+    background-color: white;
+    padding: 3%;
+    width: 650px;
+    height: 650px;
+}
+
+.showPopup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 100vw;
+    height: 100vh;
+    background-color: hsla(240, 18%, 75%, .97);
+}
+
+/* Message */
+.message-toast-wrapper {
+    position: fixed;
+    top: 70px;
+    left: calc(50% - 125px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #fff;
+    width: 250px;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 0px 15px hsl(0, 0%, 0.3);
+    transition: all .3s;
+    opacity: 0;
+}
+
+.message-toast-icon {
+    color: green;
+    font-size: 2rem;
+    height: 100%;
+}
+
+.message-toast-title {
+    font-size: 2rem;
+    font-weight: bolder;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.fadeInUp {
+    opacity: 0; /* 初始透明度为0 */
+    animation: fadeInUp 2s ease-in-out forwards; /* 使用fadeInUp动画，持续1秒，缓入缓出效果，并保持动画结束后的状态 */
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0; /* 起始透明度为0 */
+        transform: translateY(30px); /* 初始状态下元素往上偏移30px */
+    }
+
+    50% {
+        opacity: 1; /* 结束透明度为1 */
+        transform: translateY(0); /* 元素回到原位 */
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-30px)
+    }
+}

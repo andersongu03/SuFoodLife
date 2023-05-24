@@ -18,75 +18,56 @@ namespace SuFood.Models
         {
         }
 
-        public virtual DbSet<Orders> Orders { get; set; }
-        public virtual DbSet<OrdersReview> OrdersReview { get; set; }
+        public virtual DbSet<Coupon> Coupon { get; set; }
+        public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Orders>(entity =>
+            modelBuilder.Entity<Coupon>(entity =>
             {
-                entity.HasIndex(e => e.Status, "UQ_Status")
-                    .IsUnique();
+                entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
+                entity.Property(e => e.CouponDescription)
+                    .HasMaxLength(50)
+                    .HasColumnName("Coupon_Description");
 
-                entity.Property(e => e.CooponId).HasColumnName("Coopon_Id");
+                entity.Property(e => e.CouponEndDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Coupon_EndDate");
 
-                entity.Property(e => e.CustomerId).HasColumnName("Customer_Id");
+                entity.Property(e => e.CouponMinusCost)
+                    .HasColumnType("decimal(5, 0)")
+                    .HasColumnName("Coupon_MinusCost");
 
-                entity.Property(e => e.DiscountId).HasColumnName("Discount_Id");
+                entity.Property(e => e.CouponName)
+                    .HasMaxLength(50)
+                    .HasColumnName("Coupon_Name");
 
-                entity.Property(e => e.OrderStatus)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("Order_Status");
+                entity.Property(e => e.CouponStartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Coupon_StartDate");
 
-                entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
-
-                entity.Property(e => e.PaymentMethod)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("Payment_method");
-
-                entity.Property(e => e.SetOrdersDatetime)
-                    .HasColumnType("datetime")
-                    .HasColumnName("SetOrders_Datetime");
-
-                entity.Property(e => e.ShipAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.Property(e => e.MinimumPurchasingAmount).HasColumnName("Minimum_PurchasingAmount");
             });
 
-            modelBuilder.Entity<OrdersReview>(entity =>
+            modelBuilder.Entity<FreeChoicePlans>(entity =>
             {
-                entity.HasKey(e => e.ReviewId);
+                entity.HasKey(e => e.PlanId)
+                    .HasName("PK__FreeChoi__755C22B73A4C2535");
 
-                entity.ToTable("Orders_Review");
+                entity.Property(e => e.PlanCanChoiceCount).HasColumnName("Plan_CanChoiceCount");
 
-                entity.Property(e => e.ReviewId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Review_Id");
+                entity.Property(e => e.PlanDescription).HasColumnName("Plan_Description");
 
-                entity.Property(e => e.Comment).HasMaxLength(100);
+                entity.Property(e => e.PlanName).HasColumnName("Plan_Name");
 
-                entity.Property(e => e.OrdersId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("Orders_Id");
+                entity.Property(e => e.PlanPrice).HasColumnName("Plan_Price");
 
-                entity.Property(e => e.RatingStar).HasColumnName("rating_star");
+                entity.Property(e => e.PlanStatus).HasColumnName("Plan_Status");
 
-                entity.HasOne(d => d.Orders)
-                    .WithMany(p => p.OrdersReview)
-                    .HasForeignKey(d => d.OrdersId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Orders_TO_Orders_Review");
+                entity.Property(e => e.PlanTotalCount).HasColumnName("Plan_TotalCount");
             });
 
             modelBuilder.Entity<Products>(entity =>
@@ -113,6 +94,27 @@ namespace SuFood.Models
                     .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Stock_Unit");
+            });
+
+            modelBuilder.Entity<ProductsOfPlans>(entity =>
+            {
+                entity.HasKey(e => new { e.PlanId, e.ProductId });
+
+                entity.Property(e => e.ProductId).HasColumnName("Product_Id");
+
+                entity.Property(e => e.Price).HasColumnName("price");
+
+                entity.HasOne(d => d.Plan)
+                    .WithMany(p => p.ProductsOfPlans)
+                    .HasForeignKey(d => d.PlanId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductsOfPlans_FreeChoicePlans");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ProductsOfPlans)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_ProductsOfPlans_Products");
             });
 
             OnModelCreatingPartial(modelBuilder);

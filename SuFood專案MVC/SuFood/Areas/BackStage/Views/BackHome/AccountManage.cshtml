@@ -1,0 +1,128 @@
+﻿@section Styles
+{
+	<link href="~/css/accountmanage.css" rel="stylesheet" />
+}
+
+<div class="col user__management-content">
+    <!-- 內容 -->
+    <div class="account-container">
+        <h4>會員列表</h4>
+
+        <div class="wrap">
+            @*篩選欄位*@
+            @*v-model="filter"*@
+            <div class="search">
+                <input class="search-bar form-control col-md-2" type="search" name="search" id="search" placeholder="請輸入會員ID或姓名" v-model="filter" v-on:keyup.enter="filterAccount">
+                <button class="search-btn col-md" type="button"><i class='bx bx-search-alt-2'></i></button>
+            </div>
+        </div>
+
+        <!-- 2.會員管理區塊-->
+        <div class="form-group accountmanage">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <td>會員ID</td>
+                        <td>會員帳號</td>
+                        <td>姓名</td>
+                        <td>生日</td>
+                        <td>手機號碼</td>
+                        <td>收件資訊</td>
+                        <td>訂單</td>
+                        <td>編輯</td>
+                        <td>刪除</td>
+                        <td>會員創建時間</td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <!-- 2-1.會員1號-->
+                    <tr>
+                        <th class="th" scope="row">10113</th>
+                        <td>xxxx@gmail.com</td>
+                        <td>洪崇信</td>
+                        <td>2000-07-02</td>
+                        <td>0912345678</td>
+                        <td>
+                            <button class="reci-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                檢視
+                            </button>
+
+                            <!--Modal start-->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">收件資訊</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div>郵遞區號：<label for="">100</label></div>
+                                            <div>郵寄地址：<label for="">台北市中正區濟南路一段xx號</label></div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <!-- <button type="button" class="btn btn-primary">儲存</button> -->
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <!-- Vertically centered scrollable modal -->
+                        <!-- Button trigger modal -->
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                            <!--Modal end-->
+
+                        </div>
+                        <td><a href=""><i class='bx bx-file-find'></i></a></i></td>
+                        <td><a href=""><i class='bx bxs-edit'></a></i></td>
+                        <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
+                        <td>2018-02-04 18:39:27</td>
+                    </tr>
+
+                    <!-- 2-2.會員2號-->
+                    <tr>
+                        <th class="th" scope="row">10101</th>
+                        <td>yyyy@gmail.com</td>
+                        <td>谷亭逸</td>
+                        <td>1994-12-07</td>
+                        <td>0918374920</td>
+                        <td><button class="reci-btn" type="button">檢視</button></td>
+                        <td><a href=""><i class='bx bx-file-find'></a></i></td>
+                        <td><a href=""><i class='bx bxs-edit'></i></a></td>
+                        <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
+                        <td>2018-02-04 18:39:27</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 3.分頁 -->
+    <div class="paging">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+@section Scripts
+    {
+
+}

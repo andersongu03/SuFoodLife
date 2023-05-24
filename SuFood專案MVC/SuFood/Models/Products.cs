@@ -7,11 +7,6 @@ namespace SuFood.Models
 {
     public partial class Products
     {
-        public Products()
-        {
-            ProductsOfPlans = new HashSet<ProductsOfPlans>();
-        }
-
         public int ProductId { get; set; }
         public string ProductName { get; set; }
         public string ProductDescription { get; set; }
@@ -21,7 +16,5 @@ namespace SuFood.Models
         public int Cost { get; set; }
         public string Category { get; set; }
         public byte[] Img { get; set; }
-
-        public virtual ICollection<ProductsOfPlans> ProductsOfPlans { get; set; }
     }
 }

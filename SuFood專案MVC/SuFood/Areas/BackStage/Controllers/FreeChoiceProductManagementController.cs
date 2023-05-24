@@ -94,7 +94,7 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //修改功能
         [HttpPost]
-        public async Task<string> Edit([FromForm, Bind("ProductId,ProductName,ProductDescription,StockUnit,StockQuantity,Price,Cost,Category,Img")] Products products)
+        public async Task<string> Edit([FromForm,Bind("ProductId,ProductName,ProductDescription,StockUnit,StockQuantity,Price,Cost,Category,Img")] Products products)
         {
             if (ModelState.IsValid)
             {
@@ -111,14 +111,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     }
 
                     _context.Update(products);
-                    try
-                    {
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (Exception)
-                    {
-                        return "修改失敗";
-                    }
+                    await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -134,11 +127,7 @@ namespace SuFood.Areas.BackStage.Controllers
                 return "修改成功";
             }
             return "修改失敗";
-        }
-
-
-
-
+            }
 
         private bool ProductsExists(int id)
         {

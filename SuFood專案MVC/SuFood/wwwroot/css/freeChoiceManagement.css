@@ -371,12 +371,10 @@ input[type="file"] {
     border-radius: 1rem;
 }
 
-.productDetail__container {
+.productDetail__container{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    gap: 1rem;
-    margin-top: 0px;
 }
 
 .productDetail__container>div{

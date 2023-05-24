@@ -165,11 +165,11 @@
                             </div>
                             <div>
                                 <div name="Cost">成本</div>
-                                <input name="Cost" type="number" placeholder="20" class="productItemInp" v-model="EditProdcutItem.cost">
+                                <input name="Cost" type="text" placeholder="20" class="productItemInp" v-model="EditProdcutItem.cost">
                             </div>
                             <div>
                                 <div name="Price">價格</div>
-                                <input name="Price" type="number" placeholder="35" class="productItemInp" v-model="EditProdcutItem.price">
+                                <input name="Price" type="text" placeholder="35" class="productItemInp" v-model="EditProdcutItem.price">
                             </div>
                             <div>
                                 <div name="StockUnit">單位</div>
@@ -177,7 +177,7 @@
                             </div>
                             <div>
                                 <div name="StockQuantity">數量</div>
-                                <input name="StockQuantity" type="number" placeholder="100" class="productItemInp" v-model="EditProdcutItem.stockQuantity">
+                                <input name="StockQuantity" type="text" placeholder="100" class="productItemInp" v-model="EditProdcutItem.stockQuantity">
                             </div>
                         </div>
                         <button class="modal__button modal__butoon-width" @@click.prevent="EditProduct">
@@ -219,15 +219,15 @@
                         </div>
                         <div>
                             <div name="Cost">成本</div>
-                                <input name="Cost" type="number" placeholder="20" class="productItemInp" v-model="request.Cost">
+                                <input name="Cost" type="text" placeholder="20" class="productItemInp" v-model="request.Cost">
                         </div>
                         <div>
                             <div name="Price">價格</div>
-                                <input name="Price" type="number" placeholder="35" class="productItemInp" v-model="request.Price">
+                                <input name="Price" type="text" placeholder="35" class="productItemInp" v-model="request.Price">
                         </div>
                         <div>
                             <div name="StockQuantity">數量</div>
-                                <input name="StockQuantity" type="number" placeholder="100" class="productItemInp" v-model="request.StockQuantity">
+                                <input name="StockQuantity" type="text" placeholder="100" class="productItemInp" v-model="request.StockQuantity">
                         </div>
                     </div>
                         <button class="modal__button modal__butoon-width" @@click.prevent="CreateProduct">
@@ -253,12 +253,7 @@
 
     <!--========== Messge toast ==========-->
     <div class="message-toast-wrapper" :class="toastHintStlye">
-        <template v-if="toast == '新增失敗' || toast == '修改失敗'">
-            <i class='bx bxs-x-circle message-toast-icon' style='color:#fe0202'></i>
-        </template>
-        <template v-else>
-            <i class='bx bxs-check-circle message-toast-icon'></i>
-        </template>
+        <i class='bx bxs-check-circle message-toast-icon'></i>
         <p class="message-toast-title">{{toast}}</p>
     </div>
 </div>

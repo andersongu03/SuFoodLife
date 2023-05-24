@@ -43,9 +43,9 @@
 
                 <div class="row d-flex justify-content-around align-content-center">
                     <div v-for="plan in plans" class="card col-lg-4">
-                        <h5 class="card__title">{{plan.planName}}</h5>
-                        <h1 class="card__preice">${{plan.planPrice}}</h1>
-                        <p class="card__desc">{{plan.planDescription}}</p>
+                        <h5 class="card__title">{{plan.name}}</h5>
+                        <h1 class="card__preice">${{plan.price}}</h1>
+                        <p class="card__desc">{{plan.subtitle}}{{plan.itemQuantity}}</p>
                         <button @@click="selectedPlan(plan)" class="card__button">選擇方案</button>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
             </div>
             <div class="content__container">
                 <div class="confirm__container col-3">
-                    <h2 class="mt-3">{{choicePlan.planName}}</h2>
+                    <h2 class="mt-3">{{choicePlan.name}}</h2>
                     <div class="confirmItems__container col-10">
                         <template v-if="selectProduct.length != 0">
                             <ul>
@@ -112,7 +112,7 @@
                         </template>
                     </div>
                     <div v-show="choicePlan" class="confirm-line"></div>
-                    <h2 v-show="choicePlan">${{choicePlan.planPrice}}</h2>
+                    <h2 v-show="choicePlan">${{choicePlan.price}}</h2>
                 </div>
 
                 <div class="checkout">
@@ -132,7 +132,11 @@
             el: "#freeChoice",
             data: {
                 products: [], //45
-                plans: [],
+                plans: [
+                    { id: 1, name: '小資方案', price: "300", totalProductsCount: 20, itemQuantity: 10, subtitle: '熱門商品20選' },
+                    { id: 2, name: '高級方案', price: "500", totalProductsCount: 30, itemQuantity: 15, subtitle: '精選30選' },
+                    { id: 3, name: '奢華方案', price: "700", totalProductsCount: 40, itemQuantity: 20, subtitle: '隱藏商品40選' },
+                ],
                 MaxSelectItems: 20,
                 choicePlan: ""
             },
@@ -172,9 +176,8 @@
                     this.setImgOpacity(product)
                 },
                 selectedPlan(plan) {
-                    this.MaxSelectItems = plan.planCanChoiceCount;
+                    this.MaxSelectItems = plan.itemQuantity;
                     this.choicePlan = plan
-                    this.GetProducts(plan.planId) //依照plan的id獲得id內的商品。
                     this.resetItemQuantity()
                     this.ToNextSection('match')
                 },
@@ -192,32 +195,11 @@
                     }
                 },
 
-                //取得所有產品
+                //從後端取得資料的方法
                 GetProductDetail() {
                     axios.get("/FreeChoice/GetProducts").then(response => {
                         this.products = response.data
                         console.log(this.products)
-                    })
-                },
-
-                //取得方案
-                GetPlans(){
-                    axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
-                        response.data.forEach(response => {
-                            console.log(response)
-                            this.plans.push(response.plans)
-                        })
-                    })
-                },
-                //取得方案內的產品
-                GetProducts(planId){
-                    let _this = this;
-                    axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
-                        response.data.forEach(response => {
-                            if(response.plans.planId == planId){
-                                _this.products = response.products
-                            }
-                        })
                     })
                 }
             },
@@ -237,8 +219,7 @@
             },
             mounted() {
                 window.addEventListener('scroll', this.ScrollAction);
-                //this.GetProductDetail();
-               this.GetPlans();
+                this.GetProductDetail();
             }
         })
     </script>

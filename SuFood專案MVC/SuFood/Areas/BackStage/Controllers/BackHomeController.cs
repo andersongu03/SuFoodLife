@@ -28,16 +28,16 @@ namespace SuFood.Areas.BackStage.Controllers
             return View();
         }
 
-        public IActionResult FreeChoicePlans()
+        //評論管理頁面
+        public IActionResult CommentManagement() 
         {
             return View();
         }
-
-        // <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
-        //public IActionResult Coupoun()
-        //{
-        //    return View();
-        //}
-    }
+		// <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
+		//public IActionResult Coupoun()
+		//{
+		//    return View();
+		//}
+	}
 }
 

@@ -1,0 +1,156 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SuFood</title>
+    <!--==================== Boxicons ====================-->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="~/css/homePageMain.css" rel="stylesheet" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- ======= Header ======= -->
+    <header id="header" class="header fixed-top d-flex align-items-center">
+        <div class="container d-flex align-items-center justify-content-between">
+
+            <div class="col-2">
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="logo d-flex align-items-center me-auto me-lg-0">
+                    <!-- Uncomment the line below if you also wish to use an image logo -->
+                    <!-- <img src="assets/img/logo.png" alt=""> -->
+                    <h1>SuFoodlIFE<span>.</span></h1>
+                </a>
+            </div>
+
+            <div class="col-8 d-flex justify-content-center">
+                <nav id="navbar" class="navbar">
+                    <ul>
+                        @*Controller的連結*@
+                        <li><a asp-area="BackStage" asp-controller="BackHome" asp-action="Index">後台(測試用)</a></li>
+                        <li><a asp-area="" asp-controller="#" asp-action="#">零售</a></li>
+                        <li><a asp-area="" asp-controller="FreeChoice" asp-action="FreeChoice">自由選</a></li>
+                        <li><a asp-area="" asp-controller="#" asp-action="#">幫你選</a></li> 
+                        
+                        @*首頁的頁簽*@
+                        <li><a href="#testimonials">會員評價</a></li>
+                        <li><a href="#gallery">熱門商品</a></li>
+                        <li><a href="#contact">聯絡我們</a></li>
+                    </ul>
+                </nav><!-- .navbar -->
+            </div>
+
+
+            <div class="col-2">
+                <div class="header__icon__container">
+                    <div class="userBox iconBox">
+                        <i class='bx bx-user icon'></i>
+                        <div class="users__info">
+                            <a asp-area="" asp-controller="Members" asp-action="PersonalInfo"><span>帳戶資料</span> </a>
+                            <hr>
+                            <a asp-area="" asp-controller="Member" asp-action="#"><span>變更密碼</span></a>
+                            <hr>
+                            <a asp-area="" asp-controller="Member" asp-action="#"><span>我的優惠券</span></a>
+                            <hr>
+                            <a asp-area="" asp-controller="Member" asp-action="#"><span>我的訂單</span></a>
+                            <hr>
+                            <a asp-area="" asp-controller="Member" asp-action="#"><span>登入</span> </a>
+                            <!-- 如果是登入狀態顯示這個 -->
+                            <!-- <hr>
+                                      <a href="#"><span>登出</span> </a> -->
+                        </div>
+                    </div>
+                    <div class="cartsBox iconBox"><i class='bx bx-cart icon'></i></div>
+                </div>
+            </div>
+        </div>
+    </header><!-- End Header -->
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+    <!-- ======= Footer ======= -->
+    <footer id="footer" class="footer">
+
+        <div class="container">
+            <div class="row gy-3">
+                <div class="col-lg-3 col-md-6 d-flex">
+                    <i class="bi bi-geo-alt icon"></i>
+                    <div>
+                        <h4>Address</h4>
+                        <p>
+                            A108 Adam Street <br>
+                            New York, NY 535022 - US<br>
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-3 col-md-6 footer-links d-flex">
+                    <i class="bi bi-telephone icon"></i>
+                    <div>
+                        <h4>Reservations</h4>
+                        <p>
+                            <strong>Phone:</strong> +1 5589 55488 55<br>
+                            <strong>Email:</strong> info@example.com<br>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 footer-links d-flex">
+                    <i class="bi bi-clock icon"></i>
+                    <div>
+                        <h4>Opening Hours</h4>
+                        <p>
+                            <strong>Mon-Sat: 11AM</strong> - 23PM<br>
+                            Sunday: Closed
+                        </p>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6 footer-links">
+                    <h4>Follow Us</h4>
+                    <div class="social-links d-flex">
+                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="copyright">
+                &copy; Copyright <strong><span>SuFoodlIFE</span></strong>. All Rights Reserved
+            </div>
+            <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/yummy-bootstrap-restaurant-website-template/ -->
+                Designed by <a href="https://bootstrapmade.com/">THM101-2</a>
+            </div>
+        </div>
+
+    </footer>
+    <!-- End Footer -->
+    <a href="#" class="scroll-top d-flex align-items-center justify-content-center">
+        <i class="bi bi-arrow-up-short"></i>
+    </a>
+
+    @*<div id="preloader"></div>*@
+    <!-- Vendor JS Files -->
+
+    <script src="~/lib/php-email-form/validate.js"></script>
+    <script src="~/lib/glightbox/js/glightbox.min.js"></script>
+    <script src="~/lib/purecounter/purecounter_vanilla.js"></script>
+    <script src="~/lib/swiper/swiper-bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/vue.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

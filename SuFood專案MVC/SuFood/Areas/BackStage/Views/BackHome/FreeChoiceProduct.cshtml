@@ -1,0 +1,269 @@
+﻿@section Styles{
+    <link href="~/css/model.css" rel="stylesheet" />
+    <link href="~/css/freechoicemanagement.css" rel="stylesheet" />
+}
+
+
+<div class="Recent-order col-10 col-sm-12 col-md-10 col-xl-10">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h2>商品管理</h2>
+        <h4>商品總數:{{products.length}}</h4>
+    </div>
+    <div class="tableFunction col-12">
+        <div class="col-3">
+            <div class="title">產品名稱</div>
+            <div class="content">
+                <div class="searchBar">
+                    <div class="inputWrapper">
+                        <i class='bx bx-search-alt-2 searchIcon'></i>
+                        <input type="text" class="inputSearch" placeholder="Search..." v-model="keyword">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="title">狀態</div>
+            <div class="content">
+                <div class="StatusBar">
+                    <select v-model="selectedStatus">
+                        <option value="all">全部</option>
+                        <option value="active">庫存充足</option>
+                        <option value="frozen">庫存不足</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="title">種類</div>
+            <div class="content">
+                <div class="StatusBar">
+                    <select v-model="selectedCategory">
+                        <option value="全部">全部</option>
+                        <template v-for="c in Categories">
+                            <option :value="c">{{c}}</option>
+                        </template>
+@*                        <option value="全部">全部</option>
+                        <option value="零食">零食</option>
+                        <option value="水果">水果</option>
+                        <option value="蔬菜">蔬菜</option>*@
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 CreateButton-container">
+            <div class="title">新增商品</div>
+            <button @@click="CreateProducts" class="CreateButton">新增</button>
+        </div>
+    </div>
+    <div class="table__container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>產品圖片</th>
+                    <th>產品名稱</th>
+                    <th>產品敘述</th>
+                    <th>種類</th>
+                    <th>成本<i class='bx bxs-sort-alt sortIcon'></i></th>
+                    <th>售價<i class='bx bxs-sort-alt sortIcon'></i></th>
+                    <th>
+                        庫存量<i @@click="sortType === 1? sortType =2: sortType = 1"
+                              class='bx bxs-sort-alt sortIcon'></i>
+                    </th>
+                    <th>狀態</th>
+                    <th>編輯</th>
+                    <th>刪除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template v-if="filterproducts">
+                    @*filterProducts*@
+                    <tr v-for="p in filterproducts" :key="p.productId">
+                        @*filterProducts*@
+                        <td>
+                            <span>{{p.productId}}</span>
+                        </td>
+                        <td>
+                            <img :src="'data:image/jpeg;base64,'+p.img" class="productImg">
+                        </td>
+                        <td>
+                            <span>{{p.productName}}</span>
+                        </td>
+                        <td>
+                            <span>{{p.productDescription}}</span>
+                        </td>
+                        <td>
+                            <span>{{p.category}}</span>
+                        </td>
+                        <td>
+                            <span>{{p.cost}}</span>
+                        </td>
+                        <td>
+                            <span>{{p.price}}</span>
+                        </td>
+                        <td>
+                            <span>{{p.stockQuantity}}</span>
+                        </td>
+                        <td>
+                            <span :class="p.stockQuantity > 100 ? 'active' : 'frozen'">{{p.stockQuantity > 100? "庫存充足" :"庫存不足"}}</span>
+                        </td>
+                        <td>
+                            <i @@click="openEditModal(p)" :class="p.icon" :id="p.productId" :name="p.productId"></i>
+                        </td>
+                        <td>
+                            <i @@click="DeleteProducts(p)" :class="p.trash" :id="p.productId" :name="p.productId"></i>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        <template v-if="filterproducts.length == 0">
+            <h1><i class='bx bx-smile'></i>商品不存在喔!!</h1>
+        </template>
+    </div>
+    <div v-if="products.length > 5" class="arrow-down">
+        <i class='bx bx-chevrons-down'></i>
+    </div>
+
+    <div class="modal__container" :class="modalContainerStyle" id="modal-container">
+        <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
+            <div class="modal__close close-modal" @@click="closeModal" title="Close">
+                <i class='bx bx-x'></i>
+            </div>
+
+            <h1 class="modal__title">商品管理</h1>
+            <p class="modal__description">{{modaltitle}}</p>
+
+
+            <div class="model__product row g-5">
+                <template v-if="EditOrDeleteorCreate == 'Edit'">
+                    <form  class="row g-5"> 
+                        <div class="col-6 imgPreview-container">
+                            <div class="imgPreview">
+                                <i v-if="!uplodaImgPreview.preview" class='bx bx-image-add icon'></i>
+                                <img v-if="uplodaImgPreview.preview" :src="uplodaImgPreview.preview" alt="">
+                            </div>
+                            <div class="custom-file-upload-container">
+                                <label for="file-upload" class="custom-file-upload">
+                                    <i class='bx bx-cloud-upload'></i>上傳圖片
+                                </label>
+                                <input name="Img" v-on:change="previewImage" type="file" id="file-upload">
+                            </div>
+                        </div>
+                        <div class="col-6 productDetail__container">
+                            <div>
+                                <div name="ProductDescription">敘述</div>
+                                <input name="ProductDescription" type="text" placeholder="好吃喔" class="productItemInp" v-model="EditProdcutItem.productDescription">
+                            </div>
+                            <div>
+                                <div name="ProductName">名稱</div>
+                                <input name="ProductName" type="text" placeholder="葡萄" class="productItemInp" v-model="EditProdcutItem.productName">
+                            </div>
+                            <div>
+                                <div name="Category">種類</div>
+                                <input name="Category" type="text" placeholder="水果" class="productItemInp" v-model="EditProdcutItem.category">
+                            </div>
+                            <div>
+                                <div name="Cost">成本</div>
+                                <input name="Cost" type="number" placeholder="20" class="productItemInp" v-model="EditProdcutItem.cost">
+                            </div>
+                            <div>
+                                <div name="Price">價格</div>
+                                <input name="Price" type="number" placeholder="35" class="productItemInp" v-model="EditProdcutItem.price">
+                            </div>
+                            <div>
+                                <div name="StockUnit">單位</div>
+                                <input name="StockUnit" type="text" placeholder="100" class="productItemInp" v-model="EditProdcutItem.stockUnit">
+                            </div>
+                            <div>
+                                <div name="StockQuantity">數量</div>
+                                <input name="StockQuantity" type="number" placeholder="100" class="productItemInp" v-model="EditProdcutItem.stockQuantity">
+                            </div>
+                        </div>
+                        <button class="modal__button modal__butoon-width" @@click.prevent="EditProduct">
+                            更新
+                        </button>
+                    </form>
+                </template>
+
+                <template v-else-if="EditOrDeleteorCreate == 'Create'">
+                   <form class="row g-5">
+                        <div class="col-6 imgPreview-container">
+                        <div class="imgPreview">
+                            <i v-if="!uplodaImgPreview.preview" class='bx bx-image-add icon'></i>
+                            <img v-if="uplodaImgPreview.preview" :src="uplodaImgPreview.preview" alt="">
+                        </div>
+                        <div class="custom-file-upload-container">
+                            <label for="file-upload" class="custom-file-upload">
+                                <i class='bx bx-cloud-upload'></i>上傳圖片
+                            </label>
+                            <input name="Img" v-on:change="previewImage" type="file" id="file-upload">
+                        </div>
+                    </div>
+                        <div class="col-6 productDetail__container">
+                        <div>
+                            <div name="ProductName">名稱</div>
+                                <input name="ProductName" type="text" placeholder="葡萄" class="productItemInp" v-model="request.ProductName">
+                        </div>
+                        <div>
+                            <div name="ProductDescription">敘述</div>
+                                <input name="ProductDescription" type="text" placeholder="葡萄" class="productItemInp" v-model="request.ProductDescription">
+                        </div>
+                        <div>
+                            <div name="StockUnit">單位</div>
+                                <input name="StockUnit" type="text" placeholder="葡萄" class="productItemInp" v-model="request.StockUnit">
+                        </div>
+                        <div>
+                            <div name="Category">種類</div>
+                                <input name="Category" type="text" placeholder="水果" class="productItemInp" v-model="request.Category">
+                        </div>
+                        <div>
+                            <div name="Cost">成本</div>
+                                <input name="Cost" type="number" placeholder="20" class="productItemInp" v-model="request.Cost">
+                        </div>
+                        <div>
+                            <div name="Price">價格</div>
+                                <input name="Price" type="number" placeholder="35" class="productItemInp" v-model="request.Price">
+                        </div>
+                        <div>
+                            <div name="StockQuantity">數量</div>
+                                <input name="StockQuantity" type="number" placeholder="100" class="productItemInp" v-model="request.StockQuantity">
+                        </div>
+                    </div>
+                        <button class="modal__button modal__butoon-width" @@click.prevent="CreateProduct">
+                            新增
+                    </button>
+                    </form>
+                </template>
+
+                <template v-else>
+                    <div class="d-flex align-content-center justify-content-between">
+                        <button class="modal__button modal__butoon-width" @@click="DeleteProduct(deleteId)" type="submit">
+                            刪除
+                        </button>
+
+                        <button class="modal__button-link close-modal" @@click="closeModal">
+                            取消
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!--========== Messge toast ==========-->
+    <div class="message-toast-wrapper" :class="toastHintStlye">
+        <template v-if="toast == '新增失敗' || toast == '修改失敗'">
+            <i class='bx bxs-x-circle message-toast-icon' style='color:#fe0202'></i>
+        </template>
+        <template v-else>
+            <i class='bx bxs-check-circle message-toast-icon'></i>
+        </template>
+        <p class="message-toast-title">{{toast}}</p>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/vue.js"></script>
+    <script src="~/js/freechoicemanagement.js"></script>
+}

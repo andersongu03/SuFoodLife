@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "boxicons@2.1.4",
+      "destination": "wwwroot/lib/boxicons/"
+    },
+    {
+      "library": "axios@1.4.0",
+      "destination": "wwwroot/axios/"
+    }
+  ]
+}

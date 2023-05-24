@@ -1,0 +1,266 @@
+/*=============== GOOGLE FONTS ===============*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap');
+
+/*=============== VARIABLES CSS ===============*/
+:root {
+  /*========== Colors ==========*/
+  --hue: 240;
+  --first-color: hsl(var(--hue), 16%, 18%);
+  --first-color-alt: hsl(var(--hue), 16%, 12%);
+  --title-color: hsl(var(--hue), 8%, 15%);
+  --text-color: hsl(var(--hue), 8%, 35%);
+  --body-color: hsl(var(--hue), 100%, 99%);
+  --container-color: #FFF;
+
+  /*========== Font and typography ==========*/
+  --body-font: 'Poppins', sans-serif;
+  --big-font-size: 1.5rem;
+  --normal-font-size: .938rem;
+
+  /*========== z index ==========*/
+  --z-modal: 1000;
+}
+
+@media screen and (min-width: 968px) {
+  :root {
+    --big-font-size: 1.75rem;
+    --normal-font-size: 1rem;
+  }
+}
+
+/*=============== BASE ===============*/
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+
+
+body,
+button {
+  font-family: var(--body-font);
+  font-size: var(--normal-font-size);
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/*=============== MODAL ===============*/
+.container {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
+.modal {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+}
+
+.modal__button {
+  display: inline-block;
+  background-color: var(--first-color);
+  color: #fff;
+  padding: 1rem 1.25rem;
+  border-radius: .5rem;
+  transition: .3s;
+}
+
+.modal__button:hover {
+  background-color: var(--first-color-alt);
+}
+
+.modal__container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: hsla(var(--hue), 18%, 75%, .8);
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: flex-end;
+  overflow: hidden;
+  transition: all .3s;
+  z-index: var(--z-modal);
+  visibility: hidden;
+  opacity: 0;
+
+  /*=== Effect 3 ===*/
+  /* perspective: 1000px; */
+}
+
+.modal__content {
+  position: relative;
+  background-color: var(--container-color);
+  text-align: center;
+  padding: 3rem 2rem 2rem;
+  border-radius: 1rem 1rem 0 0;
+  transition: all .3s;
+  display: flex;
+  /*=== Effect 1 ===*/
+  /* transform: translateY(10%); */
+
+  /*=== Effect 2 ===*/
+  transform: scale(.5) translateY(10%);
+
+  /*=== Effect 3 ===*/
+  /* transform: rotateX(65deg) scale(.75) translateY(10%);
+  transform-origin: 50% 100%; */
+}
+
+.w800 {
+  width: 800px;
+}
+
+.w200 {
+  width: 300px;
+}
+
+.modal__img {
+  width: 150px;
+  margin-bottom: .75rem;
+}
+
+.modal__close {
+  display: inline-flex;
+  background-color: var(--first-color);
+  border-radius: .25rem;
+  color: #FFF;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  cursor: pointer;
+}
+
+.modal__title {
+  font-size: var(--big-font-size);
+  color: var(--title-color);
+  font-weight: 500;
+}
+
+.modal__description {
+  margin-bottom: 1.5rem;
+}
+
+.modal__button-width {
+  width: 90%;
+}
+
+.modal__button-link {
+  display: inline-block;
+  background-color: #e1e1e1;
+  color: #000;
+  padding: 1rem 1.25rem;
+  border-radius: .5rem;
+  transition: .3s;
+}
+
+.modal__button {
+  display: inline-block;
+  background-color: var(--first-color);
+  color: #fff;
+  padding: 1rem 1.25rem;
+  border-radius: .5rem;
+  transition: .3s;
+}
+
+.modal__button-delete {
+  display: inline-block;
+  background-color: red;
+  color: #fff;
+  padding: 1rem 1.25rem;
+  border-radius: .5rem;
+  transition: .3s;
+}
+
+/* Show modal */
+.showModal {
+  visibility: visible;
+  opacity: 1;
+}
+
+.showModal .modal__content {
+  /*=== Effect 1 ===*/
+  /* transform: translateY(0); */
+
+  /*=== Effect 2 ===*/
+  transform: scale(1) translateY(0);
+
+  /*=== Effect 3 ===*/
+  /* transform: rotateX(0) scale(1) translateY(0); */
+}
+
+/*=============== BREAKPOINTS ===============*/
+/* For small devices */
+@media screen and (min-width: 576px) {
+  .modal__content {
+    margin: auto;
+    border-radius: 1.25rem;
+  }
+
+  .modal__img {
+    width: 170px;
+  }
+}
+
+/* Message */
+.message-toast-wrapper {
+  position: fixed;
+  top: 70px;
+  left: calc(50% - 125px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background-color: #fff;
+  width: 250px;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0px 0px 15px hsl(0, 0%, 0.3);
+  transition: all .3s;
+  opacity: 0;
+}
+
+.message-toast-icon {
+  color: green;
+  font-size: 2rem;
+  height: 100%;
+}
+
+.message-toast-title{
+  font-size: 2rem;
+  font-weight: bolder;
+  height: 100%;
+  margin-bottom: 0;
+}
+
+.fadeInUp {
+  opacity: 0; /* 初始透明度为0 */
+  animation: fadeInUp 2s ease-in-out forwards; /* 使用fadeInUp动画，持续1秒，缓入缓出效果，并保持动画结束后的状态 */
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0; /* 起始透明度为0 */
+    transform: translateY(30px); /* 初始状态下元素往上偏移30px */
+  }
+  50% {
+    opacity: 1; /* 结束透明度为1 */
+    transform: translateY(0); /* 元素回到原位 */
+  }
+  100%{
+    opacity: 0;
+    transform: translateY(-30px)
+  }
+}

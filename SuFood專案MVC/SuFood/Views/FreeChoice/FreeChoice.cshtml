@@ -1,0 +1,245 @@
+﻿@section styles{
+    <link href="~/css/freechoice.css" rel="stylesheet" />
+}
+
+
+<!--========= 自由選 =========-->
+<main id="freeChoice">
+    <!-- ======= Sub Header ======= -->
+    <div class="sub__hader container-fluid">
+        <h2 class="sub__hader__title text-center">自由選</h2>
+        <h4 class="sub__hader__subtitle text-center">打造你的專屬零食櫃</h4>
+        <div class="steps__container">
+            <div class="steps-line"></div>
+            <ul class="steps">
+                <li class="step">
+                    <div class="step-content planChoice">
+                        <span class="step-circle">1</span>
+                        <span class="step-text">選擇方案</span>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step-content match">
+                        <span class="step-circle">2</span>
+                        <span class="step-text">搭配您的產品</span>
+                    </div>
+                </li>
+                <li class="step">
+                    <div class="step-content confirm">
+                        <span class="step-circle">3</span>
+                        <span class="step-text">確認訂購資訊</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--========= 方案選擇 =========-->
+    <section class="planChoice d-flex align-items-center section-bg" id="planChoice">
+        <div class="planChoice__container">
+            <div class="title__container text-center">
+                選擇方案
+            </div>
+            <div class="content__container">
+
+                <div class="row d-flex justify-content-around align-content-center">
+                    <div v-for="plan in plans" class="card col-lg-4">
+                        <h5 class="card__title">{{plan.planName}}</h5>
+                        <h1 class="card__preice">${{plan.planPrice}}</h1>
+                        <p class="card__desc">{{plan.planDescription}}</p>
+                        <button @@click="selectedPlan(plan)" class="card__button">選擇方案</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--========= 搭配產品 =========-->
+    <section class="match d-flex align-items-center section-bg" id="match">
+        <div class="planChoice__container">
+            <div class="title__container text-center">
+                搭配您的產品
+                <span v-if="choicePlan">可選數量 : {{totalQuantity}}/{{MaxSelectItems}}</span>
+            </div>
+            <div class="container d-flex justify-content-center mt-5 product__container">
+                <div class="row">
+                    <template v-if="choicePlan">
+                        <div v-for="product in showProducts" :key="product.id" class="col-lg-2 col-md-3 mb-4" style="max-height: 150px;">
+                            <div class="product-wrapper mb-45 text-center">
+                                <div class="product-img">
+                                    <img :src="'data:image/png;base64,'+product.img" :id="'Img'+product.productId" alt=""><span class="text-center">{{product.productName}}</span>
+                                    <div class="product-action">
+                                        <div class="product-action-style">
+                                            <i class='bx bx-minus-circle' @@click.passive="decrementQuantity(product)"></i>
+                                            <span>{{product.quantity}}</span>
+                                            <i class='bx bx-plus-circle' @@click.passive="incrementQuantity(product)"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="!choicePlan">
+                        <div class="matchHintImg">
+                            <h2>請先選擇方案!</h2>
+                            <img src="~/img/productmanagement/checklist.png" class="matchHintIcon" />
+                        </div>
+                    </template>
+                </div>
+            </div>
+    </section>
+    <!--========= 確認 =========-->
+    <section class="confirm d-flex align-items-center section-bg" id="confirm">
+        <div class="planChoice__container">
+            <div class="title__container text-center">
+                確認訂購資訊
+            </div>
+            <div class="content__container">
+                <div class="confirm__container col-3">
+                    <h2 class="mt-3">{{choicePlan.planName}}</h2>
+                    <div class="confirmItems__container col-10">
+                        <template v-if="selectProduct.length != 0">
+                            <ul>
+                                <li class="confirmItems" v-for="product in selectProduct">
+                                    <h1 class="confirmItems-Name">{{product.productName}}</h1>
+                                    <p class="confirmItems-Quant">{{product.quantity}}<span>個</span></p>
+                                </li>
+                            </ul>
+                        </template>
+                        <template v-else>
+                            <div class="confirm__hint">
+                                <img src="~/img/productmanagement/open-box.png" class="confirmItems-Img" />
+                                <h3>搭配喜歡的產品</h3>
+                            </div>
+                        </template>
+                    </div>
+                    <div v-show="choicePlan" class="confirm-line"></div>
+                    <h2 v-show="choicePlan">${{choicePlan.planPrice}}</h2>
+                </div>
+
+                <div class="checkout">
+                    <a href="#"><button class="bn632-hover bn28">結帳</button></a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main><!-- End #main -->
+@section scripts{
+    <script src="~/axios/axios.min.js"></script>
+    @*    <script src="~/js/freechoice.js"></script>*@
+    <script>
+        var test = ""
+        var pro = null;
+        const vm = new Vue({
+            el: "#freeChoice",
+            data: {
+                products: [], //45
+                plans: [],
+                MaxSelectItems: 20,
+                choicePlan: ""
+            },
+            methods: {
+                ScrollAction() {
+                    const sections = document.querySelectorAll('section[id]')
+                    const scrollY = window.pageYOffset
+                    sections.forEach(current => {
+                        const sectionHeight = current.offsetHeight
+                        const sectionTop = current.offsetTop - 300;
+                        sectionId = current.getAttribute('id')
+
+                        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+                            document.querySelector('.step-content.' + sectionId + ' .step-circle').classList.add('stepColor')
+                        } else {
+                            document.querySelector('.step-content.' + sectionId + ' .step-circle').classList.remove('stepColor')
+                        }
+                    })
+                },
+                ToNextSection(id) {
+                    var section = document.getElementById(id);
+                    section.scrollIntoView();
+                },
+                incrementQuantity(product) {
+                    if (this.totalQuantity < this.MaxSelectItems) {
+                        product.quantity += 1
+                    }
+                    this.setImgOpacity(product)
+                    if (this.totalQuantity == this.MaxSelectItems) {
+                        this.ToNextSection("confirm")
+                    }
+                },
+                decrementQuantity(product) {
+                    if (product.quantity > 0) {
+                        product.quantity -= 1 
+                    }
+                    this.setImgOpacity(product)
+                },
+                selectedPlan(plan) {
+                    this.MaxSelectItems = plan.planCanChoiceCount;
+                    this.choicePlan = plan
+                    this.GetProducts(plan.planId) //依照plan的id獲得id內的商品。
+                    this.resetItemQuantity()
+                    this.ToNextSection('match')
+                },
+                resetItemQuantity() {
+                    this.products.forEach(p => { p.quantity = 0; })
+                    const item = document.querySelectorAll(".product-img img")
+                    item.forEach(i => i.style.opacity = 0.5)
+                },
+                setImgOpacity(product) {
+                    const item = document.querySelector(`#Img${product.productId}`)
+                    if (product.quantity > 0) {
+                        item.style.opacity = 1
+                    } else {
+                        item.style.opacity = 0.5
+                    }
+                },
+
+                //取得所有產品
+                GetProductDetail() {
+                    axios.get("/FreeChoice/GetProducts").then(response => {
+                        this.products = response.data
+                        console.log(this.products)
+                    })
+                },
+
+                //取得方案
+                GetPlans(){
+                    axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
+                        response.data.forEach(response => {
+                            console.log(response)
+                            this.plans.push(response.plans)
+                        })
+                    })
+                },
+                //取得方案內的產品
+                GetProducts(planId){
+                    let _this = this;
+                    axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
+                        response.data.forEach(response => {
+                            if(response.plans.planId == planId){
+                                _this.products = response.products
+                            }
+                        })
+                    })
+                }
+            },
+            computed: {
+                totalQuantity() {
+                    return this.products.reduce((total, product) => total + product.quantity, 0);
+                },
+                //這邊的陣列資料到時候要當作post的request參數
+                selectProduct() {
+                    return this.products.filter(pro => {
+                        return pro.quantity !== 0;
+                    })
+                },
+                showProducts() {
+                    return this.products.slice(0, this.choicePlan.totalProductsCount)
+                }
+            },
+            mounted() {
+                window.addEventListener('scroll', this.ScrollAction);
+                //this.GetProductDetail();
+               this.GetPlans();
+            }
+        })
+    </script>
+}

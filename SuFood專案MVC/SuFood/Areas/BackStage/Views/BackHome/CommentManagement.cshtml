@@ -1,0 +1,89 @@
+﻿@section Styles{
+	<link href="~/css/model.css" rel="stylesheet" />
+	<link href="~/css/commentmanagement.min.css" rel="stylesheet" />
+}
+
+<div class="CommentReview col-10 col-sm-12 col-md-10 col-xl-10">
+	<div>
+		<!-- head -->
+		<div class="ordersreview">
+			<h4>{{topic}}</h4>
+		</div>
+		<!-- 1.搜尋框，下拉選單-->
+		<div class="wrap">
+			<div class="searchBar">
+				@*想用V-model連結*@
+				<input class="search-bar form-control" type="search" name="search" id="search" placeholder="輸入查詢">
+				@*<button class="search-btn" type="button"><i class='bx bx-search-alt-2'></i></button>*@
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- body-->
+	<div>
+		<table class="table table-striped table-hover">
+			<thead>
+				<tr class="table tr">
+					<th scope="col">評論ID</th>
+					<th scope="col">星數</th>
+					<th scope="col">評論</th>
+					<th scope="col">訂單編號</th>
+					<th scope="col">編輯</th>
+					<th scope="col">刪除</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!--評論資料 -->
+				<tr v-for="c in or" :key="c.ordersId">
+					<td>
+						<span>{{ c.reviewId}}</span>
+					</td>
+					<td>
+						<span>{{ c.ratingStar}}</span>
+					</td>
+					<td>
+						<span>{{ c.comment }}</span>
+					</td>
+					<td>
+						<span>{{ c.ordersId }}</span>
+					</td>
+					<td>
+						<button class="btn btn-success" data-bs-target="#editModal" @@click="">修改</button>
+					</td>
+					<td>
+						<button class="btn btn-warning" @@click="DeleteComment(c.ordersId)" :id="c.ordersId">刪除</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		@*	我之後再來收拾你
+		<template :class ="isActive">
+		<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+		<div class="modal-content">
+		<div class="modal-header">
+		<h1 class="modal-title fs-5" id="editModalLabel">Modal title</h1>
+		<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+		</div>
+		<div class="modal-body">
+		...
+		</div>
+		<div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-primary">Save changes</button>
+		</div>
+		</div>
+		</div>
+		</div>
+		</template>*@
+	</div>
+</div>
+
+
+@section Scripts{
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/commentmanagement.js"></script>
+}

@@ -32,6 +32,7 @@ namespace SuFood.Areas.BackStage.Controllers
             return View();
         }
 
+
         //會員管理頁面
 		public IActionResult AccountManage()
 		{
@@ -40,6 +41,14 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //訂單管理頁面
 		public IActionResult OrdersManage()
+
+        public IActionResult FreeChoicePlans()
+        {
+            return View();
+        }
+
+		public IActionResult CommentManagement()
+
 		{
 			return View();
 		}

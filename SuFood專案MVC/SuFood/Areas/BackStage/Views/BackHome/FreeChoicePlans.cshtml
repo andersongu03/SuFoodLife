@@ -1,0 +1,215 @@
+﻿@section Styles{
+    <link href="~/css/model.css" rel="stylesheet" />
+    <link href="~/css/freechoiceplansmanagement.css" rel="stylesheet" />
+}
+
+<div class="Recent-order col-sm-12 col-6 col-md-10 col-xl-8">
+    <div class="flexItems">
+        <h2>方案管理</h2>
+        <button @@click="CreateProducts" class="CreateButton">新增方案</button>
+    </div>
+
+    <div class="table__container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>方案名稱</th>
+                    <th>說明</th>
+                    <th>商品總數</th>
+                    <th>可選數量</th>
+                    <th>售價</th>
+                    <th>狀態</th>
+                    <th>編輯</th>
+                    <th>刪除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 動態產生tbody內容，從plans -->
+                <tr v-for="p in plans">
+                    <td>{{p.planId}}</td>
+                    <td>{{p.planName}}</td>
+                    <td>{{p.planDescription}}</td>
+                    <td>{{p.planTotalCount}}</td>
+                    <td>{{p.planCanChoiceCount}}</td>
+                    <td>${{p.planPrice}}</td>
+                    <td><span class="active">上架</span></td>
+                    <td><i @@click="EditProducts(p)" class="bx bxs-edit tableIcon"></i></td>
+                    <td><i @@click="DeleteProducts(p.planId)" class="bx bxs-trash tableIcon"></i></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="arrow-down">
+        <i class='bx bx-chevrons-down'></i>
+    </div>
+
+    <!-- 所有MODAL -->
+    <div class="modal__container " :class="modalContainerStyle" id="modal-container">
+        <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
+            <div class="modal__close close-modal" @@click="closeModal" title="Close">
+                <i class='bx bx-x'></i>
+            </div>
+
+            <h3 class="modal__title">{{ModalTitle}}方案</h3>
+
+            <!--====== 修改MODAL ======-->
+            <template v-if="EditOrDeleteorCreate == 'Edit'">
+                <div class="row mb-3 d-flex justify-content-between align-content-center">
+                    <div class="col-5 g-3 productDetail__container">
+                        <div class="mb-3">
+                            <div>方案名稱</div>
+                            <input type="text" placeholder="普通方案" class="productItemInp col-8"
+                                   v-model="EditProductsList.planName">
+                        </div>
+                        <div class="mb-3">
+                            <div>說明</div>
+                            <input type="text" placeholder="熱門商品20選" class="productItemInp col-8"
+                                   v-model="EditProductsList.planDescription">
+                        </div>
+                        <div class="mb-3">
+                            <div>狀態</div>
+                            <input type="text" placeholder="上架" class="productItemInp col-8"
+                                   v-model="EditProductsList.amount">
+                        </div>
+                    </div>
+                    <div class="col-5 g-3 productDetail__container">
+                        <div class="mb-3">
+                            <div>商品總數</div>
+                            <input type="text" placeholder="20" class="productItemInp col-8"
+                                   v-model="EditProductsList.planTotalCount">
+                        </div>
+                        <div class="mb-3">
+                            <div>可選數量</div>
+                            <input type="text" placeholder="10" class="productItemInp col-8"
+                                   v-model="EditProductsList.planCanChoiceCount">
+                        </div>
+                        <div class="mb-3">
+                            <div>售價</div>
+                            <input type="text" placeholder="399" class="productItemInp col-8"
+                                   v-model="EditProductsList.planPrice">
+                        </div>
+                    </div>
+
+                    <div class="row products__container">
+                        <div class="all-products-container col-5">
+                            <h3>所有商品</h3>
+                            <ul>
+                                <li v-for="p in products" class="products__items"
+                                    :class="{ SelectedItemStyle: isSelected(p) }"
+                                    @@click.stop="toggleProductSelection(p)" :id="'li'+p.productId">
+                                    {{p.productName}}<span>${{p.price}}</span>
+                                </li>
+
+                            </ul>
+                            <div class="productsHintNumber">所有商品總數 : {{products.length}}</div>
+                        </div>
+                        <i class='bx bxs-right-arrow-square rightArrowIcon'></i>
+                        <div class="selected-products-container col-5">
+                            <h3>方案商品</h3>
+                            <ul>
+                                <li v-for="p in selectedProducts" class="products__items">{{p.productName}} <span>${{p.price}}</span></li>
+                            </ul>
+                            <div class="productsHintNumber">已選商品總數 : {{selectedProducts.length}}</div>
+                        </div>
+                    </div>
+
+                    <button class="modal__button modal__butoon-width" @@click="EditPlans">
+                        更新
+                    </button>
+            </template>
+
+            <!--====== 新增MODAL ======-->
+            <template v-else-if="EditOrDeleteorCreate == 'Create'">
+                <div class="row mb-3 d-flex justify-content-between align-content-center">
+                    <div class="col-5 g-3 productDetail__container">
+                        <div class="mb-3">
+                            <div>方案名稱</div>
+                            <input type="text" placeholder="普通方案" class="productItemInp col-8"
+                                   v-model="CreateProductsList.planName">
+                        </div>
+                        <div class="mb-3">
+                            <div>說明</div>
+                            <input type="text" placeholder="熱門商品20選" class="productItemInp col-8"
+                                   v-model="CreateProductsList.planDescription">
+                        </div>
+                        <div class="mb-3">
+                            <div>狀態</div>
+                            <input type="text" placeholder="上架" class="productItemInp col-8"
+                                   v-model="CreateProductsList.planStatus">
+                        </div>
+                    </div>
+                    <div class="col-5 g-3 productDetail__container">
+                        <div class="mb-3">
+                            <div>商品總數</div>
+                            <input type="text" placeholder="20" class="productItemInp col-8"
+                                   v-model="CreateProductsList.planTotalCount">
+                        </div>
+                        <div class="mb-3">
+                            <div>可選數量</div>
+                            <input type="text" placeholder="10" class="productItemInp col-8"
+                                   v-model="CreateProductsList.planCanChoiceCount">
+                        </div>
+                        <div class="mb-3">
+                            <div>售價</div>
+                            <input type="text" placeholder="399" class="productItemInp col-8"
+                                   v-model="CreateProductsList.planPrice">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row products__container">
+                    <div class="all-products-container col-5">
+                        <h3>所有商品</h3>
+                        <ul>
+                            <li v-for="p in products" class="products__items"
+                                :class="{ SelectedItemStyle: isSelected(p) }"
+                                @@click.stop="toggleProductSelection(p)">
+                                {{p.productName}}<span>${{p.price}}</span>
+                            </li>
+
+                        </ul>
+                        <div class="productsHintNumber">所有商品總數 : {{products.length}}</div>
+                    </div>
+                    <i class='bx bxs-right-arrow-square rightArrowIcon'></i>
+                    <div class="selected-products-container col-5">
+                        <h3>方案商品</h3>
+                        <ul>
+                            <li v-for="p in selectedProducts" class="products__items">{{p.productName}} <span>${{p.price}}</span></li>
+                        </ul>
+                        <div class="productsHintNumber">已選商品總數 : {{selectedProducts.length}}</div>
+                    </div>
+                </div>
+
+                <button class="modal__button modal__butoon-width" @@click="CreatePlans">
+                    新增
+                </button>
+            </template>
+
+            <!--====== 刪除MODAL ======-->
+            <template v-else>
+                <div class="d-flex align-content-center justify-content-between">
+                    <button class="modal__button modal__butoon-width" @@click="DeletePlans(deleteId)">
+                        刪除
+                    </button>
+
+                    <button class="modal__button-link close-modal" @@click="closeModal">
+                        取消
+                    </button>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!--========== Messge toast ==========-->
+    <div class="message-toast-wrapper" :class="toastHintStlye">
+        <i class='bx bxs-check-circle message-toast-icon'></i>
+        <p class="message-toast-title">{{ModalTitle}}成功</p>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script src="~/js/vue.js"></script>
+    <script src="~/js/freechoiceplansmanagement.js"></script>
+}

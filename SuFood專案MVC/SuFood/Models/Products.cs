@@ -10,6 +10,7 @@ namespace SuFood.Models
         public Products()
         {
             ProductsOfPlans = new HashSet<ProductsOfPlans>();
+            ShoppingCart = new HashSet<ShoppingCart>();
         }
 
         public int ProductId { get; set; }
@@ -23,5 +24,6 @@ namespace SuFood.Models
         public byte[] Img { get; set; }
 
         public virtual ICollection<ProductsOfPlans> ProductsOfPlans { get; set; }
+        public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }
 }

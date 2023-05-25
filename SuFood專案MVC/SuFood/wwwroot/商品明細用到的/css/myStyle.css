@@ -1,0 +1,56 @@
+.templatemo-accordion {
+  width: 100%;
+}
+
+.templatemo-accordion li {
+  padding: 5px 10px;
+  margin-bottom: 5px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.templatemo-accordion a {
+  font-size: 18px;
+  color: #333;
+}
+
+.templatemo-accordion a:hover {
+  text-decoration: none;
+  color: #007bff;
+  background-color: #f0f0f0;
+}
+
+.card-img {
+  width: 400px;
+  height: 350px;
+}
+
+.shopping-cart {
+  display: none;
+  position: absolute;
+  width: 350px;
+  height: 100%;
+  background-color: red;
+}
+
+.cart-icon:hover + .shopping-cart,
+.cart-icon:focus + .shopping-cart {
+  display: block;
+}
+.thead-dark {
+  text-align: center;
+}
+.cartTr td {
+  text-align: center;
+  border: none;
+  background-color: white;
+}
+.trashCan {
+  text-align: center;
+  border: none;
+  background-color: white;
+}
+
+.cartFooter {
+}

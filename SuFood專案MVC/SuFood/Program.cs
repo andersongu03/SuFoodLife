@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Data;
 using SuFood.Models;
+using SuFood.Services;
 
 namespace SuFood
 {
@@ -26,6 +28,16 @@ namespace SuFood
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+               .AddCookie(options =>
+               {
+                   options.LogoutPath = "/User/Login";
+                   options.AccessDeniedPath = "/User/Login";
+                   //options.ExpireTimeSpan = TimeSpan.FromDays(1); //Cookie 預期時間
+               });
+            builder.Services.AddTransient<EncryptService>();
+
 
             var app = builder.Build();
 

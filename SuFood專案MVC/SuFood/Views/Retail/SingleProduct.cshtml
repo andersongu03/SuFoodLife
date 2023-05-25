@@ -126,38 +126,5 @@
     <script src="~/商品明細用到的/js/slick.min.js"></script>
     
     <script src="https://cdn.rawgit.com/matfish2/vue-pagination-2/controlled-component/dist/vue-pagination-2.min.js"></script>
-    <script src="~/js/vue.min.js"></script>
-    <script>
-        var product = new Vue({
-            el: "main",
-            data: {
-                product: [],
-                buyQuantity: 1,
-            },
-            methods: {
-                GetSingleProduct: function (productId) {
-                    axios.get("/Retail/GetSingleProduct?productId=" + productId).then(response => {
-                        this.product = response.data;
-                    }).catch(error => {
-                        console.log("抓不到產品資訊");
-                    });
-                },
-                minusItem: function () {
-                    if (this.buyQuantity > 1) {
-                        this.buyQuantity--;
-                    }
-                },
-                addItem: function () {
-                    if (this.buyQuantity < this.product.stockQuantity) {
-                        this.buyQuantity++;
-                    }
-                },
-            },
-
-
-            mounted() {
-                this.GetSingleProduct(productId);
-            },
-        });
-    </script>
+    <script src="~/js/singleproducts.js"></script>
 }

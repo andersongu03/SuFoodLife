@@ -18,7 +18,10 @@ namespace SuFood.Models
         {
         }
 
+        public virtual DbSet<Account> Account { get; set; }
+        public virtual DbSet<Announcement> Announcement { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
+        public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
@@ -27,6 +30,80 @@ namespace SuFood.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.Account1).HasMaxLength(50);
+
+                entity.Property(e => e.BirthDate).HasColumnType("date");
+
+                entity.Property(e => e.CreateDatetime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Create_Datetime");
+
+                entity.Property(e => e.DefaultCreditCardHolder)
+                    .HasMaxLength(10)
+                    .HasColumnName("Default_CreditCard_Holder");
+
+                entity.Property(e => e.DefaultCreditCardNumber)
+                    .HasMaxLength(10)
+                    .HasColumnName("Default_CreditCard_Number");
+
+                entity.Property(e => e.DefaultShipAddress)
+                    .HasMaxLength(50)
+                    .HasColumnName("Default_ShipAddress");
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(15)
+                    .HasColumnName("First_Name");
+
+                entity.Property(e => e.Gender).HasMaxLength(5);
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(15)
+                    .HasColumnName("Last_Name");
+
+                entity.Property(e => e.LasttImeLogin)
+                    .IsRowVersion()
+                    .IsConcurrencyToken()
+                    .HasColumnName("LasttIme_Login");
+
+                entity.Property(e => e.Phone).HasMaxLength(10);
+            });
+
+            modelBuilder.Entity<Announcement>(entity =>
+            {
+                entity.Property(e => e.AnnouncementId).HasColumnName("Announcement_Id");
+
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.AnnouncementContent)
+                    .IsRequired()
+                    .HasMaxLength(300)
+                    .HasColumnName("Announcement_Content");
+
+                entity.Property(e => e.AnnouncementEndDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Announcement_EndDate");
+
+                entity.Property(e => e.AnnouncementImage).HasColumnName("Announcement_Image");
+
+                entity.Property(e => e.AnnouncementStartDate)
+                    .HasColumnType("date")
+                    .HasColumnName("Announcement_StartDate");
+
+                entity.Property(e => e.AnnouncementStatus)
+                    .HasMaxLength(25)
+                    .HasColumnName("Announcement_Status");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Announcement)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_TO_Announcement");
+            });
+
             modelBuilder.Entity<Coupon>(entity =>
             {
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
@@ -52,6 +129,34 @@ namespace SuFood.Models
                     .HasColumnName("Coupon_StartDate");
 
                 entity.Property(e => e.MinimumPurchasingAmount).HasColumnName("Minimum_PurchasingAmount");
+            });
+
+            modelBuilder.Entity<CouponUsedList>(entity =>
+            {
+                entity.HasKey(e => e.CouponUsedId)
+                    .HasName("PK_CooponUSE_List");
+
+                entity.ToTable("CouponUsed_List");
+
+                entity.Property(e => e.CouponUsedId).HasColumnName("CouponUsed_Id");
+
+                entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
+
+                entity.Property(e => e.CustomerId).HasColumnName("Customer_Id");
+
+                entity.Property(e => e.UseCouponDate)
+                    .HasColumnType("date")
+                    .HasColumnName("UseCoupon_Date");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.CouponId)
+                    .HasConstraintName("FK_Coopon_TO_CooponUSE_List");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK_Account_TO_CooponUSE_List");
             });
 
             modelBuilder.Entity<FreeChoicePlans>(entity =>
@@ -110,6 +215,12 @@ namespace SuFood.Models
                 entity.Property(e => e.Status)
                     .IsRequired()
                     .HasMaxLength(10);
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_TO_Orders");
 
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.Orders)

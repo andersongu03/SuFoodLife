@@ -15,7 +15,7 @@ namespace SuFood.Areas.BackStage.Controllers
             _context = context;
         }
 	
-	  //Get
+	  //TEST
         //GET: /BackStage/FreeChoicePlansManagement/GetPlansAndProducts 取得方案與方案內的商品 !!有三張表的寫法
         public Object GetPlansAndProducts()
         {

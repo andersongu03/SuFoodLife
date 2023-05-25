@@ -16,7 +16,6 @@ namespace SuFood.Areas.BackStage.Controllers
             _context = context;
         }
 
-        //會員管理頁面
         public IActionResult Index()
         {
             return View();
@@ -28,16 +27,40 @@ namespace SuFood.Areas.BackStage.Controllers
             return View();
         }
 
+        public IActionResult Coupon()
+        {
+            return View();
+        }
+
+
+        //會員管理頁面
+		public IActionResult AccountManage()
+		{
+			return View();
+		}
+
+        //訂單管理頁面
+		public IActionResult OrdersManage()
+        {
+            return View();
+        }
+
         public IActionResult FreeChoicePlans()
         {
             return View();
         }
 
-        // <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
-        //public IActionResult Coupoun()
-        //{
-        //    return View();
-        //}
-    }
+		public IActionResult CommentManagement()
+
+		{
+			return View();
+		}
+
+		// <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
+		//public IActionResult Coupoun()
+		//{
+		//    return View();
+		//}
+	}
 }
 

@@ -1,0 +1,123 @@
+/*--------title--------*/
+h4{
+    font-weight:bold;
+    margin-bottom: 60px;
+    color: #555555;
+}
+
+/*--------search bar--------*/
+.search{
+    display: flex;
+    width:100%;
+    float:left;
+    margin-bottom:2%;
+    height:50px;
+    padding: 10px;
+    position: relative;
+}
+
+.search-bar{
+    width:30%;
+    height:32px;
+    font-size:16px;
+    border:2px solid gray;
+    border-radius: 10px;
+}
+
+.search-btn{
+    height:32px;
+    border: none;
+    position: absolute;
+    top: 25%;
+    right: 70%;
+    background-color: transparent;
+}
+
+
+
+/*--------account manage---------*/
+.accountmanage table {
+    border-bottom: solid 5px;
+    border-color: white;
+    text-align: center;
+}
+
+.accountmanage tr {
+    background-color: #4f8180;
+    color: white;
+}
+
+.accountmanage th {
+    border-top: solid 5px;
+    border-color: white;
+}
+
+td{
+    border-top:solid 5px;
+    border-color: white;
+    
+}
+
+
+.reci-btn{
+    height: 24px;
+    font-size:13px;
+    background-color: #97a7a7;
+    border-radius: 10px;
+    border:none;
+    color:white;
+   
+}
+
+.reci-btn:hover {
+    background-color: #818a8a;
+    box-shadow: 0 2px #808080;
+    transform: translateY(1px);
+}
+
+.modal-body{
+    text-align:left;
+}
+
+.accountmanage a {
+    color: black;
+}
+
+.accountmanage a:hover {
+        color: #0a9090;
+}
+
+.accountmanage i {
+    font-size: 1.2rem;
+}
+
+.delete-item{
+    border: none;
+    background-color: transparent;
+}
+
+.delete-item:hover{
+    color:#cc2a2a;
+}
+
+/*--------paging---------*/
+.pagination{
+    display: flex;
+    justify-content: end;
+}
+
+
+
+.page-link{
+    color:#759188;
+    background-color: rgb(255, 255, 255);
+}
+
+.page-link:hover{
+    color:#546861;
+    font-weight: bold;
+    
+}
+
+
+

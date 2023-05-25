@@ -8,5 +8,10 @@ namespace SuFood.Controllers
         {
             return View();
         }
+        public IActionResult Coupon()
+        {
+            return View();
+        }
+
     }
 }

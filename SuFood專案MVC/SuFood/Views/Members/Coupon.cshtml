@@ -1,0 +1,69 @@
+﻿@section Styles{
+	<link href="~/css/usermanagement.css" rel="stylesheet" />
+	<link href="~/css/coupon.css" rel="stylesheet" />
+}
+
+<section class="user__management section align-items-center section-bg" id="user__management">
+	<div class="user__management-container container row">
+		<partial name="_SidebarPartial" />
+
+		<div class="col-10 user__management-content">
+			<!-- 內容 -->
+			<div class="couponDetails col-sm-12 col-md-10 col-xl-10">
+				<div class="myCoupon">
+					<span>{{ pageName }}</span>
+				</div>
+				<div class="tableFunction col-12">
+					<div class="col-md-4">
+						<div class="form">
+							<input type="text" class="form-control form-input" id="name" placeholder="輸入優惠券名稱...">
+							<span class="left-pan"><button class="addCoupon" @@click="insertExistCoupon">新增</button></span>
+						</div>
+					</div>
+				</div>
+				<div class="table_container">
+					<div class="couponValid_text" style="text-align: center; font-size: 1.5rem;" v-if="isValid">
+						<span>可使用</span>
+						<div class="couponValid">
+							<div class="coupon-card" v-for="c in validCoupons" :key="c.couponId">
+								<h3 style="padding-top: 20px;" class="fw-bolder">
+									{{c.couponDescription}}
+								</h3>
+								<div class="coupon-row">
+									<span id="cpnCode" class="fw-bolder">{{c.couponName}}</span>
+									<span id="cpnBtn" class="fw-bolder">複製優惠碼</span>
+								</div>
+								<p class="fw-bolder">有效期限: {{c.couponenddate2String}}</p>
+								<div class="circle1"></div>
+								<div class="circle2"></div>
+							</div>
+						</div>
+					</div>
+					<div class="couponInvalid_text" style="text-align: center; font-size: 1.5rem;">
+						<span>已過期</span>
+						<div class="couponInvalid">
+							<div class="coupon-card" v-for="c in invalidCoupons" :key="c.couponId">
+								<h3 style="padding-top: 20px;" class="fw-bolder">
+									{{c.couponDescription}}
+								</h3>
+								<div class="coupon-row">
+									<span id="cpnCode" class="fw-bolder">{{c.couponName}}</span>
+									<span id="cpnBtn" class="fw-bolder">複製優惠碼</span>
+								</div>
+								<p class="fw-bolder">有效期限: {{c.couponenddate2String}}</p>
+								<div class="circle1"></div>
+								<div class="circle2"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>  
+
+@section Scripts{
+	<script src="~/axios/axios.min.js"></script>
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/coupon.js"></script>
+}

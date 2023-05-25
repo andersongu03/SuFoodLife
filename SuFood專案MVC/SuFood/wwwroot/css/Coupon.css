@@ -1,0 +1,208 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
+/* 會員Coupon */
+.couponDetails {
+    display: flex;
+    /* grid-template-rows: 1fr 1fr 1fr 2fr 1fr 2fr; */
+    flex-direction: column;
+    min-width: 500px;
+    height: 100vh;
+    font-family: 'Mukta';
+    margin-top: 2rem;
+}
+
+/* 我的優惠券text */
+.myCoupon {
+    font-size: 2.5rem;
+    padding-top: 1rem;
+}
+
+/* Table Function */
+.tableFunction {
+    padding: 1rem;
+    border-radius: .6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    background: #f2f2f2;
+    box-shadow: 5px 5px 15px #e1e1e1, -5px -5px 15px #ffffff;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}
+
+.table_container {
+    height: 800px;
+    /* overflow: auto; */
+}
+/* 可使用&已過期設定 */
+.couponValid,
+.couponInvalid {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    max-height: 250px;
+    overflow: auto;
+    background-color: #eee;
+    /*margin-top: 30px;*/
+    margin-bottom: 80px;
+    border-radius: 5px;
+    padding: 0px 100px;
+}
+/* 優惠碼coupon */
+.coupon-card {
+    /* background: linear-gradient(135deg, hsl(0, 99%, 67%), hsl(330, 75%, 60%)); */
+    /* background: linear-gradient(135deg, #e66465, #9198e5); */
+    background: linear-gradient(135deg, #7158fe, #9d4de6);
+    color: #fff;
+    text-align: center;
+    padding: 0px 60px;
+    border-radius: 10px;
+    box-shadow: 0 10px 10px 0 rgba(0,0,0,0.15);
+    position: relative;
+    margin: 15px;
+    width: 460px;
+    height: 211px;
+    max-width: 460px;
+    min-width: 28%;
+}
+
+    .coupon-card h3 {
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 40px;
+    }
+
+    .coupon-card p {
+        font-size: 18px;
+    }
+
+.coupon-row {
+    display: flex;
+    align-items: center;
+    margin: 25px auto;
+    width: fit-content;
+}
+
+#cpnCode {
+    border: 1px dashed #fff;
+    padding: 10px 20px;
+    border-right: 0;
+    font-size: 20px;
+    /* 差複製text的功能 */
+}
+
+#cpnBtn {
+    border: 1px solid #fff;
+    background: #fff;
+    padding: 10px 20px;
+    color: #7158fe;
+    cursor: pointer;
+}
+
+.circle1, .circle2 {
+    background: #eee;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.circle1 {
+    left: -25px;
+}
+
+.circle2 {
+    right: -25px;
+}
+
+.couponInvalid {
+    opacity: 50%;
+}
+
+/* Search Bar */
+.form {
+    position: relative;
+}
+
+    .form .fa-search {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #9ca3af;
+    }
+
+    .form span {
+        position: absolute;
+        right: 17px;
+        top: 13px;
+        padding: 2px;
+        border-left: 1px solid #d1d5db;
+    }
+
+.left-pan {
+    padding-left: 7px;
+}
+
+.form-input {
+    height: 55px;
+    text-indent: 33px;
+    border-radius: 10px;
+}
+
+    .form-input:focus {
+        box-shadow: none;
+        border: none;
+    }
+
+/* 新增BTN */
+.addCoupon {
+    border: none;
+    margin-left: 1rem;
+    color: white;
+    background-color: #267d5c;
+    transition: all .3s;
+    border-radius: 5px;
+}
+
+    .addCoupon:hover {
+        transform: scale(1.2);
+    }
+
+/* Table */
+.card {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0px solid transparent;
+    border-radius: 0px;
+}
+
+.card-body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+
+    .card-body .text-center {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+.card .card-title {
+    position: relative;
+    font-weight: 600;
+    margin-bottom: 10px;
+}

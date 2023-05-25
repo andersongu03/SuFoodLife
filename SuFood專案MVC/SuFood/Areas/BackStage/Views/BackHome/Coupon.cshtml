@@ -1,0 +1,185 @@
+﻿@section Styles{
+	<link href="~/css/main.css" rel="stylesheet" />
+	<link href="~/css/model.css" rel="stylesheet" />
+	<link href="~/css/couponmanagement.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+}
+
+<div class="col-10 user__management-content">
+					<!-- 內容 -->
+					<div class="couponManagement col-sm-12 col-md-10 col-xl-10 ">
+							<h2>{{ pageName }}</h2>
+							<div class="tableFunction col-12">
+								<div class="col-4">
+									<div class="content">
+										<div class="searchBar">
+											<div class="inputWrapper">
+												<i class='bx bx-search-alt-2 searchIcon'></i>
+												<input type="text" class="inputSearch" placeholder="輸入優惠券名稱..." v-model="keyword">
+											</div>
+										</div>
+									</div>
+								</div>
+								<div>
+									<button type="button" class="btn btn-success insertBtn" @@click="createCoupon"><i class="fa-solid fa-plus"></i> 新增 </button>
+								</div>
+								<!-- <select class="form-select" aria-label="Default select example">
+									<option selected>狀態分類</option>
+									<option value="1">可用</option>
+									<option value="2">不可用</option>
+								</select> -->
+							</div>
+							<!-- POPUP CARD (Edit) -->
+							<template v-if="CreateOrEditOrDelete === 'Edit'">
+								<div class="cardContent" id="" :class="popupShowing">
+									<div class="cardPopup-body">
+										<div class="cardPopup">
+											<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+												<div class="topic">
+													<h3>修改優惠券</h3>
+												</div>
+												<div class="form-group">
+													<label class="form-label">名稱</label>
+												<input type="name" class="form-control" placeholder="請輸入標題..." id="name" v-model="editCouponList.couponName">
+												</div>
+												<div class="form-group">
+													<label class="form-label">描述</label>
+													<input type="description" class="form-control" placeholder="請輸入描述..." id="description" v-model="editCouponList.couponDescription">
+												</div>
+												<div class="form-group">
+													<label class="form-label">優惠幅度</label>
+													<input type="discounts" class="form-control" placeholder="請輸入優惠幅度..." id="discounts" v-model="editCouponList.couponMinusCost">
+												</div>
+												<div class="form-group">
+													<label class="form-label">最低消費金額</label>
+													<input type="minimumPurchasing" class="form-control" placeholder="請輸入金額..." id="minimumPurchasing" v-model="editCouponList.minimumPurchasingAmount">
+												</div>
+												<div class="form-group">
+													<label class="form-label">開始日期</label>
+													<input type="date" class="form-control" id="date" name="date" v-model="editCouponList.couponstartdate2String">
+												</div>
+												<div class="form-group">
+													<label class="form-label">結束日期</label>
+													<input type="date" class="form-control" id="date" name="date" v-model="editCouponList.couponenddate2String">
+												</div>
+												<div>
+													<button type="button" class="btn btn-success ssaveBtn" @@click="EditCoupon()"> 保存 </button>
+													<button type="button" class="btn btn-danger" @@click="closeCoupon"> 關閉 </button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</template>
+							<!-- POPUP CARD (Create) -->
+							<template v-else-if="CreateOrEditOrDelete === 'Create'">
+								<div class="cardContent" id="" :class="popupShowing">
+									<div class="cardPopup-body">
+										<div class="cardPopup">
+											<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+												<div class="topic">
+													<h3>新增優惠券</h3>
+												</div>
+												<div class="form-group">
+													<label class="form-label">名稱</label>
+													<input type="subject" class="form-control" placeholder="請輸入標題..." id="name" v-model="manage.CouponName">
+													</div>
+												<div class="form-group">
+													<label class="form-label">描述</label>
+													<input type="description" class="form-control" placeholder="請輸入描述..." id="description" v-model="manage.CouponDescription">
+												</div>
+												<div class="form-group">
+													<label class="form-label">優惠幅度</label>
+													<input type="description" class="form-control" placeholder="請輸入優惠幅度..." id="discounts" v-model="manage.CouponMinusCost">
+												</div>
+												<div class="form-group">
+													<label class="form-label">最低消費金額</label>
+													<input type="description" class="form-control" placeholder="請輸入金額..." id="minimumPurchasing" v-model="manage.MinimumPurchasingAmount">
+												</div>
+												<div class="form-group">
+													<label class="form-label">開始日期</label>
+													<input type="date" class="form-control" id="date" name="date" v-model="manage.CouponStartDate">
+												</div>
+												<div class="form-group">
+													<label class="form-label">結束日期</label>
+													<input type="date" class="form-control" id="date" name="date" v-model="manage.CouponEndDate">
+												</div>
+												<div>
+													<button type="button" class="btn btn-success saveBtn" @@click="CreateCoupon"> 新增 </button>
+													<button type="button" class="btn btn-danger" @@click="closeCoupon"> 關閉 </button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</template>
+							<!-- POPUP CARD (Delete) -->
+							<template v-else-if="CreateOrEditOrDelete === 'Delete'">
+								<div class="cardContent" id="" :class="popupShowing">
+									<div class="cardPopup-body" style="width: 300px; height:200px">
+										<div class="cardPopup">
+											<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+												<div>
+													<h3>確定要刪除嗎?</h3>
+												</div>
+												<div style="display: flex; justify-content: space-around;">
+													<div>
+														<button type="button" class="btn btn-warning saveBtn" @@click="DelCoupon(delId)"> 下次一定 </button>
+													</div>
+													<div>
+														<button type="button" class="btn btn-danger" @@click="closeCoupon"> 我在想想 </button>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</template>
+							<div class="table__container">
+								<table>
+									<thead>
+										<tr>
+											<th>編號</th>
+											<th>名稱</th>
+											<th>描述</th>
+											<th>優惠幅度</th>
+											<th>最低消費金額</th>
+											<th>開始日期</th>
+											<th>結束日期</th>
+											<th></th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<template v-if="filterCoupons">
+											<tr v-for="c in filterCoupons" :key="c.couponId">
+												<td>{{ c.couponId }}</td>
+												<td>{{ c.couponName }}</td>
+												<td>{{ c.couponDescription }}</td>
+												<td>{{ c.couponMinusCost }}</td>
+												<td>{{ c.minimumPurchasingAmount }}</td>
+												<td>{{ c.couponstartdate2String }}</td>
+												<td>{{ c.couponenddate2String }}</td>
+												<td>
+													<i class="fa-regular fa-pen-to-square" @@click="editCoupon(c)" :id="c.couponId"></i>
+												</td>
+												<td>
+													<i class="fa-regular fa-trash-can" @@click="delCoupon(c)" :id="c.couponId"></i>
+												</td>
+											</tr>
+										</template>
+									</tbody>
+								</table>
+							</div>
+						<!--========== Messge toast ==========-->
+						<div class="message-toast-wrapper" :class="toastHintStyle">
+							<i class='bx bxs-check-circle message-toast-icon'></i>
+							<p class="message-toast-title">{{toast}}</p>
+						</div>
+					</div>
+</div>
+
+@section Scripts{
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/couponmanagement.js"></script>
+}

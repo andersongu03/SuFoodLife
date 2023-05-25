@@ -104,7 +104,7 @@ const vm = new Vue({
             }
             return arr
         },
-        modaltitle() {
+        modaltitle() {        
             switch (this.EditOrDeleteorCreate) {
                 case "Edit":
                     return "修改商品"
@@ -179,19 +179,6 @@ const vm = new Vue({
             this.modalContainerStyle.showModal = false;
             this.toastHint();
         },
-        clearRequset() {
-            this.request =  {
-                productId: 0,
-                ProductName: "",
-                ProductDescription: "",
-                StockUnit: "",
-                Category: "",
-                Cost: "",
-                Price: "",
-                StockQuantity: "",
-                Img: null
-           }
-        },
         //查詢資料的方法
         GetProductDetail() {
             let _this = this;
@@ -233,25 +220,30 @@ const vm = new Vue({
             formData.append('StockQuantity', item.stockQuantity);
             formData.append('Img', this.uplodaImgPreview.image);
 
-            axios.post("/BackStage/FreeChoiceProductManagement/Edit", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+            axios.post("/BackStage/FreeChoiceProductManagement/Edit", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
                     this.toast = response.data
                     this.closeModalWithHint()
                     _this.GetProductDetail()
-                })
-                .catch((error) => console.log("錯誤", this.toast = response.data))
+                }).catch((error) => console.log(error))
         },
         //新增資料的方法
         CreateProduct() {
             let _this = this;
-            axios.post("/BackStage/FreeChoiceProductManagement/Create", this.request, { headers: { 'Content-Type': 'multipart/form-data' } })
+            axios.post("/BackStage/FreeChoiceProductManagement/Create", this.request, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(response => {
-                    _this.clearRequset()
                     this.toast = response.data
                     this.closeModalWithHint()
                     _this.GetProductDetail()
                 })
-                .catch((error) => { console.error(error) })
         },
     },
     mounted() {

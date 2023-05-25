@@ -167,7 +167,7 @@
                 },
                 decrementQuantity(product) {
                     if (product.quantity > 0) {
-                        product.quantity -= 1 
+                        product.quantity -= 1
                     }
                     this.setImgOpacity(product)
                 },
@@ -201,7 +201,7 @@
                 },
 
                 //取得方案
-                GetPlans(){
+                GetPlans() {
                     axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
                         response.data.forEach(response => {
                             console.log(response)
@@ -210,11 +210,11 @@
                     })
                 },
                 //取得方案內的產品
-                GetProducts(planId){
+                GetProducts(planId) {
                     let _this = this;
                     axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
                         response.data.forEach(response => {
-                            if(response.plans.planId == planId){
+                            if (response.plans.planId == planId) {
                                 _this.products = response.products
                             }
                         })
@@ -238,7 +238,7 @@
             mounted() {
                 window.addEventListener('scroll', this.ScrollAction);
                 //this.GetProductDetail();
-               this.GetPlans();
+                this.GetPlans();
             }
         })
     </script>

@@ -41,6 +41,9 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //訂單管理頁面
 		public IActionResult OrdersManage()
+        {
+            return View();
+        }
 
         public IActionResult FreeChoicePlans()
         {

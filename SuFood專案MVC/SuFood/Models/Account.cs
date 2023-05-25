@@ -9,9 +9,8 @@ namespace SuFood.Models
     {
         public Account()
         {
-            Announcement = new HashSet<Announcement>();
-            CouponUsedList = new HashSet<CouponUsedList>();
             Orders = new HashSet<Orders>();
+            ShoppingCart = new HashSet<ShoppingCart>();
         }
 
         public int AccountId { get; set; }
@@ -31,8 +30,7 @@ namespace SuFood.Models
         public bool? IsActive { get; set; }
         public string HashPassword { get; set; }
 
-        public virtual ICollection<Announcement> Announcement { get; set; }
-        public virtual ICollection<CouponUsedList> CouponUsedList { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
+        public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }
 }

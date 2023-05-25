@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Material Design for Bootstrap</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="~/前端登入畫面用到的/img/SlIfe-logo.svg" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+          href="https://use.fontawesome.com/releases/v5.15.2/css/all.css" />
+    <script src="https://kit.fontawesome.com/6c09e4a88d.js"
+            crossorigin="anonymous"></script>
+    <!-- Google Fonts Roboto -->
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" />
+    <!-- MDB -->
+    <link rel="stylesheet" href="~/前端登入畫面用到的/css/bootstrap-login-form.min.css" />
+</head>
+
+<body>
+    <!-- Start your project here-->
+    <section class="vh-100" style="background-color: rgba(206, 18, 18, 0.5)">
+        <div class="container py-5 h-100" id="app">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card shadow-2-strong" style="border-radius: 1rem">
+                        <div class="card-body p-5 text-center">
+                            <div style="position: relative">
+                                <a href="Login-form.html">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         viewBox="0 0 24 24"
+                                         fill="currentColor"
+                                         class="w-6 h-6"
+                                         style="width: 3.5rem;height: 3.5rem;color: rgba(206, 18, 18, 0.9);position: absolute;left: -5px;                      ">
+                                        <path fill-rule="evenodd"
+                                              d="M7.28 7.72a.75.75 0 010 1.06l-2.47 2.47H21a.75.75 0 010 1.5H4.81l2.47 2.47a.75.75 0 11-1.06 1.06l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0z"
+                                              clip-rule="evenodd" />
+                                    </svg>
+                                </a>
+                                <img src="img/SlIfe-logo.svg" alt="SlIfe-logo" />
+                            </div>
+                            <form asp-controller="User" asp-action="Register" method="post">
+                                <h3 class="mb-3">
+                                    <br /><b style="color: black; padding-top: -100px">註冊帳號</b>
+                                </h3>
+                                @if (!string.IsNullOrEmpty(ViewBag.Error))
+                                {
+                                    <div class="alert alert-danger">@ViewBag.Error</div>
+                                }
+                                <div class="form-outline mb-4">
+                                    <input type="email" id="typeEmailX-2" class="form-control form-control-lg" name="Account1" />
+                                    <label class="form-label" for="typeEmailX-2">Email</label>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="typePasswordX-2" class="form-control form-control-lg" name="Password" />
+                                    <label class="form-label" for="typePasswordX-2">Password</label>
+                                </div>
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="typeConfirmPasswordX-2" class="form-control form-control-lg" name="ConfirmPwd" />
+                                    <label class="form-label" for="typeConfirmPasswordX-2">Confirm Password</label>
+                                </div>
+
+                                <button class="btn btn-primary btn-lg btn-block"
+                                        type="submit"
+                                        style="background-color: rgba(206, 18, 18, 0.9)"
+                                        id="registerBtn">
+                                    註冊
+                                </button>
+
+                                <!-- 省略部分程式碼 -->
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End your project here-->
+    <!-- MDB -->
+    <script type="text/javascript" src="~/前端登入畫面用到的/js/mdb.min.js"></script>
+
+</body>
+</html>

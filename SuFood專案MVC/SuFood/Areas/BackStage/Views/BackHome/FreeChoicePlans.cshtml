@@ -33,7 +33,7 @@
                     <td>{{p.planTotalCount}}</td>
                     <td>{{p.planCanChoiceCount}}</td>
                     <td>${{p.planPrice}}</td>
-                    <td><span class="active">上架</span></td>
+                    <td><span :class="p.planStatus == true?'active':'frozen'">{{p.planStatus == true? "上架": "下架"}}</span></td>
                     <td><i @@click="EditProducts(p)" class="bx bxs-edit tableIcon"></i></td>
                     <td><i @@click="DeleteProducts(p.planId)" class="bx bxs-trash tableIcon"></i></td>
                 </tr>
@@ -69,15 +69,17 @@
                         </div>
                         <div class="mb-3">
                             <div>狀態</div>
-                            <input type="text" placeholder="上架" class="productItemInp col-8"
-                                   v-model="EditProductsList.amount">
+                            <select v-model="EditProductsList.planStatus" class="productItemInp col-8">
+                                <option value="true">上架</option>
+                                <option value="false">下架</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-5 g-3 productDetail__container">
                         <div class="mb-3">
                             <div>商品總數</div>
                             <input type="text" placeholder="20" class="productItemInp col-8"
-                                   v-model="EditProductsList.planTotalCount">
+                                   v-model="EditProductsList.planTotalCount">                            
                         </div>
                         <div class="mb-3">
                             <div>可選數量</div>
@@ -135,8 +137,10 @@
                         </div>
                         <div class="mb-3">
                             <div>狀態</div>
-                            <input type="text" placeholder="上架" class="productItemInp col-8"
-                                   v-model="CreateProductsList.planStatus">
+                            <select v-model="CreateProductsList.planStatus" class="productItemInp col-8">
+                                <option value="true">上架</option>
+                                <option value="false">下架</option>
+                            </select>
                         </div>
                     </div>
                     <div class="col-5 g-3 productDetail__container">

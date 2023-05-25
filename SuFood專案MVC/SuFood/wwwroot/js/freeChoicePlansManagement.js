@@ -82,6 +82,7 @@
             this.EditProductsList.planTotalCount = item.planTotalCount
             this.EditProductsList.planCanChoiceCount = item.planCanChoiceCount
             this.EditProductsList.planPrice = item.planPrice
+            this.EditProductsList.planStatus = item.planStatus
             this.uplodaImgPreview.preview = item.img
             this.EditOrDeleteorCreate = "Edit"
             this.modalContentStyle.w200 = false
@@ -183,6 +184,7 @@
         //新增方案與方案產品
         CreatePlans() {
             let _this = this;
+            _this.CreateProductsList.planStatus = _this.EditProductsList.planStatus == "true"
             axios.post("/BackStage/FreeChoicePlansManagement/CreatePlans", this.CreateProductsList, { headers: { 'Content-Type': 'application/json' } })
                 .then(response => {               
                     _this.toast = response.data
@@ -203,6 +205,7 @@
         //修改方案與方案產品
         EditPlans() {
             let _this = this;
+            _this.EditProductsList.planStatus = _this.EditProductsList.planStatus == "true"
             axios.post("/BackStage/FreeChoicePlansManagement/EditPlans", this.EditProductsList, { headers: { 'Content-Type': 'application/json' } })
                 .then(response => {
                     _this.toast = response.data

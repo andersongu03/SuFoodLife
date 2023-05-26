@@ -1,0 +1,407 @@
+﻿/*===== 字型(粉圓體) =====*/
+@font-face {
+    font-family: 'CustomFont';
+    /* 自定义字体的名称 */
+    src: url('./jf-openhuninn-1.0.699905d9.ttf') format('truetype');
+    /* 自定义字体文件的路径 */
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'CustomFont', sans-serif;
+}
+
+/*===== 結帳頁面 =====*/
+.check-out__container {
+    position: relative;
+    min-height: 80vh;
+    margin-bottom: -95px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 15px -2px rgba(0, 0, 0, .3);
+    z-index: 99;
+    overflow: hidden;
+}
+
+.check-out-status-container {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.check-out-status {
+    position: relative;
+    border-radius: 10px;
+    padding: 1rem 1.5rem;
+    height: 100%;
+    color: #000;
+    z-index: 2;
+    cursor: pointer;
+}
+
+    .check-out-status p {
+        font-size: 1rem;
+    }
+
+.flexItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.tableIcon,
+.bx-trash {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/*===== vue變更狀態style =====*/
+.currentStatus {
+    background-color: #6527a0;
+    color: #fff;
+}
+
+    .currentStatus.check-out-status::after {
+        background-color: #6527a0;
+    }
+
+.check-out-status::after {
+    content: "";
+    display: block;
+    position: absolute;
+    border-radius: 5.33333px;
+    background-color: #e3d2f4;
+    width: 80%;
+    height: 8px;
+    bottom: 0;
+}
+
+.check-out-content {
+    height: 450px;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+/*===== 確認購物車 =====*/
+.carts__container h2 {
+    font-weight: bold;
+}
+
+.carts__container table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #19323c;
+}
+
+    .carts__container table thead {
+        background-color: #e9ecef !important;
+        height: 50px;
+    }
+
+        .carts__container table thead th {
+            border-bottom: 2px solid #dee2e6;
+            font-size: 1.2rem;
+            padding-left: 1rem;
+        }
+
+    .carts__container table td,
+    .table th {
+        padding: 0.75rem;
+        vertical-align: baseline;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .carts__container table tr {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .carts__container table tbody td {
+        min-width: 110px;
+    }
+
+    .carts__container table tbody tr td:nth-child(4) {
+        padding-left: 20px;
+    }
+
+.productItem {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    max-height: 100px;
+    overflow: hidden;
+}
+
+    .productItem img {
+        max-width: 150px;
+        object-fit: cover;
+    }
+
+.product-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 1rem;
+}
+
+    .product-body p {
+        margin-bottom: 0;
+    }
+
+        .product-body p:nth-child(1) {
+            color: #000;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .product-body p:nth-child(2) {
+            color: #6c757d !important;
+        }
+
+.productItem > div {
+    width: 100px;
+    height: 100px;
+}
+
+    .productItem > div img {
+        width: 100%;
+        height: 100%;
+    }
+
+.cartsIcon {
+    background-color: gainsboro;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.plusAndMinus {
+    width: fit-content;
+    background-color: gainsboro;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .plusAndMinus > div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+    }
+
+    .plusAndMinus input {
+        border: 1px solid #e9ecef;
+        width: 80px;
+        height: 40px;
+        text-align: center;
+    }
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.carts__container .total {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    font-weight: bold;
+}
+
+/*===== button =====*/
+.carts__container .buy {
+    display: block;
+    padding: 1rem;
+    background-color: green;
+    color: #fff;
+    border-radius: 10px;
+    border: none;
+    width: 150px;
+    margin: 0 auto;
+}
+
+.carts__container table thead {
+    position: sticky;
+    top: 0;
+}
+
+.scroll {
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+/* 調整滾動條的寬度 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* 調整滾動條的背景顏色 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* 調整滾動條滑塊的顏色 */
+::-webkit-scrollbar-thumb {
+    background-color: #dee2e6;
+}
+
+/*===== Orders =====*/
+.orders__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+    .orders__container img {
+        height: 300px;
+        width: 300px;
+        object-fit: cover;
+    }
+
+    .orders__container .buttons__container {
+        margin-top: 1rem;
+        gap: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+        .orders__container .buttons__container .gohome,
+        .orders__container .buttons__container .checkOrders {
+            display: block;
+            padding: 1rem;
+            background-color: green;
+            color: #fff;
+            border-radius: 10px;
+            border: none;
+            width: 150px;
+            margin: 0 auto;
+        }
+
+/*===== 填寫訂單資訊 =====*/
+.col-md-7 {
+    flex: 0 0 58.33333%;
+    max-width: 58.33333%;
+}
+
+.col-md-5 {
+    flex: 0 0 41.66667%;
+    max-width: 41.66667%;
+}
+
+.section-title {
+    position: relative;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+}
+
+.card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1.25rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.formControl {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.isInvalid {
+    border-color: #f13246 !important;
+    /* padding-right: calc(1.5em + 0.75rem);
+    background-image:
+    background-repeat: no-repeat;
+    background-position: right calc(0.375em + 0.1875rem) center;
+    background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem); */
+}
+
+label {
+    display: inline-block;
+    margin-bottom: 0.5rem;
+}
+
+.title {
+    font-size: 1.3rem;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #20c997;
+    border-color: green;
+    box-shadow: inset 0 1px 0 hsla(0,0%,100%,.15), 0 1px 1px rgba(0,0,0,.075);
+}
+
+.btn-info {
+    color: white;
+    background-color: #6f42c1;
+    border-color: #6527a0;
+    box-shadow: inset 0 1px 0 hsla(0,0%,100%,.15), 0 1px 1px rgba(0,0,0,.075);
+}
+
+.text-right {
+    text-align: right;
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+/*.isInvalid ~ .invalidFeedback {
+    display: block;
+}
+
+.invalidFeedback {
+    display: none;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #f13246;
+}*/

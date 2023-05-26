@@ -74,9 +74,6 @@ namespace SuFood.Models
 
             modelBuilder.Entity<Orders>(entity =>
             {
-                entity.HasIndex(e => e.Status, "UQ_Status")
-                    .IsUnique();
-
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
@@ -86,14 +83,12 @@ namespace SuFood.Models
                 entity.Property(e => e.DiscountId).HasColumnName("Discount_Id");
 
                 entity.Property(e => e.OrderStatus)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
                 entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
 
                 entity.Property(e => e.PaymentMethod)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Payment_method");
 
@@ -101,20 +96,15 @@ namespace SuFood.Models
                     .HasColumnType("datetime")
                     .HasColumnName("SetOrders_Datetime");
 
-                entity.Property(e => e.ShipAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.ShipAddress).HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
 
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.Property(e => e.Status).HasMaxLength(50);
 
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CouponId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Coopon_TO_Orders");
             });
 
@@ -124,15 +114,11 @@ namespace SuFood.Models
 
                 entity.ToTable("Orders_Review");
 
-                entity.Property(e => e.ReviewId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Review_Id");
+                entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
 
                 entity.Property(e => e.Comment).HasMaxLength(100);
 
-                entity.Property(e => e.OrdersId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("Orders_Id");
+                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
 

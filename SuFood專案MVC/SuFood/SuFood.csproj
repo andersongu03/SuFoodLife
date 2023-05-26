@@ -26,6 +26,7 @@
   <ItemGroup>
     <Folder Include="Areas\BackStage\Data\" />
     <Folder Include="Areas\BackStage\Models\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -13,19 +13,19 @@ namespace SuFood.Models
         }
 
         public int OrdersId { get; set; }
-        public int SubTotal { get; set; }
-        public int SubCost { get; set; }
-        public double SubDiscount { get; set; }
+        public int? SubTotal { get; set; }
+        public int? SubCost { get; set; }
+        public double? SubDiscount { get; set; }
         public string PaymentMethod { get; set; }
-        public DateTime SetOrdersDatetime { get; set; }
+        public DateTime? SetOrdersDatetime { get; set; }
         public string ShipAddress { get; set; }
         public string OrderStatus { get; set; }
-        public int ShippingMethodId { get; set; }
+        public int? ShippingMethodId { get; set; }
         public string Status { get; set; }
-        public int AccountId { get; set; }
-        public int CouponId { get; set; }
-        public int DiscountId { get; set; }
-        public int OrdersDetailsId { get; set; }
+        public int? AccountId { get; set; }
+        public int? CouponId { get; set; }
+        public int? DiscountId { get; set; }
+        public int? OrdersDetailsId { get; set; }
 
         public virtual Coupon Coupon { get; set; }
         public virtual ICollection<OrdersReview> OrdersReview { get; set; }

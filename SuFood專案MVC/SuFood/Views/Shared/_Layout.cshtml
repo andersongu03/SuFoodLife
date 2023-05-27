@@ -21,19 +21,6 @@
     <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
     <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
     <link href="~/assets/css/main.css" rel="stylesheet" />
-    <!-- 零售用到的 -->
-    <link rel="stylesheet" href="~/商品明細用到的/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/templatemo.css" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/custom.css" />
-
-    <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/fontawesome.min.css" />
-    <!-- jimmy's css && font-awsome -->
-    <link rel="stylesheet" href="~/商品明細用到的/css/myStyle.css" />
-    <script src="https://kit.fontawesome.com/6c09e4a88d.js"
-            crossorigin="anonymous"></script>
     <!-- vue -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     @await RenderSectionAsync("Styles", required: false)
@@ -56,10 +43,10 @@
                     <ul>
                         @*Controller的連結*@
                         <li><a asp-area="BackStage" asp-controller="BackHome" asp-action="Index">後台(測試用)</a></li>
-                        <li><a asp-area="" asp-controller="Retail" asp-action="Retail">零售</a></li>q
+                        <li><a asp-area="" asp-controller="Retail" asp-action="Retail">零售</a></li>
                         <li><a asp-area="" asp-controller="FreeChoice" asp-action="FreeChoice">自由選</a></li>
-                        <li><a asp-area="" asp-controller="#" asp-action="#">幫你選</a></li> 
-                        
+                        <li><a asp-area="" asp-controller="#" asp-action="#">幫你選</a></li>
+
                         @*首頁的頁簽*@
                         <li><a href="#testimonials">會員評價</a></li>
                         <li><a href="#gallery">熱門商品</a></li>
@@ -90,184 +77,202 @@
                     }
                     else
                     {
-                        <a asp-area="" asp-controller="User" asp-action="Login">登入</a>
+                        //到時候要刪掉
+                        <div class="userBox iconBox">
+                            <i class='bx bx-user icon'></i>
+                            <div class="users__info">
+                                <a asp-area="" asp-controller="Members" asp-action="PersonalInfo"><span>帳戶資料</span> </a>
+                                <hr>
+                                <a asp-area="" asp-controller="Members" asp-action="#"><span>變更密碼</span></a>
+                                <hr>
+                                <a asp-area="" asp-controller="Members" asp-action="Coupon"><span>我的優惠券</span></a>
+                                <hr>
+                                <a asp-area="" asp-controller="Members" asp-action="#"><span>我的訂單</span></a>
+                                <hr>
+                                <a asp-area="" asp-controller="User" asp-action="Logout"><span>登出</span> </a>
+                            </div>
+                        </div>
+                        //到時候要刪掉
+
+                        <nav id="navbar" class="navbar">
+                            <a asp-area="" asp-controller="User" asp-action="Login">登入</a>
+                        </nav>
                     }
 
                     <!---購物車起點 ---!>
-                                    <div class="cartsBox iconBox"
-                                         data-bs-toggle="offcanvas"
-                                         data-bs-target="#offcanvasWithBothOptions"
-                                         aria-controls="offcanvasWithBothOptions">
-                                        <i class="bx bx-cart icon"></i>
-                                    </div>
+                                                    <div class="cartsBox iconBox"
+                                                         data-bs-toggle="offcanvas"
+                                                         data-bs-target="#offcanvasWithBothOptions"
+                                                         aria-controls="offcanvasWithBothOptions">
+                                                        <i class="bx bx-cart icon"></i>
+                                                    </div>
 
-                                    <div class="offcanvas offcanvas-end"
-                                         data-bs-scroll="true"
-                                         tabindex="-1"
-                                         id="offcanvasWithBothOptions"
-                                         aria-labelledby="offcanvasWithBothOptionsLabel"
-                                         style="width: 800px">
-                                        <div class="offcanvas-header">
-                                            <h5 class="offcanvas-title"
-                                                id="offcanvasWithBothOptionsLabel">
-                                                購物車
-                                            </h5>
-                                            <button type="button"
-                                                    class="btn-close"
-                                                    data-bs-dismiss="offcanvas"
-                                                    aria-label="Close"></button>
-                                        </div>
-                                        <div class="offcanvas-body">
-                                            <table class="table">
-                                                <thead class="thead-dark">
-                                                    <tr>
-                                                        <th scope="col"></th>
-                                                        <th scope="col">商品名稱</th>
-                                                        <th scope="col">商品照片</th>
-                                                        <th scope="col"></th>
-                                                        <th scope="col">數量</th>
-                                                        <th scope="col"></th>
-                                                        <th scope="col">單價</th>
-                                                        <th scope="col">操作</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="cartTb">
-                                                    <tr class="cartTr">
-                                                        <th scope="row">1</th>
-                                                        <td></td>
-                                                        <td></td>
-                                                        <td>
-                                                            <button class="fa-solid fa-plus"
-                                                                    style="
-                                              color: #d52029;
-                                              border: 0;
-                                              background-color: white;
-                                            "></button>
-                                                        </td>
-                                                        <td></td>
-                                                        <td>
-                                                            <button class="fa-solid fa-minus"
-                                                                    style="
-                                              color: #d52029;
-                                              border: 0;
-                                              background-color: white;
-                                            "></button>
-                                                        </td>
-                                                        <td></td>
-                                                        <td>
-                                                            <button class="trashCan">
-                                                                <i class="fa-solid fa-trash fa-sm"
-                                                                   style="color: #511f2b"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div class="cartFooter">
-                                                <div class="buyBtn">
-                                                    <a href="#about" class="btn-book-a-table">
-                                                        前往購買<i class="fa-solid fa-arrow-right"></i>
-                                                    </a>
-                                                    <div>商品總價：</div>
+                                                    <div class="offcanvas offcanvas-end"
+                                                         data-bs-scroll="true"
+                                                         tabindex="-1"
+                                                         id="offcanvasWithBothOptions"
+                                                         aria-labelledby="offcanvasWithBothOptionsLabel"
+                                                         style="width: 800px">
+                                                        <div class="offcanvas-header">
+                                                            <h5 class="offcanvas-title"
+                                                                id="offcanvasWithBothOptionsLabel">
+                                                                購物車
+                                                            </h5>
+                                                            <button type="button"
+                                                                    class="btn-close"
+                                                                    data-bs-dismiss="offcanvas"
+                                                                    aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="offcanvas-body">
+                                                            <table class="table">
+                                                                <thead class="thead-dark">
+                                                                    <tr>
+                                                                        <th scope="col"></th>
+                                                                        <th scope="col">商品名稱</th>
+                                                                        <th scope="col">商品照片</th>
+                                                                        <th scope="col"></th>
+                                                                        <th scope="col">數量</th>
+                                                                        <th scope="col"></th>
+                                                                        <th scope="col">單價</th>
+                                                                        <th scope="col">操作</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody class="cartTb">
+                                                                    <tr class="cartTr">
+                                                                        <th scope="row">1</th>
+                                                                        <td></td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <button class="fa-solid fa-plus"
+                                                                                    style="
+                                                              color: #d52029;
+                                                              border: 0;
+                                                              background-color: white;
+                                                            "></button>
+                                                                        </td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <button class="fa-solid fa-minus"
+                                                                                    style="
+                                                              color: #d52029;
+                                                              border: 0;
+                                                              background-color: white;
+                                                            "></button>
+                                                                        </td>
+                                                                        <td></td>
+                                                                        <td>
+                                                                            <button class="trashCan">
+                                                                                <i class='bx bxs-trash-alt'></i>
+                                                                            </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <div class="cartFooter">
+                                                                <div class="buyBtn">
+                                                                    <a href="#about" class="btn-book-a-table">
+                                                                        前往購買<i class="fa-solid fa-arrow-right"></i>
+                                                                    </a>
+                                                                    <div>商品總價：</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
+
+
+
                                         </div>
+
+                                    <!---購物車終點 ---!>
+                    </header><!-- End Header -->
+                    <main role="main" class="pb-3">
+        @RenderBody()
+                    </main>
+
+                    <!-- ======= Footer ======= -->
+                    <footer id="footer" class="footer">
+
+                        <div class="container">
+                            <div class="row gy-3">
+                                <div class="col-lg-3 col-md-6 d-flex">
+                                    <i class="bi bi-geo-alt icon"></i>
+                                    <div>
+                                        <h4>Address</h4>
+                                        <p>
+                                            A108 Adam Street <br>
+                                            New York, NY 535022 - US<br>
+                                        </p>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 footer-links d-flex">
+                                    <i class="bi bi-telephone icon"></i>
+                                    <div>
+                                        <h4>Reservations</h4>
+                                        <p>
+                                            <strong>Phone:</strong> +1 5589 55488 55<br>
+                                            <strong>Email:</strong> info@example.com<br>
+                                        </p>
                                     </div>
                                 </div>
+
+                                <div class="col-lg-3 col-md-6 footer-links d-flex">
+                                    <i class="bi bi-clock icon"></i>
+                                    <div>
+                                        <h4>Opening Hours</h4>
+                                        <p>
+                                            <strong>Mon-Sat: 11AM</strong> - 23PM<br>
+                                            Sunday: Closed
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-3 col-md-6 footer-links">
+                                    <h4>Follow Us</h4>
+                                    <div class="social-links d-flex">
+                                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
+                                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
+                                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
+                                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                                    </div>
+                                </div>
+
                             </div>
-
-
-
                         </div>
-                    
-                    <!---購物車終點 ---!>
-    </header><!-- End Header -->
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
 
-    <!-- ======= Footer ======= -->
-    <footer id="footer" class="footer">
+                        <div class="container">
+                            <div class="copyright">
+                                &copy; Copyright <strong><span>SuFoodlIFE</span></strong>. All Rights Reserved
+                            </div>
+                            <div class="credits">
+                                <!-- All the links in the footer should remain intact. -->
+                                <!-- You can delete the links only if you purchased the pro version. -->
+                                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/yummy-bootstrap-restaurant-website-template/ -->
+                                Designed by <a href="https://bootstrapmade.com/">THM101-2</a>
+                            </div>
+                        </div>
 
-        <div class="container">
-            <div class="row gy-3">
-                <div class="col-lg-3 col-md-6 d-flex">
-                    <i class="bi bi-geo-alt icon"></i>
-                    <div>
-                        <h4>Address</h4>
-                        <p>
-                            A108 Adam Street <br>
-                            New York, NY 535022 - US<br>
-                        </p>
-                    </div>
-
-                </div>
-
-                <div class="col-lg-3 col-md-6 footer-links d-flex">
-                    <i class="bi bi-telephone icon"></i>
-                    <div>
-                        <h4>Reservations</h4>
-                        <p>
-                            <strong>Phone:</strong> +1 5589 55488 55<br>
-                            <strong>Email:</strong> info@example.com<br>
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 footer-links d-flex">
-                    <i class="bi bi-clock icon"></i>
-                    <div>
-                        <h4>Opening Hours</h4>
-                        <p>
-                            <strong>Mon-Sat: 11AM</strong> - 23PM<br>
-                            Sunday: Closed
-                        </p>
-                    </div>
-                </div>
-
-                <div class="col-lg-3 col-md-6 footer-links">
-                    <h4>Follow Us</h4>
-                    <div class="social-links d-flex">
-                        <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
-                        <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>
-                        <a href="#" class="instagram"><i class="bi bi-instagram"></i></a>
-                        <a href="#" class="linkedin"><i class="bi bi-linkedin"></i></a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="container">
-            <div class="copyright">
-                &copy; Copyright <strong><span>SuFoodlIFE</span></strong>. All Rights Reserved
-            </div>
-            <div class="credits">
-                <!-- All the links in the footer should remain intact. -->
-                <!-- You can delete the links only if you purchased the pro version. -->
-                <!-- Licensing information: https://bootstrapmade.com/license/ -->
-                <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/yummy-bootstrap-restaurant-website-template/ -->
-                Designed by <a href="https://bootstrapmade.com/">THM101-2</a>
-            </div>
-        </div>
-
-    </footer>
-    <!-- End Footer -->
-    <a href="#" class="scroll-top d-flex align-items-center justify-content-center">
-        <i class="bi bi-arrow-up-short"></i>
-    </a>
+                    </footer>
+                    <!-- End Footer -->
+                    <a href="#" class="scroll-top d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-up-short"></i>
+                    </a>
 
     @*<div id="preloader"></div>*@
-    <!-- Vendor JS Files -->
+                    <!-- Vendor JS Files -->
 
-    <script src="~/lib/php-email-form/validate.js"></script>
-    <script src="~/lib/glightbox/js/glightbox.min.js"></script>
-    <script src="~/lib/purecounter/purecounter_vanilla.js"></script>
-    <script src="~/lib/swiper/swiper-bundle.min.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/vue.js"></script>
+                    <script src="~/lib/php-email-form/validate.js"></script>
+                    <script src="~/lib/glightbox/js/glightbox.min.js"></script>
+                    <script src="~/lib/purecounter/purecounter_vanilla.js"></script>
+                    <script src="~/lib/swiper/swiper-bundle.min.js"></script>
+                    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+                    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+                    <script src="~/js/site.js" asp-append-version="true"></script>
+                    <script src="~/js/vue.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

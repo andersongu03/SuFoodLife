@@ -13,15 +13,16 @@ const vm = new Vue({
             preview: null,
             image: null,
         },
+        editImg:"",
         EditProdcutItem: {
             ProductId: this.editId,
-            ProductName: "蘋果",
-            ProductDescription: "好吃喔",
-            StockUnit: 200,
-            Category: "水果",
-            Cost: 20,
-            Price: 35,
-            StockQuantity: 300,
+            ProductName: "",
+            ProductDescription: "",
+            StockUnit: 0,
+            Category: "",
+            Cost: 0,
+            Price: 0,
+            StockQuantity: 0,
             Img: null
         },
         EditOrDeleteorCreate: "Edit",
@@ -45,6 +46,16 @@ const vm = new Vue({
             Price: "",
             StockQuantity: "",
             Img: null
+        },
+        warmMessage: {
+            errProductName: false,
+            errProductDescription: false,
+            errStockUnit: false,
+            errCategory: false,
+            errCost: false,
+            errPrice: false,
+            errorStockQuantity: false,
+            error: false,
         }
     },
     computed: {
@@ -104,7 +115,7 @@ const vm = new Vue({
             }
             return arr
         },
-        modaltitle() {        
+        modaltitle() {
             switch (this.EditOrDeleteorCreate) {
                 case "Edit":
                     return "修改商品"
@@ -125,6 +136,9 @@ const vm = new Vue({
                 return arr.indexOf(element) == index;
             })
         },
+        EditPreviewImg() {
+            return this.uplodaImgPreview.preview == '' ? this.editImg : this.uplodaImgPreview.preview
+        }
     },
     methods: {
         previewImage: function (event) {
@@ -140,6 +154,7 @@ const vm = new Vue({
             }
         },
         openEditModal(item) {
+            this.editImg = "data:image/png;base64," + item.img
             this.uplodaImgPreview.preview = "data:image/png;base64," + item.img
             this.EditOrDeleteorCreate = "Edit"
             this.modalContentStyle.w200 = false
@@ -208,45 +223,73 @@ const vm = new Vue({
         EditProduct() {
             let _this = this;
             let item = _this.EditProdcutItem;
-
-            const formData = new FormData();
-            formData.append('ProductId', this.editId);
-            formData.append('ProductName', item.productName);
-            formData.append('ProductDescription', item.productDescription);
-            formData.append('StockUnit', item.stockUnit);
-            formData.append('Category', item.category);
-            formData.append('Cost', item.cost);
-            formData.append('Price', item.price);
-            formData.append('StockQuantity', item.stockQuantity);
-            formData.append('Img', this.uplodaImgPreview.image);
-
-            axios.post("/BackStage/FreeChoiceProductManagement/Edit", formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-                .then(response => {
-                    this.toast = response.data
-                    this.closeModalWithHint()
-                    _this.GetProductDetail()
-                }).catch((error) => console.log(error))
-        },
-        //新增資料的方法
-        CreateProduct() {
-            let _this = this;
-            axios.post("/BackStage/FreeChoiceProductManagement/Create", this.request, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-                .then(response => {
-                    this.toast = response.data
-                    this.closeModalWithHint()
-                    _this.GetProductDetail()
+            if (item.productDescription != '' && item.category != '' && item.cost != '' && item.price != '' && item.productDescription != '' && item.productName != '' && item.stockQuantity != '' && item.stockUnit != '') {
+                const formData = new FormData();
+                formData.append('ProductId', this.editId);
+                formData.append('ProductName', item.productName);
+                formData.append('ProductDescription', item.productDescription);
+                formData.append('StockUnit', item.stockUnit);
+                formData.append('Category', item.category);
+                formData.append('Cost', item.cost);
+                formData.append('Price', item.price);
+                formData.append('StockQuantity', item.stockQuantity);                
+                if (this.uplodaImgPreview.image != '') formData.append('Img', this.uplodaImgPreview.image);
+                axios.post("/BackStage/FreeChoiceProductManagement/Edit", formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
                 })
+                    .then(response => {
+                        this.closeModalWithHint()
+                        this.toast = response.data
+                        _this.GetProductDetail()
+                    }).catch((error) => console.log(error))
+            }
+            this.toast = "請確認內容";
+            this.toastHint();            
         },
+        CreateProduct() {
+            if (this.CreateRequestIsNotEmpty()) {
+                let _this = this;
+                axios.post("/BackStage/FreeChoiceProductManagement/Create", this.request, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                    .then(response => {
+                        this.toast = response.data
+                        this.closeModalWithHint()
+                        _this.GetProductDetail()
+                        _this.clearRquest()
+                    })
+            }
+            this.toast = "請確認內容";
+            this.toastHint();
+        },
+        CreateRequestIsNotEmpty() {
+            let r = this.request;
+            return (r.Category == '' && r.Cost == '' && r.Price == '' && r.ProductDescription == '' && r.StockQuantity == '' && r.StockUnit == '' && r.ProductName == '') ? false : true;
+        },
+        EditRequestIsNotEmpty() {
+            let r = this.EditProdcutItem;
+            return (r.category == '' && r.cost == '' && r.price == '' && r.productDescription == '' && r.stockQuantity == '' && r.stockUnit == '' && r.productName == '') ? false : true;
+        },
+        clearRquest() {
+            this.request = {
+            productId: 0,
+            ProductName: "",
+            ProductDescription: "",
+            StockUnit: "",
+            Category: "",
+            Cost: "",
+            Price: "",
+            StockQuantity: "",
+            Img: null
+            }
+        }
     },
+
     mounted() {
         this.GetProductDetail();
-    }
+    },
 })

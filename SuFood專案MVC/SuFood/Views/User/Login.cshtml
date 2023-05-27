@@ -37,22 +37,19 @@
                                     <img src="~/前端登入畫面用到的/img/SlIfe-logo.svg"
                                          alt="SlIfe-logo" />
                                     <br /><b style="color: black">迎接蔬食人生吧！</b>
-                                </h3>    
+                                </h3>
                                 <div class="form-outline mb-4">
                                     @if (ViewBag.Error != "")
                                     {
                                         <p class="text-danger fw-bold font-weight-bolder"><b>@ViewBag.Error</b></p>
                                     }
                                     <input type="email" id="typeEmailX-2" name="Account1" class="form-control form-control-lg" />
-                                    <label class="form-label"  for="typeEmailX-2">請輸入信箱</label>
+                                    <label class="form-label" for="typeEmailX-2">請輸入信箱</label>
                                 </div>
-
                                 <div class="form-outline mb-4">
                                     <input type="password" id="typePasswordX-2" name="Password" class="form-control form-control-lg" />
-                                    <label class="form-label" >請輸入密碼</label>
+                                    <label class="form-label">請輸入密碼</label>
                                 </div>
-
-
                                 <!-- Checkbox -->
                                 <div class="form-check d-flex justify-content-start mb-4">
                                     <input class="form-check-input"
@@ -65,7 +62,7 @@
                                 </div>
                                 <div style="margin-bottom: 15px; display: flex; column-gap: 20px;
                                         justify-content: center;">
-                                    <a href="#"><b>忘記密碼 ?</b></a>
+                                    <a asp-area="" asp-controller="User" asp-action="ForgetPassword4Email"><b>忘記密碼 ?</b></a>
                                     <a asp-area="" asp-controller="User" asp-action="Register"><span>註冊</span> </a>
                                 </div>
 
@@ -75,27 +72,37 @@
                                         name="loginButton">
                                     登入
                                 </button>
-
-                                <hr class="my-4" />
-
-                                <button class="btn btn-lg btn-block btn-primary"
-                                        style="background-color: rgba(221, 75, 57, 0.97)"
-                                        type="submit"
-                                        name="googleButton">
-                                    <i class="fab fa-google me-2"></i> Sign in with google
-                                </button>
-
-                            </div>
                         </form>
+
+                        <hr class="my-4" />
+
+                        <form method="post" action="/User/VerifyGoogleToken">
+
+                            <button class="btn btn-lg btn-block btn-primary"
+                                    style="background-color: rgba(221, 75, 57, 0.97)"
+                                    type="submit" name="googleButton">
+                                <i class="fab fa-google me-2"
+                                id="g_id_onload"
+                                data-client_id="966342829466-ci3oeauv24s9qgimp1vc2uaavfsaraag.apps.googleusercontent.com"
+                                data-login_uri="https://localhost:50720/User/ValidGoogleLogin"
+                                data-auto_prompt="false"></i>
+                                Sign in with Google
+                            </button>
+
+                        </form>
+
+
                     </div>
+
                 </div>
             </div>
+        </div>
         </div>
     </section>
     <!-- End your project here-->
     <!-- MDB -->
-    <script type="text/javascript"
-            src="~/前端登入畫面用到的/js/mdb.min.js"></script>
+    <script type="text/javascript" src="~/前端登入畫面用到的/js/mdb.min.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
 </body>
 </html>

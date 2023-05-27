@@ -5,7 +5,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>SuFoodLife</title>
     <!-- MDB icon -->
     <link rel="icon" href="~/前端登入畫面用到的/img/SlIfe-logo.svg" type="image/x-icon" />
     <!-- Font Awesome -->
@@ -29,18 +29,18 @@
                     <div class="card shadow-2-strong" style="border-radius: 1rem">
                         <div class="card-body p-5 text-center">
                             <div style="position: relative">
-                                <a href="Login-form.html">
+                                <a  asp-controller="User" asp-action="Login">
                                     <svg xmlns="http://www.w3.org/2000/svg"
                                          viewBox="0 0 24 24"
                                          fill="currentColor"
-                                         class="w-6 h-6"
+                                         class="w-6 h-6"                                         
                                          style="width: 3.5rem;height: 3.5rem;color: rgba(206, 18, 18, 0.9);position: absolute;left: -5px;                      ">
                                         <path fill-rule="evenodd"
                                               d="M7.28 7.72a.75.75 0 010 1.06l-2.47 2.47H21a.75.75 0 010 1.5H4.81l2.47 2.47a.75.75 0 11-1.06 1.06l-3.75-3.75a.75.75 0 010-1.06l3.75-3.75a.75.75 0 011.06 0z"
                                               clip-rule="evenodd" />
                                     </svg>
-                                </a>
-                                <img src="img/SlIfe-logo.svg" alt="SlIfe-logo" />
+                                </a> 
+                                <img src="~/前端登入畫面用到的/img/SlIfe-logo.svg" alt="SlIfe-logo" />
                             </div>
                             <form asp-controller="User" asp-action="Register" method="post">
                                 <h3 class="mb-3">
@@ -69,7 +69,11 @@
                                         id="registerBtn">
                                     註冊
                                 </button>
-
+                                @if (!string.IsNullOrEmpty(ViewBag.Succuss))
+                                {
+                                    <div class="fw-bolder alert alert-danger">@ViewBag.Succuss</div>
+                                }
+                                
                                 <!-- 省略部分程式碼 -->
                             </form>
                         </div>

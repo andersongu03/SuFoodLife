@@ -67,11 +67,11 @@
                     <ul class="list-unstyled templatemo-accordion py-4">
                         <li class="pb-3">
                             <p class="collapsed d-flex justify-content-between text-decoration-none display-6 fw-bold fw-bolder p-0">
-                                <a class="text-decoration-none fw-bold" href="#" @@click="GetProductList()"><b>所有商品</b></a>
+                                <a class="text-decoration-none fw-bold" href="#" @@click.prevent="GetProductList()"><b>所有商品</b></a>
                             </p>
                             <ul class="collapse show list-unstyled pl-3" v-for="c in category">
                                 <li>
-                                    <a class="text-decoration-none fw-bold" href="#" @@click="showCategoryProducts(c.category)">{{c.category}} ({{c.countCategory}})</a>
+                                    <a class="text-decoration-none fw-bold" href="#" @@click.prevent="showCategoryProducts(c.category)">{{c.category}} ({{c.countCategory}})</a>
 
                                 </li>
                             </ul>
@@ -147,8 +147,9 @@
 
 @section Scripts{
     <script src="~/axios/axios.min.js"></script>
+    <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
     <script src="https://cdn.rawgit.com/matfish2/vue-pagination-2/controlled-component/dist/vue-pagination-2.min.js"></script>
-    <script src="~/js/vue.min.js"></script>
+    
     <script>
         var product = new Vue({
             el: "#main",

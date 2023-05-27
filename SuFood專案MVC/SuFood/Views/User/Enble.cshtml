@@ -42,7 +42,7 @@
                             <button class="btn btn-primary btn-lg btn-block" id=" homeBtn"
                                     type="submit"
                                     style="background-color: rgba(206, 18, 18, 0.9)"
-                                    name="loginButton" @@click="back2Login()">
+                                    name="loginButton" onclick="window.location.href = '@Url.Action("Login", "User")'">
                                 成功驗證回到首頁
                             </button>
                         </div>
@@ -66,7 +66,7 @@
             el: "#homeBtn",
             methods: {
                 back2Login: function () {
-                    window.location.href = '@Url.Action("Index", "Home")';
+                    window.location.href = '@Url.Action("Login", "User")';
                 }
             }
         })

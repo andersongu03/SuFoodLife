@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Google.Apis.Auth;
+using System.Security.Cryptography.Xml;
 
 namespace SuFood.Controllers
 {
@@ -32,6 +33,10 @@ namespace SuFood.Controllers
         }
         [AllowAnonymous]
         public IActionResult Register()
+        {
+            return PartialView();
+        }
+        public IActionResult Enble()
         {
             return PartialView();
         }
@@ -64,7 +69,7 @@ namespace SuFood.Controllers
             //寄信
             var obj = new AesValidationDto(model.Account1, DateTime.Now.AddDays(1));
             var jString = JsonSerializer.Serialize(obj);
-            var code = encryptService.Encrypt(jString);
+            var code = Convert.ToBase64String(Encoding.UTF8.GetBytes(jString));
 
 
             var mail = new MailMessage()
@@ -94,9 +99,8 @@ namespace SuFood.Controllers
         }
         public async Task<IActionResult> Enable(string code)
         {
-
-            var str = encryptService.Decrypt(code);
-            var obj = JsonSerializer.Deserialize<AesValidationDto>(str);
+            var str = Convert.FromBase64String(code);
+            var obj = JsonSerializer.Deserialize<AesValidationDto>(Encoding.UTF8.GetString(str));
             if (DateTime.Now > obj.ExpiredDate)
             {
                 return BadRequest("過期");
@@ -107,8 +111,8 @@ namespace SuFood.Controllers
                 user.IsActive = true;
                 _context.SaveChanges();
             }
-            return Ok($@"code:{code}  str:{str}");
-            //return RedirectToAction("Enble", "User");
+            //return Ok($@"code:{code}  str:{str}");
+            return RedirectToAction("Enble", "User");
         }
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
@@ -154,7 +158,7 @@ namespace SuFood.Controllers
             //宣告一個帳號有幾個憑證            
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             //登入並給一張憑證
-            await HttpContext.SignInAsync(claimsPrincipal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,claimsPrincipal);
 
             return RedirectToAction("Index", "Home");
         }

@@ -14,7 +14,8 @@ namespace SuFood.Areas.BackStage.Controllers
         {
             _context = context;
         }
-
+	
+	  //TEST
         //GET: /BackStage/FreeChoicePlansManagement/GetPlansAndProducts 取得方案與方案內的商品 !!有三張表的寫法
         public Object GetPlansAndProducts()
         {
@@ -102,6 +103,7 @@ namespace SuFood.Areas.BackStage.Controllers
                 return "修改失敗";
             }
 
+            //修改主資料表內容
             FreeChoicePlans fcp = new FreeChoicePlans
             {
                 PlanId = vmParameters.PlanId,
@@ -114,11 +116,36 @@ namespace SuFood.Areas.BackStage.Controllers
                 //ProductsOfPlans = vmParameters.ProductsOfPlans,
             };
             _context.FreeChoicePlans.Update(fcp);
-            await _context.SaveChangesAsync();
 
             //這裡使用條件判斷，修改ProductsOfPlans
+            // (1)添加清單中的資料，資料庫沒有該筆資料時，資料存入資料庫。
+            var pop = vmParameters.ProductsOfPlans;
+            foreach (var product in pop)
+            {
+                // 檢查是否已存在相同的記錄，不存在的內容儲存到資料庫
+                if (! _context.ProductsOfPlans.Any(pop => pop.PlanId == vmParameters.PlanId && pop.ProductId == product.ProductId))
+                {
+                    ProductsOfPlans data = new ProductsOfPlans
+                    {
+                        PlanId = vmParameters.PlanId,
+                        ProductId = product.ProductId,
+                    };
+                    _context.ProductsOfPlans.Add(data);
+                }
+            }
+            //(2)添加清單中的資料，資料庫有清單中沒有的資料時，刪除資料庫的該資料
+            var tableOfPOP = _context.ProductsOfPlans.Where(pop => pop.PlanId == vmParameters.PlanId);
+            foreach (var product in tableOfPOP)
+            {
+                //product.ProductId
+                if (!vmParameters.ProductsOfPlans.Any(pop => pop.ProductId == product.ProductId))
+                {
+                    var removeItem = tableOfPOP.Where(p => p.ProductId == product.ProductId);
+                    _context.ProductsOfPlans.RemoveRange(removeItem);
+                }
+            }
 
-
+            await _context.SaveChangesAsync();
             return "修改方案成功";
         }
 
@@ -169,6 +196,11 @@ namespace SuFood.Areas.BackStage.Controllers
             }
             await _context.SaveChangesAsync();
             return "刪除成功";
+        }
+
+        private bool ProductsOfPlansExists(int id)
+        {
+            return (_context.ProductsOfPlans?.Any(e => e.PlanId == id)).GetValueOrDefault();
         }
     }
 }

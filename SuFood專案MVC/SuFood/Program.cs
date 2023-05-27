@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SuFood.Data;
 using SuFood.Models;
 using SuFood.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace SuFood
 {
@@ -29,11 +30,23 @@ namespace SuFood
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            // 啟用Session
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.Name = ".CustomerswebSite.Session";//自session名稱
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(5);//設定網頁5分鐘逾時
+                options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+
+             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options =>
                {
                    options.LogoutPath = "/User/Login";
                    options.AccessDeniedPath = "/User/Login";
+                   options.LogoutPath = "/Home/Index";
                    //options.ExpireTimeSpan = TimeSpan.FromDays(1); //Cookie 預期時間
                });
             builder.Services.AddTransient<EncryptService>();
@@ -52,6 +65,7 @@ namespace SuFood
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSession();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

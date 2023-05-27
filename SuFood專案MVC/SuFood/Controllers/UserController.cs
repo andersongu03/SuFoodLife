@@ -13,9 +13,10 @@ using System.Text.Json;
 using Google.Apis.Auth;
 using System.Security.Cryptography.Xml;
 
+
 namespace SuFood.Controllers
 {
-
+    [AllowAnonymous]
     public class UserController : Controller
     {
         private readonly SuFoodDBContext _context;
@@ -25,18 +26,24 @@ namespace SuFood.Controllers
             this._context = context;
             this.encryptService = encryptService;
         }
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet]        
         public IActionResult Login()
         {
             return PartialView();
-        }
-        [AllowAnonymous]
+        }        
         public IActionResult Register()
         {
             return PartialView();
         }
+        public IActionResult EnterComfirmPassword()
+        {
+            return PartialView();
+        }
         public IActionResult Enble()
+        {
+            return PartialView();
+        }
+        public IActionResult ForgetPassword4Email()
         {
             return PartialView();
         }
@@ -162,25 +169,16 @@ namespace SuFood.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-        [HttpPost]
+
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
-        }
-        public IActionResult ForgetPassword4Email()
-        {
-            return PartialView();
-        }
-        public IActionResult ForgetPassword()
-        {
-            return PartialView();
         }
         [HttpPost]
         public IActionResult ForgetPassword4Email(ForgetPasswordViewModel model)
         {
             var user = _context.Account.FirstOrDefault(x => x.Account1 == model.Account1);
-
 
             if (user == null)
             {
@@ -194,13 +192,13 @@ namespace SuFood.Controllers
             //寄信
             var obj = new AesValidationDto(model.Account1, DateTime.Now.AddMinutes(30));
             var jString = JsonSerializer.Serialize(obj);
-            var code = encryptService.Encrypt(jString);
+            var code = Convert.ToBase64String(Encoding.UTF8.GetBytes(jString));
 
             var mail = new MailMessage()
             {
                 From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
                 Subject = "啟用帳號驗證", //主旨
-                Body = (@$"請點<a href='https://localhost:50720/User/enableChangePassword?code={code}'>這裡</a>來修改你的新密碼"),
+                Body = (@$"請點<a href='https://localhost:50720/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
             };
@@ -217,38 +215,51 @@ namespace SuFood.Controllers
             }
             catch (Exception ex)
             {
-                throw;
+                throw ex;
             }
             return PartialView();
         }
         public async Task<IActionResult> EnableChangePassword(string code, ForgetPasswordViewModel model)
         {
-            var str = encryptService.Decrypt(code);
+            var str = Convert.FromBase64String(code);
             var obj = JsonSerializer.Deserialize<AesValidationDto>(str);
+            
+            string json = JsonSerializer.Serialize(obj);
+            HttpContext.Session.SetString("obj", json);
+
             if (DateTime.Now > obj.ExpiredDate)
             {
                 return BadRequest("過期");
             }
+            
+            return RedirectToAction("EnterComfirmPassword", "User");
             //return Ok($@"code:{code}  str:{str}");
-            return RedirectToAction("ForgetPassword", "User");
         }
         public async Task<IActionResult> ForgetPassword(ForgetPasswordViewModel model)
         {
-            var user = _context.Account.FirstOrDefault(x => x.Account1 == model.Account1);
-            if (user.Password != model.ConfirmPwd)
+            string obj = HttpContext.Session.GetString("obj");
+
+            if (string.IsNullOrEmpty(obj))
+            {               
+                return Ok("驗證信沒過");               
+            }
+            AesValidationDto objOK = JsonSerializer.Deserialize<AesValidationDto>(obj);
+
+            var user = _context.Account.FirstOrDefault(x => x.Account1 == objOK.Account);
+
+            if (model.Password != model.ConfirmPwd)
             {
-                ViewBag.Error = "確認密碼不一致";                
+                ViewBag.Error = "確認密碼不一致";
+            }
+            else if (user != null)
+            {
+                var encryptedPassword = encryptService.Encrypt(model.Password);
+                user.Password = encryptedPassword;
+                _context.Account.Update(user);
+                _context.SaveChanges();
             }
 
-            var encryptedPassword = encryptService.Encrypt(model.Password);
-
-            _context.Account.Update(new Account()
-            {                
-                Password = encryptedPassword,
-            });
-
-            _context.SaveChanges();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Enble", "User");
         }
 
         //public IActionResult ValidGoogleLogin()
@@ -276,62 +287,7 @@ namespace SuFood.Controllers
         //    return View();
         //}
 
-        ///// <summary>
-        ///// 驗證 Google Token
-        ///// </summary>
-        ///// <param name="formCredential"></param>
-        ///// <param name="formToken"></param>
-        ///// <param name="cookiesToken"></param>
-        ///// <returns></returns>
-        //public async Task<GoogleJsonWebSignature.Payload?> VerifyGoogleToken(string? formCredential, string? formToken, string? cookiesToken)
-        //{
-        //    // 檢查空值
-        //    if (formCredential == null || formToken == null && cookiesToken == null)
-        //    {
-        //        return null;
-        //    }
 
-        //    GoogleJsonWebSignature.Payload? payload;
-        //    try
-        //    {
-        //        // 驗證 token
-        //        if (formToken != cookiesToken)
-        //        {
-        //            return null;
-        //        }
-
-        //        // 驗證憑證
-        //        IConfiguration Config = new ConfigurationBuilder().AddJsonFile("appSettings.json").Build();
-        //        string GoogleApiClientId = Config.GetSection("GoogleApiClientId").Value;
-        //        var settings = new GoogleJsonWebSignature.ValidationSettings()
-        //        {
-        //            Audience = new List<string>() { GoogleApiClientId }
-        //        };
-        //        payload = await GoogleJsonWebSignature.ValidateAsync(formCredential, settings);
-        //        if (!payload.Issuer.Equals("accounts.google.com") && !payload.Issuer.Equals("https://accounts.google.com"))
-        //        {
-        //            return null;
-        //        }
-        //        if (payload.ExpirationTimeSeconds == null)
-        //        {
-        //            return null;
-        //        }
-        //        else
-        //        {
-        //            DateTime now = DateTime.Now.ToUniversalTime();
-        //            DateTime expiration = DateTimeOffset.FromUnixTimeSeconds((long)payload.ExpirationTimeSeconds).DateTime;
-        //            if (now > expiration)
-        //            {
-        //                return null;
-        //            }
-        //        }
-        //    }
-        //    catch
-        //    {
-        //        return null;
-        //    }
-        //    return payload;
-        //}
 
     }
 }

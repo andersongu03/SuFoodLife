@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
 
 namespace SuFood.Areas.BackStage.Controllers
-{
+{    
     [Area("BackStage")] //所有寫在Area裡面的Controller記得都要加這一行
     public class BackHomeController : Controller
     {
@@ -15,7 +16,7 @@ namespace SuFood.Areas.BackStage.Controllers
         {
             _context = context;
         }
-
+        [Authorize(Roles = "Employee")]
         public IActionResult Index()
         {
             return View();

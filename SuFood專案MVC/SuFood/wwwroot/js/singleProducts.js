@@ -1,15 +1,13 @@
 ﻿var product = new Vue({
-    el: "main",
+    el: "#main",
     data: {
         product: [],
         buyQuantity: 1,
     },
     methods: {
         GetSingleProduct: function () {
-            pId = window.location.search.replace('?', '').split('&')[0].split('=')[1];
-            console.log(pId)
-            axios.get(`/Retail/GetSingleProduct?productId=${pId}`).then(response => {
-                console.log(response.data)
+            productId = window.location.search.replace('?', '').split('&')[0].split('=')[1];            
+            axios.get(`/Retail/GetSingleProduct?productId=${productId}`).then(response => {                
                 this.product = response.data;
             }).catch(error => {
                 console.log("抓不到產品資訊");
@@ -25,10 +23,11 @@
                 this.buyQuantity++;
             }
         },
+        
     },
 
 
     mounted() {
-        //this.GetSingleProduct(productId);
+        this.GetSingleProduct(5);
     },
 });

@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Security.Cryptography;
 using System.Text;
 
 
@@ -7,53 +8,66 @@ namespace SuFood.Services
     public class EncryptService
     {
         private readonly IConfiguration configuration;
-        private readonly string key;
+        private readonly string Key;
+        private readonly string IV;
 
         public EncryptService(IConfiguration configuration)
         {
             this.configuration = configuration;
-            this.key = configuration.GetSection("AesKey").Value;
+            Key = configuration.GetSection("AesKey").Value;
+            IV = configuration.GetSection("IV").Value;
         }
-        public string AesEncryptToBase64(string str)
+        public string Encrypt(string plainText)
         {
-            using Aes aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            aes.GenerateIV();
-            byte[] iv = aes.IV;
-            using (var encryptor = aes.CreateEncryptor(aes.Key, iv))
-            using (var memoryStream = new MemoryStream())
+            using (Aes aesAlg = Aes.Create())
             {
-                memoryStream.Write(iv, 0, iv.Length);
-                using (var cryptoStream = new CryptoStream(memoryStream, encryptor, CryptoStreamMode.Write))
-                {
-                    byte[] plainBytes = Encoding.UTF8.GetBytes(str);
-                    cryptoStream.Write(plainBytes, 0, plainBytes.Length);
-                    cryptoStream.FlushFinalBlock();
-                }
-                return Convert.ToBase64String(memoryStream.ToArray());
-            }
-        }
-        public string AesDecryptToString(string str)
-        {
-            using Aes aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(key);
-            byte[] encryptedData = Convert.FromBase64String(str);
-            string plainText;
-            byte[] iv = new byte[aes.IV.Length];
-            Array.Copy(encryptedData, 0, iv, 0, iv.Length);
+                aesAlg.Key = Encoding.UTF8.GetBytes(Key);
+                aesAlg.IV = Encoding.UTF8.GetBytes(IV);
 
-            using (var decryptor = aes.CreateDecryptor(aes.Key, iv))
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Write))
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                byte[] encryptedData;
+                using (var msEncrypt = new System.IO.MemoryStream())
                 {
-                    cryptoStream.Write(encryptedData, iv.Length, encryptedData.Length - iv.Length);
-                    cryptoStream.FlushFinalBlock();
+                    using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                    {
+                        using (var swEncrypt = new System.IO.StreamWriter(csEncrypt))
+                        {
+                            swEncrypt.Write(plainText);
+                        }
+                        encryptedData = msEncrypt.ToArray();
+                    }
                 }
-                byte[] decryptedBytes = memoryStream.ToArray();
-                plainText = Encoding.UTF8.GetString(decryptedBytes);
+
+                return Convert.ToBase64String(encryptedData);
             }
-            return plainText;
+        }
+
+        public string Decrypt(string cipherText)
+        {
+            byte[] cipherData = Convert.FromBase64String(cipherText);
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Encoding.UTF8.GetBytes(Key);
+                aesAlg.IV = Encoding.UTF8.GetBytes(IV);
+
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                string plaintext = null;
+                using (var msDecrypt = new System.IO.MemoryStream(cipherData))
+                {
+                    using (var csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (var srDecrypt = new System.IO.StreamReader(csDecrypt))
+                        {
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+
+                return plaintext;
+            }
         }
     }
 

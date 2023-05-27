@@ -43,7 +43,7 @@
                                     type="submit"
                                     style="background-color: rgba(206, 18, 18, 0.9)"
                                     name="loginButton" @@click="back2Login()">
-                                回到首頁
+                                成功驗證回到首頁
                             </button>
                         </div>
 
@@ -66,7 +66,7 @@
             el: "#homeBtn",
             methods: {
                 back2Login: function () {
-                    window.location.href = '@Url.Action("Login", "User")';
+                    window.location.href = '@Url.Action("Index", "Home")';
                 }
             }
         })

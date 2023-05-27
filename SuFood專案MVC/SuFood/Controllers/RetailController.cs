@@ -3,6 +3,8 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SuFood.Controllers
 {
@@ -63,24 +65,42 @@ namespace SuFood.Controllers
 
             return GroupCategories;
         }
-        [HttpGet]
-        public async Task<IEnumerable<SingleProductViewModel>> GetSingleProduct(int productId)
-        {
-            var SingleProducts = await _context.Products
-                .Where(p => p.ProductId == productId)
-                .Select(p => new SingleProductViewModel
-                {
-                    ProductId = p.ProductId,
-                    ProductName = p.ProductName,
-                    ProductDescription = p.ProductDescription,
-                    StockUnit = p.StockUnit,
-                    StockQuantity = p.StockQuantity,
-                    Price = p.Price,
-                    Img = p.Img
-                })
-                .ToListAsync();
+        //[httppost]
+        //public async task<ienumerable<singleproductviewmodel>> getsingleproduct(int productid)
+        //{
+        //var singleproducts = await _context.products
+        //    .where(p => p.productid == productid)
+        //    .select(p => new singleproductviewmodel
+        //    {
+        //        productid = p.productid,
+        //        productname = p.productname,
+        //        productdescription = p.productdescription,
+        //        stockunit = p.stockunit,
+        //        stockquantity = p.stockquantity,
+        //        price = p.price,
+        //        img = p.img
+        //    })
+        //    .tolistasync();
 
-            return SingleProducts;
+        //    return singleproducts;
+        //}
+
+        [HttpGet]
+        public async Task<SingleProductViewModel> GetSingleProduct(int productId)
+        {
+            var p = await _context.Products.FindAsync(productId);
+
+            SingleProductViewModel result = new SingleProductViewModel
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                Price = p.Price,
+                Img = p.Img,
+                ProductDescription = p.ProductDescription,
+                StockQuantity = p.StockQuantity,
+            };
+
+            return result;
         }
     }
 }

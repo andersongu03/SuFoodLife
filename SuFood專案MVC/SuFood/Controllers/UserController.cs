@@ -122,7 +122,7 @@ namespace SuFood.Controllers
             return RedirectToAction("Enble", "User");
         }
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model, bool RememberAcc)
         {
             var user = _context.Account.FirstOrDefault(Acc => Acc.Account1 == model.Account1 && Acc.IsActive == true);
 
@@ -151,6 +151,17 @@ namespace SuFood.Controllers
                     ViewBag.Error = "帳號密碼錯誤！";
                     return PartialView("Login");
                 }
+            }
+            if (RememberAcc)
+            {                
+                Response.Cookies.Append("Account1", model.Account1, new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(30) // 存在Cookie30天
+                });
+            }
+            else
+            {
+                Response.Cookies.Delete("Account1");
             }
 
             //建立憑證 (訂定身分證上的欄位) 
@@ -222,9 +233,10 @@ namespace SuFood.Controllers
         public async Task<IActionResult> EnableChangePassword(string code, ForgetPasswordViewModel model)
         {
             var str = Convert.FromBase64String(code);
-            var obj = JsonSerializer.Deserialize<AesValidationDto>(str);
-            
+            var obj = JsonSerializer.Deserialize<AesValidationDto>(str); 
+            //序列化json格式            
             string json = JsonSerializer.Serialize(obj);
+            //反序列化json格式
             HttpContext.Session.SetString("obj", json);
 
             if (DateTime.Now > obj.ExpiredDate)

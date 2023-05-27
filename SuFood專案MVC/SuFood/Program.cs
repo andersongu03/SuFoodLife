@@ -29,6 +29,7 @@ namespace SuFood
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            
 
             // 啟用Session
             builder.Services.AddSession(options =>
@@ -43,11 +44,13 @@ namespace SuFood
 
              builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options =>
-               {
-                   options.LogoutPath = "/User/Login";
-                   options.AccessDeniedPath = "/User/Login";
-                   options.LogoutPath = "/Home/Index";
-                   //options.ExpireTimeSpan = TimeSpan.FromDays(1); //Cookie 預期時間
+               {                    
+                   options.AccessDeniedPath = "/User/Login"; //登入失敗路徑
+                   options.LogoutPath = "/Home/Index";  //登出路徑
+                   //options.ExpireTimeSpan = TimeSpan.FromDays(1); //Cookie 預期時間                   
+                   options.Cookie.IsEssential = true;//設定session Id，可透過你設定的id找到哪個是你的               
+                   options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
+                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;//設定傳送時一定要透過加密方式傳送
                });
             builder.Services.AddTransient<EncryptService>();
 

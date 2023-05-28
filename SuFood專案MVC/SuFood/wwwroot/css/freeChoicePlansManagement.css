@@ -27,7 +27,7 @@
     --body-font: 'Mukta', sans-serif;
     ;
 
-    /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+    /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */   
     --big-font-size: 2rem;
     --h1-font-size: 1.5rem;
     --h2-font-size: 1.25rem;
@@ -476,4 +476,8 @@ input[type=number]::-webkit-inner-spin-button {
 
 .error{
     border: 1px solid red;
+}
+
+.message-toast-icon-error {
+    font-size: 2rem;
 }

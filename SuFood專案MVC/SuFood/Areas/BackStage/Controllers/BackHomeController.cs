@@ -40,13 +40,13 @@ namespace SuFood.Areas.BackStage.Controllers
 			return View();
 		}
 
-		//訂單管理頁面
-		public IActionResult OrdersManage()
+        //訂單管理頁面
+        public IActionResult OrdersManage()
 		{
 			return View();
 		}
-
-		public IActionResult FreeChoicePlans()
+		
+        public IActionResult FreeChoicePlans()
 		{
 			return View();
 		}

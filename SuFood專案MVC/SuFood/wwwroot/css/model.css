@@ -182,11 +182,14 @@ img {
   border-radius: .5rem;
   transition: .3s;
 }
-
+.modal__butoon-width,
+.close-modal {
+    margin-top: 2rem;
+}
 /* Show modal */
 .showModal {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
 
 .showModal .modal__content {

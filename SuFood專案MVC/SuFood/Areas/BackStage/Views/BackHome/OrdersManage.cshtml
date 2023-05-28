@@ -1,202 +1,175 @@
-﻿@section Styles
-{
-	<link href="~/css/ordersmanage.css" rel="stylesheet" />
-
+﻿@section Styles{
+    <link href="~/css/model.css" rel="stylesheet" />
+    <link href="~/css/ordersmanage.css" rel="stylesheet" />
 }
 
-<div class="col user__management-content">
-    <!-- 內容 -->
-    <div class="general-order">
 
-        <!-- 標題 -->
-        <div class="order-list">
-            <h4>訂單列表</h4>
-        </div>
-        <!-- 1.搜尋框，下拉選單-->
-        <div class="wrap">
-            <div class="search">
-                <input class="search-bar form-control" type="search" name="search" id="search" placeholder="請輸入會員ID" v-model="" v-on:keyup.enter="">
-                <button class="search-btn" type="button"><i class='bx bx-search-alt-2'></i></button>
-            </div>
+<div class="orders-container col-10">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h2>訂單列表</h2>
+    </div>
 
-
-            <div class="order__container">
-                <div class="order-mode">
-                    <div id="order-mode">
-                        <select v-model="order-mode">
-                            <option value="">訂購方案</option>
-                            <option>零售</option>
-                            <option>自由選</option>
-                            <option>幫你選</option>
-                        </select>
-                    </div>
+    @*----------會員搜尋列----------*@
+    <div class="row mb-3">
+        <div class="col-2">
+            <div class="searchBar">
+                <div class="inputWrapper">
+                    <i class='bx bx-search-alt-2 searchIcon'></i>
+                    <input type="text" class="inputSearch" placeholder="Search..." v-model="keyword">
                 </div>
-
-                <div class="order-option">
-                    <div id="order-option">
-                        <select v-model="order-option">
-                            <option value="">訂單制度</option>
-                            <option>一般制</option>
-                            <option>訂閱制</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="order-status">
-                    <div id="order-status">
-                        <select v-model="order-status">
-                            <option value="">訂單狀態</option>
-                            <option>處理中</option>
-                            <option>已完成</option>
-                            <option>已取消</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
-
-            <div>
-                <input type="date">
-                <input type="date">
-                <button type="submit">搜尋</button>
             </div>
         </div>
 
-
-
-        <!-- 2.一般會員訂單區塊-->
-        <div class="general-order">
-            <table class="table table-hover">
-                <thead>
-                    <tr class="tr">
-                        <th scope="col">會員ID</th>
-                        <th scope="col">姓名</th>
-                        <th scope="col">訂單編號</th>
-                        <th scope="col">訂購方案</th>
-                        <th scope="col">訂單制度</th>
-                        <th scope="col">訂單成立時間</th>
-                        <th scope="col">訂單狀態</th>
-                        <th scope="col">訂單明細</th>
-                        <th scope="col">總金額</th>
-                        <th scope="col">編輯</th>
-                        <th scope="col">刪除</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 2-1.會員1號-->
-                    <tr>
-                        <th class="th" scope="row">10113</th>
-                        <td>洪崇信</td>
-                        <td>202305020186</td>
-                        <td>零售</td>
-                        <td>一般制</td>
-                        <td>2023-05-02 12:08:36</td>
-                        <td><span class="badge rounded-pill text-bg-primary">處理中</span></td>
-                        <td>
-                            <button class="orderdetail-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                檢視
-                            </button>
-
-                            <!--Modal start-->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">訂單ID</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <table>
-                                                <thead>
-                                                <tr>
-                                                    <th>訂購方案</th>
-                                                    <th>商品ID</th>
-                                                    <th>商品數量</th>
-                                                    <th>商品單價</th>
-                                                    <th>選購數量</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <th>自由選</th>
-                                                        <th>123</th>
-                                                        <th>1</th>
-                                                        <th>12</th>
-                                                        <th>5</th>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            
-                                        </div>
-                                        <div class="modal-footer">
-                                            <!-- <button type="button" class="btn btn-primary">儲存</button> -->
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-                        <!-- Vertically centered scrollable modal -->
-                        <!-- Button trigger modal -->
-                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-                            <!--Modal end-->
-
-                        </div>
-                        <td>2300</td>
-                        <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                        <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
-                    </tr>
-
-                    <!-- 2-2.會員2號-->
-                    <tr>
-                        <th class="th" scope="row">10101</th>
-                        <td>谷亭逸</td>
-                        <td>202305020192</td>
-                        <td>幫你選</td>
-                        <td>一般制</td>
-                        <td>2023-05-02 19:17:28</td>
-                        <td><span class="badge rounded-pill text-bg-danger">已取消</span></td>
-                        <td><button class="orderdetail-btn" type="button">檢視</button></td>
-                        <td>1000</td>
-                        <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                        <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
-                    </tr>
-                    <!-- 2-3.會員3號-->
-                    <tr>
-                        <th class="th" scope="row">10109</th>
-                        <td>楊詠如</td>
-                        <td>202305120231</td>
-                        <td>自由選</td>
-                        <td>訂閱制</td>
-                        <td>2023-05-12 19:15:48</td>
-                        <td><span class="badge rounded-pill text-bg-warning">已完成</span></td>
-                        <td><button class="orderdetail-btn" type="button">檢視</button></td>
-                        <td>500</td>
-                        <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                        <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
-                    </tr>
-                </tbody>
-            </table>
+        <div class="col-2">
+            <div class="title"></div>
+            <div class="content">
+                <div class="StatusBar">
+                    <select v-model="selectedStatus">
+                        <option value="all">訂購方案</option>
+                        <option value="all">零售</option>
+                        <option value="active">自由選</option>
+                        <option value="frozen">幫你選</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <!-- 3.分頁 -->
-        <div class="paging">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+        <div class="col-2">
+            <div class="title"></div>
+            <div class="content">
+                <div class="StatusBar">
+                    <select v-model="selectedStatus">
+                        <option value="all">訂單制度</option>
+                        <option value="all">一般制</option>
+                        <option value="active">訂閱制</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="title"></div>
+            <div class="content">
+                <div class="StatusBar">
+                    <select v-model="selectedStatus">
+                        <option value="all">訂單狀態</option>
+                        <option value="all">處理中</option>
+                        <option value="active">已完成</option>
+                        <option value="active">已取消</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="title"></div>
+            <div class="content">
+                <div class="date-picker">
+                    <input type="date"></input>
+                    <input type="date"></input>
+                    <button>搜尋</button>
+                </div>
+            </div>
         </div>
     </div>
+
+
+    @*----------資料表格----------*@
+    <div class="table__container">
+        <table>
+            <thead>
+                <tr>
+                    <th>會員ID</th>
+                    <th>姓名</th>
+                    <th>訂單編號</th>
+                    <th>訂購方案</th>
+                    <th>訂單制度</th>
+                    <th>成立時間</th>
+                    <th>訂單狀態</th>
+                    <th>訂單明細</th>
+                    <th>總金額</th>
+                    <th>收件資訊</th>
+                    <th>刪除</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>10113</td>
+                    <td>毛毛蟲</td>
+                    <td>20230502186</td>
+                    <td>零售</td>
+                    <td>一般制</td>
+                    <td>2023-05-02 12:08:36</td>
+                    <td><button class="pending">處理中</button></td>
+                    <td><button class="reci-btn">檢視</button></td>
+                    <td>2300</td>
+                    <td><i class='bx bx bxs-edit sortIcon'></i></td>
+                    <td><i class='bx bx-trash sortIcon'></i></td>
+                </tr>
+            </tbody>
+        </table>
+        @*<template v-if="filterproducts.length == 0">
+        <h1><i class='bx bx-smile'></i>商品不存在喔!!</h1>
+        </template>*@
+    </div>
+
+    <!-- 3.分頁 -->
+    <div class="paging">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="modal__container" :class="modalContainerStyle" id="modal-container">
+        <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
+            <div v-if="EditOrDeleteorCreate == 'Edit' || EditOrDeleteorCreate == 'Create'" class="modal__close close-modal" @@click="closeModal" title="Close">
+                <i class='bx bx-x'></i>
+            </div>
+
+            <h1 class="modal__title">商品管理</h1>
+
+            <div class="model__product row g-5">
+
+                <template v-else>
+                    <div class="d-flex align-content-center justify-content-between">
+                        <button class="modal__button modal__butoon-width" @@click="DeleteProduct(deleteId)" type="submit">
+                            刪除
+                        </button>
+
+                        <button class="modal__button-link close-modal" @@click="closeModal">
+                            取消
+                        </button>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <!--========== Messge toast ==========-->
+    <div class="message-toast-wrapper" :class="toastHintStlye">
+        <i v-if="toast=='新增成功' || toast=='修改成功'" class='bx bxs-check-circle message-toast-icon'></i>
+        <i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
+        <p class="message-toast-title">{{toast}}</p>
+    </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/vue.js"></script>
+    <script>
+
+    </script>
+}

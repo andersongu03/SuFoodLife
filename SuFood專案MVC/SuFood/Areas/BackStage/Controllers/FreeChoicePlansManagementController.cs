@@ -91,7 +91,7 @@ namespace SuFood.Areas.BackStage.Controllers
 
             _context.FreeChoicePlans.Add(fcp);
             await _context.SaveChangesAsync();
-            return "新增方案成功";
+            return "新增成功";
         }
 
         //Edit: /BackStage/FreeChoicePlansManagement/EditPlans 新增方案與方案中的產品。
@@ -146,7 +146,7 @@ namespace SuFood.Areas.BackStage.Controllers
             }
 
             await _context.SaveChangesAsync();
-            return "修改方案成功";
+            return "修改成功";
         }
 
         //新增ProdcutOfPlans資料表

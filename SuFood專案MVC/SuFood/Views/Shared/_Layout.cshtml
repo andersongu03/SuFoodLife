@@ -15,25 +15,25 @@
           rel="stylesheet" />
 
     <!-- Vendor CSS Files -->
-    <link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
     <link href="~/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
     <link href="~/assets/vendor/aos/aos.css" rel="stylesheet" />
     <link href="~/assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />
     <link href="~/assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-    <link href="~/assets/css/main.css" rel="stylesheet" />
+    <link href="~/assets/css/main.css" rel="stylesheet" />*@
     <!-- 零售用到的 -->
-    <link rel="stylesheet" href="~/商品明細用到的/css/bootstrap.min.css" />
+    @*<link rel="stylesheet" href="~/商品明細用到的/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/商品明細用到的/css/templatemo.css" />
-    <link rel="stylesheet" href="~/商品明細用到的/css/custom.css" />
+    <link rel="stylesheet" href="~/商品明細用到的/css/custom.css" />*@
 
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet"
+    @*<link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap" />
     <link rel="stylesheet" href="~/商品明細用到的/css/fontawesome.min.css" />
     <!-- jimmy's css && font-awsome -->
     <link rel="stylesheet" href="~/商品明細用到的/css/myStyle.css" />
     <script src="https://kit.fontawesome.com/6c09e4a88d.js"
-            crossorigin="anonymous"></script>
+            crossorigin="anonymous"></script>*@
     <!-- vue -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
     @await RenderSectionAsync("Styles", required: false)
@@ -65,7 +65,6 @@
                         <li><a href="#gallery">熱門商品</a></li>
                         <li><a href="#contact">聯絡我們</a></li>
                     </ul>
-                </nav><!-- .navbar -->
             </div>
 
 
@@ -78,7 +77,7 @@
                             <div class="users__info">
                                 <a asp-area="" asp-controller="Members" asp-action="PersonalInfo"><span>帳戶資料</span> </a>
                                 <hr>
-                                <a asp-area="" asp-controller="Members" asp-action="#"><span>變更密碼</span></a>
+                                <a asp-area="" asp-controller="Members" asp-action="ModifyPassword"><span>變更密碼</span></a>
                                 <hr>
                                 <a asp-area="" asp-controller="Members" asp-action="Coupon"><span>我的優惠券</span></a>
                                 <hr>

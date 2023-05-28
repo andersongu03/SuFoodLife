@@ -52,7 +52,7 @@
                             <hr>
                             <a asp-area="" asp-controller="Members" asp-action="Coupon"><span>我的優惠券</span></a>
                             <hr>
-                            <a asp-area="" asp-controller="Comment" asp-action="Comment"><span>新修評論測試</span></a>
+                            <a asp-area="" asp-controller="Members" asp-action="CommentPage"><span>新修評論測試</span></a>
                             <hr>
                             <a asp-area="" asp-controller="Members" asp-action="#"><span>我的訂單</span></a>
                             <hr>
@@ -144,7 +144,8 @@
 
     @*<div id="preloader"></div>*@
     <!-- Vendor JS Files -->
-
+	
+	<script src="~/axios/axios.min.js"></script>
     <script src="~/lib/php-email-form/validate.js"></script>
     <script src="~/lib/glightbox/js/glightbox.min.js"></script>
     <script src="~/lib/purecounter/purecounter_vanilla.js"></script>

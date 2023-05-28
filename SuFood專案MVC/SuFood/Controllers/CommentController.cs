@@ -21,6 +21,7 @@ namespace SuFood.Controllers
 		{
 			return Json(_context.OrdersReview);
 		}
+		//"/Comment/CreateComment"
 		[HttpPost]
 		public async Task<string> CreateComment([FromBody]OrdersReview Comment)
 		{

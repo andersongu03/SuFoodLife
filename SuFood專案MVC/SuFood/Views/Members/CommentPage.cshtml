@@ -1,3 +1,51 @@
-﻿<div>
-	testing
+﻿@section Styles{
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link href="~/css/homePageMain.css" rel="stylesheet" />
+	<link href="~/css/main.css" rel="stylesheet" />
+	<link href="~/css/model.css" rel="stylesheet" />
+	<link href="~/css/couponmanagement.css" rel="stylesheet" />
+}
+<div class="CommentReview">
+	<button class="btn btn-success" data-bs-target="#editModal" @@click="createComment()">新增評論</button>
+	<template  v-if="CreateOrEditOrDelete === 'Create'">
+		<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
+			<div class="cardPopup-body" style="width: 600px; height:500px">
+				<div class="cardPopup">
+					<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+						<div class="topic">
+							<h3>留下你的意見吧</h3>
+							<lable>你的回覆是我們的最大動力</lable>
+						</div>
+
+						<div class="form-group">
+							<label class="form-label">評論ID:<span>{{editCommentList.reviewId}}</span></label>
+						</div>
+						<div class="form-group">
+							<label class="form-label">星星評價</label>
+							<input class="form-control" placeholder="5" :value="editCommentList.ratingStar" />
+						</div>
+						<div class="form-group">
+							<label class="form-label">評論</label>
+							<input class="form-control" type="text" :value="editCommentList.comment" />
+						</div>
+						<div class="form-group">
+							<label class="form-label">客戶ID</label>
+							<input class="form-control" type="text" :value="editCommentList.ordrsId" />
+						</div>
+						<div>
+							<button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
+							<button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(editCommentList)">新增 </button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</template>
 </div>
+
+
+@section Scripts{
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/commentmanagement.js"></script>
+	<script src="~/axios/axios.min.js"></script>
+}

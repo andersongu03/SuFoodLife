@@ -18,15 +18,59 @@ namespace SuFood.Models
         {
         }
 
+        public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Account>(entity =>
+            {
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.Account1).HasMaxLength(50);
+
+                entity.Property(e => e.BirthDate).HasColumnType("date");
+
+                entity.Property(e => e.CreateDatetime)
+                    .HasColumnType("datetime")
+                    .HasColumnName("Create_Datetime");
+
+                entity.Property(e => e.DefaultCreditCardHolder)
+                    .HasMaxLength(10)
+                    .HasColumnName("Default_CreditCard_Holder");
+
+                entity.Property(e => e.DefaultCreditCardNumber)
+                    .HasMaxLength(10)
+                    .HasColumnName("Default_CreditCard_Number");
+
+                entity.Property(e => e.DefaultShipAddress)
+                    .HasMaxLength(50)
+                    .HasColumnName("Default_ShipAddress");
+
+                entity.Property(e => e.FirstName)
+                    .HasMaxLength(15)
+                    .HasColumnName("First_Name");
+
+                entity.Property(e => e.Gender).HasMaxLength(5);
+
+                entity.Property(e => e.LastName)
+                    .HasMaxLength(15)
+                    .HasColumnName("Last_Name");
+
+                entity.Property(e => e.LasttImeLogin)
+                    .IsRowVersion()
+                    .IsConcurrencyToken()
+                    .HasColumnName("LasttIme_Login");
+
+                entity.Property(e => e.Phone).HasMaxLength(10);
+            });
+
             modelBuilder.Entity<Coupon>(entity =>
             {
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
@@ -102,6 +146,12 @@ namespace SuFood.Models
 
                 entity.Property(e => e.Status).HasMaxLength(50);
 
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_TO_Orders");
+
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CouponId)
@@ -174,6 +224,33 @@ namespace SuFood.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductsOfPlans_Products");
+            });
+
+            modelBuilder.Entity<ShoppingCart>(entity =>
+            {
+                entity.HasKey(e => e.CartId);
+
+                entity.ToTable("Shopping_Cart");
+
+                entity.Property(e => e.CartId).HasColumnName("Cart_Id");
+
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.CartQuantity).HasColumnName("Cart_Quantity");
+
+                entity.Property(e => e.ProductId).HasColumnName("Product_Id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.ShoppingCart)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_TO_Shopping_Cart");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ShoppingCart)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Products_TO_Shopping_Cart");
             });
 
             OnModelCreatingPartial(modelBuilder);

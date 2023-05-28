@@ -375,10 +375,46 @@ input[type="file"] {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    gap: 1rem;
 }
 
 .productDetail__container>div{
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.modal__button{
+    margin-top: 2rem;
+}
+
+/*===== 警示訊息 =====*/
+.input-group{
+    position: relative;
+}
+
+.warm {
+    border: 1px solid red;
+}
+
+.invalidFeedback {
+    position: absolute;
+    top: 15px;
+    right: 10px;
+    display: block;
+    width: fit-content;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #f13246;
+    text-align: start;
+}
+
+.message-toast-icon-error{
+    font-size: 2rem;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }

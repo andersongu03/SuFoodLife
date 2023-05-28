@@ -27,6 +27,7 @@ namespace SuFood.Models
         public int? DiscountId { get; set; }
         public int? OrdersDetailsId { get; set; }
 
+        public virtual Account Account { get; set; }
         public virtual Coupon Coupon { get; set; }
         public virtual ICollection<OrdersReview> OrdersReview { get; set; }
     }

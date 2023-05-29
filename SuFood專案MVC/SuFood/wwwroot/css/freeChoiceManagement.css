@@ -501,10 +501,16 @@ table tbody tr {
     font-weight: bold;
 }
 
-.function-bar{
-
-}
-
 .CreateButton-container {
     height: 100%;
+}
+
+.Recent-order h2 {
+    font-weight: bold;
+}
+
+
+.Recent-order table {
+    font-weight: bold;
+    font-size: 1.1rem;
 }

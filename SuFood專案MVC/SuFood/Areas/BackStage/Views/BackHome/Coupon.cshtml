@@ -9,7 +9,7 @@
 					<!-- 內容 -->
 					<div class="couponManagement col-sm-12 col-md-10 col-xl-10 ">
 							<h2>{{ pageName }}</h2>
-							<div class="tableFunction col-12">
+@*							<div class="tableFunction col-12">*@
 								<div class="col-4">
 									<div class="content">
 										<div class="searchBar">
@@ -23,12 +23,7 @@
 								<div>
 									<button type="button" class="btn btn-success insertBtn" @@click="createCoupon"><i class="fa-solid fa-plus"></i> 新增 </button>
 								</div>
-								<!-- <select class="form-select" aria-label="Default select example">
-									<option selected>狀態分類</option>
-									<option value="1">可用</option>
-									<option value="2">不可用</option>
-								</select> -->
-							</div>
+							@*</div>*@
 							<!-- POPUP CARD (Edit) -->
 							<template v-if="CreateOrEditOrDelete === 'Edit'">
 								<div class="cardContent" id="" :class="popupShowing">

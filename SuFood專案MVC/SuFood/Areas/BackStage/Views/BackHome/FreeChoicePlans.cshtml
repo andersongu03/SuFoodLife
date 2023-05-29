@@ -207,7 +207,7 @@
 
     <!--========== Messge toast ==========-->
     <div class="message-toast-wrapper" :class="toastHintStlye">
-        <i v-if="toast=='新增成功' || toast=='修改成功'" class='bx bxs-check-circle message-toast-icon'></i>
+        <i v-if="toast=='新增成功' || toast=='修改成功'|| toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
         <i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
         <p class="message-toast-title">{{toast}}</p>
     </div>

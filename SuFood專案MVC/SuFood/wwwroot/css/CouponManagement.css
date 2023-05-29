@@ -184,10 +184,10 @@ table tbody tr {
     align-items: center;
     justify-content: space-between;
     border-radius: 15px;
-    background: #f2f2f2;
-    box-shadow: 5px 5px 15px #e1e1e1, -5px -5px 15px #ffffff;
     font-weight: bold;
-    margin-bottom: 2rem;
+    /*background: #f2f2f2;*/
+    /*box-shadow: 5px 5px 15px #e1e1e1, -5px -5px 15px #ffffff;*/
+    /*margin-bottom: 2rem;*/
 }
 
 .title {
@@ -471,4 +471,24 @@ input[type="file"] {
         opacity: 0;
         transform: translateY(-30px)
     }
+}
+
+/*--------- 統一樣式與顏色 ----------*/
+.table__container th {
+    background-color: #4f8180 !important;
+    color: white !important;
+}
+
+.couponManagement h2 {
+    font-weight: bold !important;
+}
+
+.couponManagement table {
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+}
+
+.inputWrapper {
+    background: #fff;
+    width: 90%;
 }

@@ -481,3 +481,17 @@ input[type=number]::-webkit-inner-spin-button {
 .message-toast-icon-error {
     font-size: 2rem;
 }
+
+.table__container th {
+    background-color: #4f8180 !important;
+    color: white !important;
+}
+
+.Recent-order h2 {
+    font-weight: bold !important;
+}
+
+.Recent-order table {
+    font-weight: bold !important;
+    font-size: 1.1rem !important;
+}

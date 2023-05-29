@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SuFood.Data;
 using SuFood.Models;
 using SuFood.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace SuFood
 {
@@ -28,13 +29,28 @@ namespace SuFood
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+            
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            // 啟用Session
+            builder.Services.AddSession(options =>
+            {
+                options.Cookie.Name = ".CustomerswebSite.Session";//自session名稱
+                options.Cookie.IsEssential = true;
+                options.IdleTimeout = TimeSpan.FromMinutes(5);//設定網頁5分鐘逾時
+                options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+
+             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options =>
-               {
-                   options.LogoutPath = "/User/Login";
-                   options.AccessDeniedPath = "/User/Login";
-                   //options.ExpireTimeSpan = TimeSpan.FromDays(1); //Cookie 預期時間
+               {                    
+                   options.AccessDeniedPath = "/User/Login"; //登入失敗路徑
+                   options.LogoutPath = "/Home/Index";  //登出路徑
+                   //options.ExpireTimeSpan = TimeSpan.FromDays(1); //Cookie 預期時間                   
+                   options.Cookie.IsEssential = true;//設定session Id，可透過你設定的id找到哪個是你的               
+                   options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
+                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;//設定傳送時一定要透過加密方式傳送
                });
             builder.Services.AddTransient<EncryptService>();
 
@@ -52,6 +68,7 @@ namespace SuFood
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseSession();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

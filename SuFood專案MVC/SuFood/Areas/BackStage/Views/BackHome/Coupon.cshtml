@@ -76,7 +76,7 @@
 								<div class="cardContent" id="" :class="popupShowing">
 									<div class="cardPopup-body">
 										<div class="cardPopup">
-											<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+											<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form" v-on:submit.prevent="onSubmit">
 												<div class="topic">
 													<h3>新增優惠券</h3>
 												</div>

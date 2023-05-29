@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
 
 namespace SuFood.Controllers
 {
+	
 	public class CommentContrioller : Controller
 	{
 		private readonly SuFoodDBContext _context;

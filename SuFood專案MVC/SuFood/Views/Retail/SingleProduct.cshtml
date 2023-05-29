@@ -13,9 +13,7 @@
                         data-bs-dismiss="modal"
                         aria-label="Close"></button>
             </div>
-            <form action=""
-                  method="get"
-                  class="modal-content modal-body border-0 p-0">
+
                 <div class="input-group mb-2">
                     <input type="text"
                            class="form-control"
@@ -27,18 +25,19 @@
                         <i class="fa fa-fw fa-search text-white"></i>
                     </button>
                 </div>
-            </form>
+            
         </div>
     </div>
 
     <!-- Open Content -->
     <section class="bg-light">
-        <div class="container pb-5">
+        <div class="container pb-5" > 
+            
             <div class="row">
                 <div class="col-lg-5 mt-5">
                     <div class="card mb-3">
                         <img class="card-img img-fluid"
-                             :src="'data:image/png;base64,'+p.img"
+                             :src="'data:image/png;base64,'+product.img"
                              alt="bear"
                              id="product-detail" />
                     </div>
@@ -46,45 +45,42 @@
                 <!-- 商品頁面 -->
                 <div class="col-lg-7 mt-5">
                     <div class="card">
-                        <div class="card-body" v-for="p in product"
-                            <h1 class="h2 fw-bold">{{p.productName}}</h1>
-                            <p class="h3 py-2">{{p.price}}</p>
+                        <div class="card-body" >
+                            <h1 class="h2 fw-bold">{{product.productName}}</h1>
+                            <p class="h3 py-2">{{product.price}}</p>
 
 
                             <h6>商品描述:</h6>
                             <p>
-                                {{p.price}}
+                                {{product.productDescription}}
                             </p>
 
-                            <form action="" method="GET">
-                                <input type="hidden"
+
+                            <input type="hidden"
                                        name="product-title"
                                        value="Activewear" />
-                                <div class="row">
-                                    <div class="col-auto">
-                                        <ul class="list-inline pb-3">
-                                            <li class="list-inline-item text-right">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <ul class="list-inline pb-3">
+                                        <li class="list-inline-item text-right">
                                                 數量
-                                                <input type="hidden"
-                                                       name="product-quanity"
-                                                       id="product-quanity"
-                                                       value="1" />
-                                            </li>
-                                            <li class="list-inline-item">
-                                                <button class="btn btn-danger" id="btn-minus" @@click="minusItem()">-</button>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                <span class="badge bg-secondary" id="var-value">{{buyQuantity}}</span>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                <button class="btn btn-danger" id="btn-plus" @@click="addItem()">+</button>
-                                            </li>
-                                            <li class="list-inline-item">
-                                                <p>剩餘產品數量：{{p.stockQuantity}}</p>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                                <input type="hidden" name="product-quanity" id="product-quanity" value="1" />
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <button class="btn btn-danger" id="btn-minus" @@click="minusItem()">-</button>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <span class="badge bg-secondary" id="var-value">{{buyQuantity}}</span>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <button class="btn btn-danger" id="btn-plus" @@click="addItem()">+</button>
+                                        </li>
+                                        <li class="list-inline-item">
+                                            <p>剩餘產品數量：{{product.stockQuantity}}</p>
+                                        </li>
+                                    </ul>
                                 </div>
+                            </div>
                                 <div class="row pb-3">
                                     <div class="col d-grid">
                                         <button type="submit"
@@ -103,7 +99,8 @@
                                         </button>
                                     </div>
                                 </div>
-                            </form>
+
+
                         </div>
                     </div>
                 </div>
@@ -113,7 +110,7 @@
     </section>
 
 
-    
+
 
 </main>
 @section Scripts{
@@ -124,7 +121,7 @@
     <script src="~/商品明細用到的/js/templatemo.js"></script>
     <script src="~/商品明細用到的/js/custom.js"></script>
     <script src="~/商品明細用到的/js/slick.min.js"></script>
-    
+
     <script src="https://cdn.rawgit.com/matfish2/vue-pagination-2/controlled-component/dist/vue-pagination-2.min.js"></script>
     <script src="~/js/singleproducts.js"></script>
 }

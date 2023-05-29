@@ -12,7 +12,7 @@ namespace SuFood.Controllers
         {
             return View();
         }
-        public IActionResult CommentPage()
+        public IActionResult MyOrders()
         {
             return View();
         }

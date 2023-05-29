@@ -6,10 +6,10 @@ using System.Linq;
 
 namespace SuFood.Controllers
 {
-	public class CommentController : Controller
+	public class MyOrdersController : Controller
 	{
 		private readonly SuFoodDBContext _context;
-		public CommentController(SuFoodDBContext context)
+		public MyOrdersController(SuFoodDBContext context)
 		{
 			_context = context;
 		}
@@ -17,23 +17,37 @@ namespace SuFood.Controllers
 		{
 			return View();
 		}
-		public async Task<JsonResult> Comment()
+		public IActionResult MyOreders() 
 		{
-			return Json(_context.OrdersReview);
+			return View();
 		}
-		//"/Comment/CreateComment"
-		[HttpPost]
-		public async Task<string> CreateComment([FromBody]OrdersReview Comment)
+		public async Task<JsonResult> Orders()
 		{
-			
-			var exsist = _context.Orders.Where(o => o.OrdersId == Comment.OrdersId).Count();
-			if (exsist != 0) { 
-				_context.Add(Comment);
+			return Json(_context.Orders);
+		}
+		//"/MyOrdersController/CreateComment"
+
+		[HttpPost]
+		public async Task<string> CreateComment([FromBody] VmComment x)
+		{
+
+			var exsist = _context.Orders.Where(o => o.OrdersId == x.OrdersId).Count();
+			var Commented = _context.OrdersReview.Where(o => o.OrdersId == x.OrdersId).Count() == 0;
+			if (exsist != 0 && Commented)
+			{
+				_context.OrdersReview.Add(new Models.OrdersReview()
+				{
+					ReviewId = x.ReviewId,
+
+					Comment = x.Comment,
+					OrdersId = x.OrdersId,
+					RatingStar = x.RatingStar,
+				});
 				await _context.SaveChangesAsync();
 				return "新增成功";
+
 			}
 			return "新增失敗";
-
 		}
 		[HttpPost]
 		public async Task<string> EditComment([FromBody] OrdersReview Comment)

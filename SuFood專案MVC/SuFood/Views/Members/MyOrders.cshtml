@@ -1,0 +1,339 @@
+﻿@section Styles{
+	<link href="~/css/usermanagement.css" rel="stylesheet" />
+	<link href="~/css/myorders.css" rel="stylesheet" />
+}
+<section class="user__management section align-items-center section-bg" id="user__management">
+    <div class="user__management-container container row">
+        <partial name="_SidebarPartial" />
+		<div class="col-10 user__management-content">
+			@* ----------內容-------------*@
+			<div class="MyOrders col-sm-10  col-md-8 col-xl-8">
+                <span>{{title}}</span>
+                <div>
+                    <a class="btn" data-bs-toggle="collapse" href="#multiCollapseExample1" role="button"
+                       aria-expanded="true" aria-controls="multiCollapseExample1">處理中</a>
+                </div>
+                <div>
+                    <div class="detail">
+                        <button class="btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">
+                            已完成
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <div class="">
+                        <button class="btn" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">
+                            已取消
+                        </button>
+                    </div>
+                </div>
+			</div>
+
+			
+			
+			
+           @* <div class="col">
+                <div class="collapse multi-collapse" id="multiCollapseExample1">
+                    <div class="card card-body">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">小農賣家/收件明細</th>
+                                    <th scope="col">金額</th>
+                                    <th scope="col">付款方式</th>
+                                    <th scope="col">運送方式</th>
+                                    <th scope="col">訂單日期</th>
+                                    <th scope="col">功能</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>訂單編號:31</td>
+                                    <td>$29</td>
+                                    <td>銀行轉帳</td>
+                                    <td>宅配</td>
+                                    <td>日期2023-05-06</td>
+                                    <td>
+                                        <!-- 彈跳式視窗 -->
+                                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal">
+                                            取消訂單
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">此訂單即將被取消</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        你要刪除這筆訂單嗎?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            再想想
+                                                        </button>
+                                                        <button type="button" class="btn btn-warning"
+                                                                data-bs-dismiss="modal" onclick="dele()">
+                                                            真的要刪掉
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="5">地址:XXXXXXXXXX</td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="3">收件人:User123</td>
+                                    <td>連絡電話:09xxxxxxxx</td>
+                                    <td>出貨日期:2023-05-07</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="4">購買備註:</td>
+                                    <td>運費:$160</td>
+                                    <td>訂單狀態:未付款</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>*@
+            <div class="col">
+                <div class="collapse multi-collapse" id="multiCollapseExample2">
+                    <div class="card card-body">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">小農賣家/收件明細</th>
+                                    <th scope="col">金額</th>
+                                    <th scope="col">付款方式</th>
+                                    <th scope="col">運送方式</th>
+                                    <th scope="col">訂單日期</th>
+                                    <th scope="col">功能</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>訂單編號:31</td>
+                                    <td>$29</td>
+                                    <td>銀行轉帳</td>
+                                    <td>宅配</td>
+                                    <td>日期2023-05-06</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="5">地址:XXXXXXXXXX</td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="3">收件人:User123</td>
+                                    <td>連絡電話:09xxxxxxxx</td>
+                                    <td>出貨日期:2023-05-07</td>
+                                    <td>
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal2">
+                                            訂單明細
+                                        </button>
+
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="exampleModal2" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel2" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel2">此訂單的明細</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>商品圖片</th>
+                                                                <th>商品名稱</th>
+                                                                <th>數量</th>
+                                                                <th>價格</th>
+                                                                <th>小計</th>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td>img</td>
+                                                                <td>蔬菜</td>
+                                                                <td>2束</td>
+                                                                <td class="cost">300</td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2.</td>
+                                                                <td>img</td>
+                                                                <td>歪國零食</td>
+                                                                <td>5包</td>
+                                                                <td class="cost">600</td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="5"></td>
+                                                                <td id="totalcost">總計:</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            OK
+                                                        </button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="4">購買備註:</td>
+                                    <td>運費:$160</td>
+                                    <td>訂單狀態:已付款</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="collapse multi-collapse" id="multiCollapseExample3">
+                    <div class="card card-body">
+                        <table class="table table-hover table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">小農賣家/收件明細</th>
+                                    <th scope="col">金額</th>
+                                    <th scope="col">付款方式</th>
+                                    <th scope="col">運送方式</th>
+                                    <th scope="col">訂單日期</th>
+                                    <th scope="col">功能</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>訂單編號:31</td>
+                                    <td>$29</td>
+                                    <td>銀行轉帳</td>
+                                    <td>宅配</td>
+                                    <td>日期2023-05-06</td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="5">地址:XXXXXXXXXX</td>
+                                    <td>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="3">收件人:User123</td>
+                                    <td>連絡電話:09xxxxxxxx</td>
+                                    <td>出貨日期:2023-05-07</td>
+                                    <td>
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#exampleModal3">
+                                            自由選明細
+                                        </button>
+                                        <div class="modal fade" id="exampleModal3" tabindex="-1"
+                                             aria-labelledby="exampleModalLabel3" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel3">自由選訂單的明細</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <table class="table table-bordered">
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>商品圖片</th>
+                                                                <th>商品名稱</th>
+                                                                <th>數量</th>
+                                                                <th>價格</th>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>1.</td>
+                                                                <td>img</td>
+                                                                <td>蔬菜</td>
+                                                                <td>2束</td>
+                                                                <td></td>
+
+                                                            </tr>
+                                                            <tr>
+                                                                <td>2.</td>
+                                                                <td>img</td>
+                                                                <td>歪國零食</td>
+                                                                <td>5包</td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="5"></td>
+                                                                <td id="totalcost">方案:999</td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">
+                                                            OK
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td colspan="4">購買備註:</td>
+                                    <td>運費:$160</td>
+                                    <td>訂單狀態:已取消</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script src="~/js/vue.js"></script>
+	<script src="~/js/myorders.js"></script>
+}

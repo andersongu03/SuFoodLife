@@ -17,10 +17,10 @@
         CreateOrEditOrDelete: "",
         or: [],
         createCommentList: {
-            reviewId: "",
-            ratingStar:"",
+            reviewId: 0,
+            ratingStar:0,
             comment:"",
-            ordersId:""
+            ordersId:0
         },
         editCommentList: {
             ReviewId: "",
@@ -100,28 +100,29 @@
         },
         CreateComment(createCommentList) {
             let _this = this;
-            var createdata = {
-                reviewId: _this.createCommentList.reviewId,
-                ratingStar: _this.createCommentList.ratingStar,
-                comment: _this.createCommentList.comment,
-                ordersId: _this.createCommentList.ordersId
-            };
-            if (this.createCommentList.ordersId == null || this.createCommentList.ratingStar > 6 || this.createCommentList.ratingStar < 0) {
+
+            var request = null;
+
+            request = {
+                    "reviewId": _this.createCommentList.reviewId,
+                    "ratingStar": _this.createCommentList.ratingStar,
+                    "comment": _this.createCommentList.comment,
+                    "ordersId": _this.createCommentList.ordersId
+             }
+
+
+            if (this.createCommentList.ordersId == 0 || this.createCommentList.ratingStar > 6 || this.createCommentList.ratingStar < 0) {
                 alert('客戶ID為必填欄位,星數不得大於5或是小於0')
             }
-            else { 
-                axios.post('/BackStage/CommentManagement/CreateComment', createdata, {
-                    header: {
-                        'Content-Type': 'application/json'
-                    }
-                }).then(response => {
+            else {
+                axios.post('/BackStage/CommentManagement/CreateComment', request 
+                ).then(response => {
                     _this.kesi = response.data
                     /*console.log('123')*/
                     this.closepopupShowHint()
                     _this.GetComments()
                 })
             }
-            
         },
         EditComment: function (editCommentList) {
             var _this = this;

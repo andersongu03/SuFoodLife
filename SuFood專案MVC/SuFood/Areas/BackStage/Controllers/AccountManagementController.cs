@@ -1,30 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
 
-namespace SuFood.Controllers
+namespace SuFood.Areas.BackStage.Controllers
 {
-    public class PersonalInfoController : Controller
+    [Area("BackStage")]
+    public class AccountManagementController : Controller
     {
         private readonly SuFoodDBContext _context;
 
-        public PersonalInfoController(SuFoodDBContext context)
+        public AccountManagementController(SuFoodDBContext context)
         {
             _context = context;
         }
 
-        //取得會員資料 ("/PersonalInfo/GetAccount")
-        [HttpGet]
-        public async Task<IEnumerable<VmAccount>> GetAccount()
-        {
+        public IActionResult AccountManagement() { 
+            return View();
+        }
 
-            var acc = _context.Account.Where(user => user.AccountId == 1).Select(acc => new VmAccount
+
+
+
+
+        //取得會員資料 ("/BackStage/AccountManagement/GetAccount")
+        [HttpGet]
+        public async Task<IEnumerable<VmAccount>> GetAcc()
+        {
+            return _context.Account.Select(acc => new VmAccount
             {
                 AccountId = acc.AccountId,
                 Account1 = acc.Account1,
@@ -36,18 +39,17 @@ namespace SuFood.Controllers
                 Phone = acc.Phone,
                 DefaultShipAddress = acc.DefaultShipAddress,
                 DefaultCreditCardNumber = acc.DefaultCreditCardNumber,
-                DefaultCreditCardHolder = acc.DefaultCreditCardHolder
+                DefaultCreditCardHolder = acc.DefaultCreditCardHolder,
+                CreateDatetime = acc.CreateDatetime,
+                LasttImeLogin = acc.LasttImeLogin,
+                Role = acc.Role,
+                IsActive = acc.IsActive,
             });
-            return acc;
         }
 
         //修改會員資料
-        // POST: PersonalInfo/EditAccont/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
         [HttpPost]
-        public async Task<string> EditAccount([FromBody] VmAccount account)
+        public async Task<string> EditAcc([FromBody] VmAccount account)
         {
             if (account.AccountId == null)
             {
@@ -83,11 +85,29 @@ namespace SuFood.Controllers
             return "修改成功";
         }
 
-       
+        //刪除會員資料
+        [HttpPost]
+        public async Task<string> DeleteAcc(int id)
+        {
+            if (_context.Account == null)
+            {
+                return "刪除失敗";
+            }
+            var account = await _context.Account.FindAsync(id);
+            if (account != null)
+            {
+                _context.Account.Remove(account);
+            }
+
+            await _context.SaveChangesAsync();
+            return "刪除成功";
+        }
+
+
 
         private bool AccountExists(int id)
         {
-          return (_context.Account?.Any(e => e.AccountId == id)).GetValueOrDefault();
+            return (_context.Account?.Any(e => e.AccountId == id)).GetValueOrDefault();
         }
     }
 }

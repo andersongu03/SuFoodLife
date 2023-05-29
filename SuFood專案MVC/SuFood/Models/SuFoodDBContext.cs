@@ -19,7 +19,6 @@ namespace SuFood.Models
         }
 
         public virtual DbSet<Account> Account { get; set; }
-        public virtual DbSet<Announcement> Announcement { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
         public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
@@ -27,6 +26,7 @@ namespace SuFood.Models
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
+        public virtual DbSet<ShoppingCart> ShoppingCart { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,38 +70,6 @@ namespace SuFood.Models
                     .HasColumnName("LasttIme_Login");
 
                 entity.Property(e => e.Phone).HasMaxLength(10);
-            });
-
-            modelBuilder.Entity<Announcement>(entity =>
-            {
-                entity.Property(e => e.AnnouncementId).HasColumnName("Announcement_Id");
-
-                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
-
-                entity.Property(e => e.AnnouncementContent)
-                    .IsRequired()
-                    .HasMaxLength(300)
-                    .HasColumnName("Announcement_Content");
-
-                entity.Property(e => e.AnnouncementEndDate)
-                    .HasColumnType("date")
-                    .HasColumnName("Announcement_EndDate");
-
-                entity.Property(e => e.AnnouncementImage).HasColumnName("Announcement_Image");
-
-                entity.Property(e => e.AnnouncementStartDate)
-                    .HasColumnType("date")
-                    .HasColumnName("Announcement_StartDate");
-
-                entity.Property(e => e.AnnouncementStatus)
-                    .HasMaxLength(25)
-                    .HasColumnName("Announcement_Status");
-
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.Announcement)
-                    .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Account_TO_Announcement");
             });
 
             modelBuilder.Entity<Coupon>(entity =>
@@ -299,6 +267,33 @@ namespace SuFood.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductsOfPlans_Products");
+            });
+
+            modelBuilder.Entity<ShoppingCart>(entity =>
+            {
+                entity.HasKey(e => e.CartId);
+
+                entity.ToTable("Shopping_Cart");
+
+                entity.Property(e => e.CartId).HasColumnName("Cart_Id");
+
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.CartQuantity).HasColumnName("Cart_Quantity");
+
+                entity.Property(e => e.ProductId).HasColumnName("Product_Id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.ShoppingCart)
+                    .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Account_TO_Shopping_Cart");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.ShoppingCart)
+                    .HasForeignKey(d => d.ProductId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Products_TO_Shopping_Cart");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -22,6 +22,7 @@ namespace SuFood.Models
         public virtual DbSet<Coupon> Coupon { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
@@ -118,54 +119,44 @@ namespace SuFood.Models
 
             modelBuilder.Entity<Orders>(entity =>
             {
-                entity.HasIndex(e => e.Status, "UQ_Status")
-                    .IsUnique();
-
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.DiscountId).HasColumnName("Discount_Id");
+                entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
 
                 entity.Property(e => e.OrderStatus)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
                 entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
 
-                entity.Property(e => e.PaymentMethod)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("Payment_method");
-
                 entity.Property(e => e.SetOrdersDatetime)
                     .HasColumnType("datetime")
                     .HasColumnName("SetOrders_Datetime");
 
-                entity.Property(e => e.ShipAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.ShipAddress).HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
+            });
 
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(10);
+            modelBuilder.Entity<OrdersDetails>(entity =>
+            {
+                entity.HasKey(e => new { e.OrderId, e.ProductId });
 
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.AccountId)
+                entity.ToTable("Orders_details");
+
+                entity.Property(e => e.OrderId).HasColumnName("Order_Id");
+
+                entity.Property(e => e.ProductId).HasColumnName("Product_Id");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrdersDetails)
+                    .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Account_TO_Orders");
-
-                entity.HasOne(d => d.Coupon)
-                    .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.CouponId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Coopon_TO_Orders");
+                    .HasConstraintName("FK_Orders_details_Orders");
             });
 
             modelBuilder.Entity<OrdersReview>(entity =>

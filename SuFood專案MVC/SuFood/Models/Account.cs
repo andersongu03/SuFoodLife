@@ -9,7 +9,6 @@ namespace SuFood.Models
     {
         public Account()
         {
-            Orders = new HashSet<Orders>();
             ShoppingCart = new HashSet<ShoppingCart>();
         }
 
@@ -30,7 +29,6 @@ namespace SuFood.Models
         public bool? IsActive { get; set; }
         public string HashPassword { get; set; }
 
-        public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }
 }

@@ -438,7 +438,7 @@ input[type="file"] {
 }
 
 .all-products-container .SelectedItemStyle {
-    background-color: #5562eb;
+    background-color: #4f8180;
     color: #fff;
 }
 
@@ -494,4 +494,20 @@ input[type=number]::-webkit-inner-spin-button {
 .Recent-order table {
     font-weight: bold !important;
     font-size: 1.1rem !important;
+}
+
+.delete-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .8rem;
+}
+
+.modal__button,
+.modal__close {
+    background-color: #4f8180;
+}
+
+.modal__button:hover{
+    background-color: #4f8180;
 }

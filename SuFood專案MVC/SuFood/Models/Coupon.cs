@@ -7,11 +7,6 @@ namespace SuFood.Models
 {
     public partial class Coupon
     {
-        public Coupon()
-        {
-            Orders = new HashSet<Orders>();
-        }
-
         public int CouponId { get; set; }
         public string CouponDescription { get; set; }
         public string CouponName { get; set; }
@@ -19,7 +14,5 @@ namespace SuFood.Models
         public int? MinimumPurchasingAmount { get; set; }
         public DateTime? CouponStartDate { get; set; }
         public DateTime? CouponEndDate { get; set; }
-
-        public virtual ICollection<Orders> Orders { get; set; }
     }
 }

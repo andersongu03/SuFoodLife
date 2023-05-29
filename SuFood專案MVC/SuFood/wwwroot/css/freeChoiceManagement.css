@@ -247,7 +247,7 @@ select {
 
 /* Status */
 .active {
-    background: green;
+    background: #106f10;
     color: #fff;
     display: block;
     /* width: fit-content; */
@@ -258,7 +258,8 @@ select {
 }
 
 .frozen {
-    background: rgb(218, 14, 14);
+    /*background: rgb(218, 14, 14);*/
+    background-color: RGB(220,53,69) !important;
     color: #fff;
     display: block;
     /* width: fit-content; */
@@ -314,7 +315,7 @@ input[type="file"] {
     padding: 1rem;
     width: 60%;
     height: 100%;
-    background: var(--first-color-second);
+    background-color: #4f8180;
     color: #fff;
     border-radius: 30px;
     cursor: pointer;
@@ -513,4 +514,20 @@ table tbody tr {
 .Recent-order table {
     font-weight: bold;
     font-size: 1.1rem;
+}
+
+.delete-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .8rem;
+}
+
+.modal__button,
+.modal__close {
+    background-color: #4f8180;
+}
+
+.modal__button:hover{
+    background-color: #4f8180;
 }

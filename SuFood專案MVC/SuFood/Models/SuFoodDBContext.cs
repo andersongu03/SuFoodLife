@@ -118,16 +118,13 @@ namespace SuFood.Models
 
             modelBuilder.Entity<Orders>(entity =>
             {
-                entity.HasIndex(e => e.Status, "UQ_Status")
-                    .IsUnique();
-
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.DiscountId).HasColumnName("Discount_Id");
+                entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
 
                 entity.Property(e => e.OrderStatus)
                     .IsRequired()
@@ -135,11 +132,6 @@ namespace SuFood.Models
                     .HasColumnName("Order_Status");
 
                 entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
-
-                entity.Property(e => e.PaymentMethod)
-                    .IsRequired()
-                    .HasMaxLength(10)
-                    .HasColumnName("Payment_method");
 
                 entity.Property(e => e.SetOrdersDatetime)
                     .HasColumnType("datetime")
@@ -150,10 +142,6 @@ namespace SuFood.Models
                     .HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
-
-                entity.Property(e => e.Status)
-                    .IsRequired()
-                    .HasMaxLength(10);
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)

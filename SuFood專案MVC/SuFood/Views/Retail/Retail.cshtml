@@ -3,8 +3,7 @@
     <link rel="stylesheet" href="~/商品明細用到的/css/templatemo.css" />
     <link rel="stylesheet" href="~/商品明細用到的/css/custom.css" />
     <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap" />
     <link rel="stylesheet" href="~/商品明細用到的/css/fontawesome.min.css" />
     <!-- jimmy's css && font-awsome -->
     <link rel="stylesheet" href="~/商品明細用到的/css/myStyle.css" />
@@ -29,6 +28,29 @@
     .dropdown-menu a:hover {
         background-color: #d84b59;
         color: white;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 15%;
+        text-align: center;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
     }
 
 </style>
@@ -108,12 +130,12 @@
                                             <li>
                                                 <a class="btn btn-danger text-white"
                                                    href="#"
-                                                   @@click.prevent="addToChart(p)">
-                                                    <i class="far fa-heart"></i>
+                                                   style="animation-play-state:paused">
+                                                    <i class="fa-heart" @@click.prevent="addCart(p.productId)"></i>
                                                 </a>
-                                            </li>s
+                                            </li>
                                             <li>
-                                                <a class="btn btn-danger text-white mt-2" @@click="goSingle(p.productId)">
+                                                <a class="btn btn-danger text-white mt-2" @@click.prevent="goSingle(p.productId)">
                                                     <i class="far fa-eye"></i>
                                                 </a>
 
@@ -151,6 +173,11 @@
             </div>
         </div>
         <!-- 零售終點 -->
+        <div class="modal" :style="{ display: modalVisible ? 'block' : 'none' }">
+            <div class="modal-content">
+                <p class="text-danger fw-bold">{{showAlert }}</p>
+            </div>
+        </div>
     </section>
 </main>
 
@@ -160,15 +187,24 @@
     <script src="~/axios/axios.min.js"></script>
     <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
     <script src="https://cdn.rawgit.com/matfish2/vue-pagination-2/controlled-component/dist/vue-pagination-2.min.js"></script>
-    
+
     <script>
         var product = new Vue({
             el: "#main",
             data: {
                 product: [],
+                cart:{
+                    "cartId": 0,
+                    "accountId": null,
+                    "cartQuantity": null,
+                    "productId": null
+                },
                 category: [],
                 keyWord: "",
                 sortType: 0,   //排序0是原本的,1是價格排序遞增,2是價格排序遞減
+                modalVisible: false,
+                showAlert: "", 
+                getAccountId:""
             },
             methods: {
                 GetProductList() {
@@ -195,7 +231,35 @@
                 },
                 goSingle: function (productId) {
                     window.location.href = "/Retail/SingleProduct?productId=" + productId;
+                },
+                addCart(productId) {
+                    this.cart = {
+                        ProductId: productId,
+                    };                    
+                    axios.post("/Retail/Add2Cart", this.cart, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                        .then(response => {                            
+                            if (response.data.getAccountId) {
+                                this.getAccountId = response.data.getAccountId;
+                                this.showAlert = "成功加入購物車";                                
+                                console.log(this.cart);                                
+                            } else {                               
+                                this.showAlert = "你要先登入哦";                                
+                            }
+                            this.modalVisible = true;
+                            setTimeout(() => {
+                                this.modalVisible = false;
+                            }, 2000);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 }
+
+
             },
             computed: {
                 //搜尋排序

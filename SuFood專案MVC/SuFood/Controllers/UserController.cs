@@ -178,6 +178,8 @@ namespace SuFood.Controllers
             //登入並給一張憑證
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,claimsPrincipal);
 
+            HttpContext.Session.SetString("GetAccountId", Convert.ToString(user.AccountId));
+
             return RedirectToAction("Index", "Home");
         }
 

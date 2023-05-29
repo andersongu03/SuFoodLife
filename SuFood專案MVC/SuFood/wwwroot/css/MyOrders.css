@@ -2,3 +2,16 @@
     background-color: #4f8180 !important;
     color: white !important;
 }
+.Mytitle {
+    font-size: 2.5rem;
+    padding-top: 1rem;
+}
+
+.MyOrders {
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    height: 100vh;
+    font-family: 'Mukta';
+    margin-top: 2rem;
+}

@@ -25,7 +25,7 @@ namespace SuFood.Controllers
 		{
 			return Json(_context.Orders);
 		}
-		//"/MyOrdersController/CreateComment"
+		//"/MyOrders/CreateComment"
 
 		[HttpPost]
 		public async Task<string> CreateComment([FromBody] VmComment x)

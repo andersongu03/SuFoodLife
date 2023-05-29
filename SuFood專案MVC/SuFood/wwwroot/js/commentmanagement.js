@@ -4,7 +4,7 @@
     {
         keyword:"",
         topic: '評論管理',
-        kesi: "",
+        toast: "",
         deleteId: undefined,
         reviewId: undefined,
         OrdersId: undefined,
@@ -93,7 +93,7 @@
             /*console.log("觸發");*/
             var _this = this
             axios.delete(`/BackStage/CommentManagement/DeleteComment/${id}`).then(response => {
-                this.kesi = response.data;
+                this.toast = response.data;
                 this.closepopupShowHint()
                 _this.GetComments();
             })
@@ -117,7 +117,7 @@
             else {
                 axios.post('/BackStage/CommentManagement/CreateComment', request 
                 ).then(response => {
-                    _this.kesi = response.data
+                    _this.toast = response.data
                     /*console.log('123')*/
                     this.closepopupShowHint()
                     _this.GetComments()
@@ -137,21 +137,15 @@
                     'Content-Type':'application/json'
                 }
             }).then(response => {
-                this.kesi = response.data,
+                this.toast = response.data,
                 this.closepopupShowHint()
                 _this.GetComments()
             })
         }
-
     },
     computed: {
         filter() {
-            //篩選
-            console.log('123')
-            return this.or.filter(ri => ri.reviewId.toLowerCase().includes(this.keyword.toLowerCase()))
-            arr = this.or.filter(o => {
-                return o.or.indexOf(this.keyword)!=-1
-            })
+            arr = this.or.filter(o => {return o.or.indexOf(this.keyword)!=-1})
         }
     },
     mounted() {

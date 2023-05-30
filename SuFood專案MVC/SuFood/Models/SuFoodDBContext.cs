@@ -20,9 +20,9 @@ namespace SuFood.Models
 
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
+        public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
-        public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
@@ -99,6 +99,34 @@ namespace SuFood.Models
                 entity.Property(e => e.MinimumPurchasingAmount).HasColumnName("Minimum_PurchasingAmount");
             });
 
+            modelBuilder.Entity<CouponUsedList>(entity =>
+            {
+                entity.HasKey(e => e.CouponUsedId)
+                    .HasName("PK_CooponUSE_List");
+
+                entity.ToTable("CouponUsed_List");
+
+                entity.Property(e => e.CouponUsedId).HasColumnName("CouponUsed_Id");
+
+                entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
+
+                entity.Property(e => e.CustomerId).HasColumnName("Customer_Id");
+
+                entity.Property(e => e.UseCouponDate)
+                    .HasColumnType("date")
+                    .HasColumnName("UseCoupon_Date");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.CouponId)
+                    .HasConstraintName("FK_Coopon_TO_CooponUSE_List");
+
+                entity.HasOne(d => d.Customer)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.CustomerId)
+                    .HasConstraintName("FK_Account_TO_CooponUSE_List");
+            });
+
             modelBuilder.Entity<FreeChoicePlans>(entity =>
             {
                 entity.HasKey(e => e.PlanId)
@@ -128,6 +156,7 @@ namespace SuFood.Models
                 entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
 
                 entity.Property(e => e.OrderStatus)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
@@ -137,26 +166,23 @@ namespace SuFood.Models
                     .HasColumnType("datetime")
                     .HasColumnName("SetOrders_Datetime");
 
-                entity.Property(e => e.ShipAddress).HasMaxLength(50);
+                entity.Property(e => e.ShipAddress)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
-            });
 
-            modelBuilder.Entity<OrdersDetails>(entity =>
-            {
-                entity.HasKey(e => new { e.OrderId, e.ProductId });
-
-                entity.ToTable("Orders_details");
-
-                entity.Property(e => e.OrderId).HasColumnName("Order_Id");
-
-                entity.Property(e => e.ProductId).HasColumnName("Product_Id");
-
-                entity.HasOne(d => d.Order)
-                    .WithMany(p => p.OrdersDetails)
-                    .HasForeignKey(d => d.OrderId)
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.AccountId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Orders_details_Orders");
+                    .HasConstraintName("FK_Account_TO_Orders");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.Orders)
+                    .HasForeignKey(d => d.CouponId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Coopon_TO_Orders");
             });
 
             modelBuilder.Entity<OrdersReview>(entity =>

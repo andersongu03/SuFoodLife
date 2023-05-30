@@ -50,13 +50,13 @@
             }, 2000)
         },
         createComment() {
-            /*console.log('123')*/
+           /* console.log('123')*/
             this.CreateOrEditOrDelete = 'Create';
             this.popupShowing.showPopup= true;
            
         },
         CloseComment() {
-            /*console.log('123')*/
+           /* console.log('123')*/
             this.popupShowing.showPopup = false;
         },
         closepopupShowHint() {

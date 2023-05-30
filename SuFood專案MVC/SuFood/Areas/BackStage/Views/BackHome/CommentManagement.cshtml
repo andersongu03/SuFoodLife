@@ -81,8 +81,8 @@
 								<input class="form-control" type="text" v-model="editCommentList.comment" />
 							</div>
 							<div>
-								<button type="button" class="btn btn-success ssaveBtn" @@click="EditComment(editCommentList)"> 保存 </button>
 								<button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
+								<button type="button" class="btn btn-primary saveBtn" @@click="EditComment(editCommentList)"> 保存 </button>
 							</div>
 						</form>
 					</div>
@@ -108,8 +108,8 @@
 								<label class="form-label">評論:<span>{{editCommentList.comment}}</span></label>
 							</div>
 							<div>
-								<button type="button" class="btn btn-danger" @@click="CloseComment">取消 </button>
-								<button type="button" class="btn btn-success ssaveBtn" @@click="DeleteComment(editCommentList.ordersId)"> 刪除</button>
+								<button type="button" class="btn btn-primary" @@click="CloseComment">取消 </button>
+								<button type="button" class="btn btn-danger ssaveBtn" @@click="DeleteComment(editCommentList.ordersId)"> 刪除</button>
 							</div>
 						</form>
 					</div>
@@ -152,7 +152,11 @@
 			</div>
 		</template>
 	</div>
-
+	<!--========== Messge toast ==========-->
+	<div class="message-toast-wrapper" :class="toastHintStyle">
+		<i class='bx bxs-check-circle message-toast-icon'></i>
+		<p class="message-toast-title">{{toast}}</p>
+	</div>
 </div>
 
 

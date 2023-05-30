@@ -43,6 +43,7 @@
             },2000)
         },
         createComment() {
+            /*console.log('123')*/
             this.CreateOrEditOrDelete = 'Create';
             this.popupShowing.showPopup = true;
         },
@@ -82,7 +83,6 @@
                 axios.post('MyOrders/CreateComment', request
                 ).then(response => {
                     _this.toast = response.data
-                    /*console.log('123')*/
                     this.closepopupShowHint()
                     _this.GetComments()
                 })

@@ -1,6 +1,7 @@
 ﻿@section Styles{
 	<link href="~/css/usermanagement.css" rel="stylesheet" />
 	<link href="~/css/myorders.css" rel="stylesheet" />
+	<link href="~/css/model.css" rel="stylesheet" />
 }
 <section class="user__management section align-items-center section-bg" id="user__management">
     <div class="user__management-container container row">
@@ -21,7 +22,7 @@
                                 <th scope="col">訂單編號</th>
                                 <th scope="col">訂購日期</th>
                                 <th scope="col">訂單狀態</th>
-                                <th scope="col">付款方式</th>
+                                <th scope="col">評論</th>
                                 <th scope="col">金額</th>
                                 <th scope="col">新增評論</th>
                             </tr>
@@ -44,14 +45,14 @@
                                     <span></span>
                                 </td>
                                 <td>
-                                    <button class="btn" @@click="createComment(o)">新增</button>
+                                    <button class="btn" @@click="createComment()">新增</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     @*---------------------Create的視窗--------------*@
                     <template v-if="CreateOrEditOrDelete === 'Create'">
-                        <div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
+                        <div class="cardContent" id="" :class="popupShowing">
                             <div class="cardPopup-body" style="width: 600px; height:500px">
                                 <div class="cardPopup">
                                     <form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
@@ -61,10 +62,10 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="form-label">評論ID<span>{{createCommentList.reviewId}}</span></label>
+                                            <label class="form-label">評論ID<span></span></label>
                                         </div>
                                         <div class="form-group">
-                                            <label class="form-label">星星評價</label>
+                                            <label class="form-label">評價</label>
                                             <input class="form-control" placeholder="5" v-model="createCommentList.ratingStar" />
                                         </div>
                                         <div class="form-group">

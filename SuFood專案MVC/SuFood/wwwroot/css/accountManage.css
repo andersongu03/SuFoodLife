@@ -530,6 +530,26 @@ table tbody tr {
     width: 30%;
 }
 
+.table__container th:nth-child(1),
+.table__container td:nth-child(1) {
+    min-width: 100px;
+}
+.table__container th:nth-child(2),
+.table__container td:nth-child(2) {
+    min-width: 280px;
+}
+.table__container th:nth-child(3),
+.table__container td:nth-child(3) {
+    min-width: 100px;
+}
+.table__container th:nth-child(4),
+.table__container td:nth-child(4) {
+    min-width: 120px;
+}
+.table__container th:nth-child(5),
+.table__container td:nth-child(5) {
+    min-width: 80px;
+}
 .table__container th:nth-child(6),
 .table__container td:nth-child(6) {
     min-width: 80px;
@@ -544,8 +564,18 @@ table tbody tr {
 }
 .table__container th:nth-child(9),
 .table__container td:nth-child(9) {
-    min-width: 125px;
+    min-width: 80px;
 }
+.table__container th:nth-child(10),
+.table__container td:nth-child(10) {
+    min-width: 124px;
+}
+.table__container th:nth-child(10),
+.table__container td:nth-child(10) {
+    min-width: 124px;
+}
+
+
 .table__container td:nth-child(6) {
     display: flex;
     align-items: center;

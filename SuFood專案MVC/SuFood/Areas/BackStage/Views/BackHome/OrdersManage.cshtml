@@ -84,11 +84,12 @@
                     <th>訂單編號</th>
                     <th>訂購方案</th>
                     <th>訂單制度</th>
+                    <th>支付方式</th>
                     <th>成立時間</th>
                     <th>訂單狀態</th>
                     <th>訂單明細</th>
                     <th>總金額</th>
-                    <th>收件資訊</th>
+                    <th>編輯</th>
                     <th>刪除</th>
                 </tr>
             </thead>
@@ -99,36 +100,9 @@
                     <td>20230502186</td>
                     <td>零售</td>
                     <td>一般制</td>
+                    <td>信用卡</td>
                     <td>2023-05-02 12:08:36</td>
                     <td><button class="pending">處理中</button></td>
-                    <td><button class="reci-btn" @@click="viewModal">檢視</button></td>
-                    <td>2300</td>
-                    <td><i class='bx bx bxs-edit sortIcon' @@click="editModal"></i></td>
-                    <td><i class='bx bx-trash sortIcon' @@click="deleteModal"></i></td>
-                </tr>
-
-                <tr>
-                    <td>10113</td>
-                    <td>咕谷咕</td>
-                    <td>20230502186</td>
-                    <td>零售</td>
-                    <td>一般制</td>
-                    <td>2023-05-02 12:08:36</td>
-                    <td><button class="cancel">已取消</button></td>
-                    <td><button class="reci-btn" @@click="viewModal">檢視</button></td>
-                    <td>2300</td>
-                    <td><i class='bx bx bxs-edit sortIcon' @@click="editModal"></i></td>
-                    <td><i class='bx bx-trash sortIcon' @@click="deleteModal"></i></td>
-                </tr>
-
-                <tr>
-                    <td>10113</td>
-                    <td>毛毛蟲</td>
-                    <td>20230502186</td>
-                    <td>零售</td>
-                    <td>一般制</td>
-                    <td>2023-05-02 12:08:36</td>
-                    <td><button class="completed">已完成</button></td>
                     <td><button class="reci-btn" @@click="viewModal">檢視</button></td>
                     <td>2300</td>
                     <td><i class='bx bx bxs-edit sortIcon' @@click="editModal"></i></td>
@@ -169,13 +143,14 @@
                 <i class='bx bx-x'></i>
             </div>
 
-            <h1 class="modal__title">會員資料</h1>
+            
 
             <div class="model row g-5">
                 @*----------檢視模式----------*@
                 <template v-if="currentStatus == 'view'">
                     <div class="row mb-3 flexItems">
                         @*----內容-----*@
+                        <h3 class="modal__title">會員資料</h3>
                         <div>檢視</div>
                     </div>
 

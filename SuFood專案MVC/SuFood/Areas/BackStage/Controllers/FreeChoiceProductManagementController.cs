@@ -85,7 +85,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     }
                 }
 
-                _context.Add(products);
+                _context.Products.Add(products);
                 await _context.SaveChangesAsync();
                 return "新增成功";
             }
@@ -110,7 +110,7 @@ namespace SuFood.Areas.BackStage.Controllers
                         }
                     }
 
-                    _context.Update(products);
+                    _context.Products.Update(products);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

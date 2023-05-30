@@ -23,6 +23,7 @@ namespace SuFood.Models
         public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
+        public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
@@ -156,7 +157,6 @@ namespace SuFood.Models
                 entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
 
                 entity.Property(e => e.OrderStatus)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
@@ -166,23 +166,39 @@ namespace SuFood.Models
                     .HasColumnType("datetime")
                     .HasColumnName("SetOrders_Datetime");
 
-                entity.Property(e => e.ShipAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.ShipAddress).HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_TO_Orders");
 
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.CouponId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Coopon_TO_Orders");
+            });
+
+            modelBuilder.Entity<OrdersDetails>(entity =>
+            {
+                entity.ToTable("Orders_details");
+
+                entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
+
+                entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
+
+                entity.Property(e => e.OrderId).HasColumnName("Order_Id");
+
+                entity.Property(e => e.ProductName)
+                    .HasMaxLength(50)
+                    .HasColumnName("Product_Name");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.OrdersDetails)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK_Orders_details_Orders");
             });
 
             modelBuilder.Entity<OrdersReview>(entity =>

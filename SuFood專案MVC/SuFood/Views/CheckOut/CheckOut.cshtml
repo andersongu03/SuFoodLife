@@ -1,256 +1,300 @@
 ﻿@section styles{
-    <link href="~/css/checkout.css" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link href="~/css/checkout.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 }
 
 <section class="check-out__section" id="app">
-    <div class="check-out__container">
-        <div class="check-out-status-container">
-            <div v-for="tab in tabs" class="check-out-status flexItem" :class="{currentStatus: currentTab === tab}">
-                @*@@click="currentTab = tab"*@
-                <p class="flexItem">{{tab}}</p>
-            </div>
-        </div>
-        <div class="check-out-content row">
-            <!-- 確認購物車 -->
-            <template v-if="currentTab == '1.確認購物車'">
-                <div class="col-8 carts__container">
-                    <h2>購物車</h2>
-                    <div class="scroll">
-                        <table>
-                            <thead>
-                            <th>商品</th>
-                            <th></th>
-                            <th>小計</th>
-                            <th>刪除</th>
-                            </thead>
-                            @*零售明細*@
-                            <tbody>
-                                <tr v-for="c in carts" :key="c.id">
-                                    <td>
-                                        <div class="productItem">
-                                            <div>
-                                                <img :src="c.img" alt="">
-                                            </div>
-                                            <div class="product-body">
-                                                <p>{{c.productName}}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="plusAndMinus">
-                                            <div>
-                                                <i class='bx bx-minus cartsIcon plus' @@click.passive="decrementQuantity(c)"></i>
-                                            </div>
-                                            <input type="number" v-model="c.quantity">
-                                            <div>
-                                                <i class='bx bx-plus cartsIcon minus' @@click.passive="incrementQuantity(c)"></i>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>${{c.price * c.quantity}}</td>
-                                    <td>
-                                        <i @@click="DeleteProducts(c.id)" class="bx bxs-trash tableIcon"></i>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="total">總計: </div>
-                    <div><button class="buy" @@click="currentTab = '2.填寫訂單資訊'">購買</button></div>
-                </div>
-            </template>
-            <!-- 填寫訂單資訊 -->
-            <template v-else-if="currentTab == '2.填寫訂單資訊'">
-                <div class="col-md-8 row flex-column-reverse flex-md-row">
-                    <div class="col-md-7 orderInfo">
-                        <h2 class="section-title">訂單資訊</h2>
-                        <div class="card">
-                            <form action="" class="card-body">
-                                <div class="from-group">
-                                    <label for="name" class="title">收件人姓名</label>
-                                    <input type="text" id="name" name="name" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.RecipientName">
-                                    @*<small class="invalidFeedback">請填寫姓名</small>*@
-                                </div>
-                                <div class="from-group">
-                                    <label for="email" class="title">Email</label>
-                                    <input type="text" id="email" name="email" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Email">
-                                    @*<small class="invalidFeedback">Email不能為空</small>*@
-                                </div>
-                                <div class="from-group">
-                                    <label for="tel" class="title">電話</label>
-                                    <input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Phone">
-                                    @*<small class="invalidFeedback">請填寫聯絡電話</small>*@
-                                </div>
-                                <div class="from-group">
-                                    <label for="tel" class="title">聯絡地址</label>
-                                    <input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Address">
-                                    @*<small class="invalidFeedback">請填寫聯絡地址</small>*@
-                                </div>
-                                <div class="from-group">
-                                    <label for="message" class="title">
-                                        備註
-                                        <small class="text-primary" style="color: #6527a0 !important;">此欄位非必填</small>
-                                    </label>
-                                    <textarea name="" id="mesage" cols="30" rows="6" class="form-control"></textarea>
-                                </div>
-                                <div class="text-right">
-                                    <button type="submit" class="btn btn-success">送出訂單</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="sticky-top commoditiesDetail">
-                            <h2 class="section-title">商品明細</h2>
-                            <ul class="list-unstyled list-group mb-3">
-                                @*<li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div class="flex-shrink-1">
-                                        <h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{freeChoiceProducts.PlanName}}</h4>
-                                        <small>蘋果</small>
-                                    </div>
-                                    <div>
-                                    </div>
-                                    <div class="text-nowrap"><strong class="mr-3">{{freeChoiceProducts.planPrice}}</strong></div>
-                                </li>*@
+	<div class="check-out__container">
+		<div class="check-out-status-container">
+			<div v-for="tab in tabs" class="check-out-status flexItem" :class="{currentStatus: currentTab === tab}"
+				 @@click="currentTab = tab">
+				<p class="flexItem">{{tab}}</p>
+			</div>
+		</div>
+		<div class="check-out-content row">
+			<!-- 確認購物車 -->
+			<template v-if="currentTab == '1.確認購物車'">
+				<div class="col-8 carts__container">
+					<h2>購物車</h2>
+					<div class="scroll">
+						<table>
+							<thead>
+							<th>商品</th>
+							<th></th>
+							<th>小計</th>
+							<th>刪除</th>
+							</thead>
+							@*零售明細*@
+							<tbody>
+								<tr v-for="c in carts" :key="c.id">
+									<td>
+										<div class="productItem">
+											<div>
+												<img :src="c.img" alt="">
+											</div>
+											<div class="product-body">
+												<p>{{c.productName}}</p>
+											</div>
+										</div>
+									</td>
+									<td>
+										<div class="plusAndMinus">
+											<div>
+												<i class='bx bx-minus cartsIcon plus' @@click.passive="decrementQuantity(c)"></i>
+											</div>
+											<input type="number" v-model="c.quantity">
+											<div>
+												<i class='bx bx-plus cartsIcon minus' @@click.passive="incrementQuantity(c)"></i>
+											</div>
+										</div>
+									</td>
+									<td>${{c.price * c.quantity}}</td>
+									<td>
+										<i @@click="DeleteProducts(c.id)" class="bx bxs-trash tableIcon"></i>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="total">總計: </div>
+					<div><button class="buy" @@click="currentTab = '2.填寫訂單資訊'">購買</button></div>
+				</div>
+			</template>
+			<!-- 填寫訂單資訊 -->
+			<template v-else-if="currentTab == '2.填寫訂單資訊'">
+				<div class="cardContent" id="" :class="popupShowing">
+					<div class="cardPopup-body" style="width: 375px; height:260px">
+						<div class="cardPopup">
+							<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+								<div class="closeMark" @@click="closeOrder()">
+									<i class="fa-solid fa-circle-xmark fa-lg"></i>
+								</div>
+								<div class="col-12">
+									<h3 style="font-weight: bold">請選擇您的付款方式</h3>
+								</div>
+								<div class="col-12">
+									<!-- 用表單送給藍新  action="https://ccore.newebpay.com/MPG/mpg_gateway"-->
+									<form name='Newebpay' method='post' action="https://ccore.newebpay.com/MPG/mpg_gateway">
+										<!-- 設定 hidden 可以隱藏不用給使用者看的資訊 -->
+										<!-- 藍新金流商店代號 -->
+										<input type='hidden' id='MerchantID' name='MerchantID' v-model="paymentData.MerchantID">
+										<!-- 交易資料透過 Key 及 IV 進行 AES 加密 -->
+										<input type='hidden' id='TradeInfo' name='TradeInfo' v-model="paymentData.TradeInfo">
+										<!-- 經過上述 AES 加密過的字串，透過商店 Key 及 IV 進行 SHA256 加密 -->
+										<input type='hidden' id='TradeSha' name='TradeSha' v-model="paymentData.TradeSha">
+										<!-- 串接程式版本 -->
+										<input type='hidden' id='Version' name='Version' v-model="paymentData.Version">
+										<!-- 直接執行送出 -->
+										<input type='submit' value='前往付款'>
+										@*<button value='前往付款'>123</button>*@
+										<button value='準備' v-on:click.prevent="pay(1)">123</button>
+									</form>
+									<a v-on:click.prevent="pay('credit')" class="btn btnpaymentinstrument paybycreditcard">
+										<i class="fa-solid fa-credit-card fa-2xl"></i>
+										<span style="font-size: 1.3rem">&nbsp信用卡支付</span>
+									</a>
+								</div>
+								<div class="col-12">
+									<a v-on:click.prevent="pay('bank')" class="btn btnpaymentinstrument">
+										<i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
+										<span style="font-size: 1.3rem">&nbsp銀行轉帳</span>
+									</a>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8 row flex-column-reverse flex-md-row">
+					<div class="col-md-7 orderInfo">
+						<h2 class="section-title">訂單資訊</h2>
+						<div class="card">
+							<form action="" class="card-body">
+								<div class="from-group">
+									<label for="name" class="title">收件人姓名</label>
+									<input type="text" id="name" name="name" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.RecipientName">
+									@*<small class="invalidFeedback">請填寫姓名</small>*@
+								</div>
+								<div class="from-group">
+									<label for="email" class="title">Email</label>
+									<input type="text" id="email" name="email" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Email">
+									@*<small class="invalidFeedback">Email不能為空</small>*@
+								</div>
+								<div class="from-group">
+									<label for="tel" class="title">電話</label>
+									<input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Phone">
+									@*<small class="invalidFeedback">請填寫聯絡電話</small>*@
+								</div>
+								<div class="from-group">
+									<label for="tel" class="title">聯絡地址</label>
+									<input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Address">
+									@*<small class="invalidFeedback">請填寫聯絡地址</small>*@
+								</div>
+								<div class="from-group">
+									<label for="message" class="title">
+										備註
+										<small class="text-primary" style="color: #6527a0 !important;">此欄位非必填</small>
+									</label>
+									<textarea name="" id="mesage" cols="30" rows="6" class="form-control"></textarea>
+								</div>
+								<div class="text-right">
+									<button type="submit" class="btn btn-success" @@click.prevent="SubmitOrder()">送出訂單</button>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="sticky-top commoditiesDetail">
+							<h2 class="section-title">商品明細</h2>
+							<ul class="list-unstyled list-group mb-3" v-for="pl in plan">
+								<li class="list-group-item d-flex justify-content-between align-items-center">
+									<div class="flex-shrink-1">
+										<h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{ pl.plan.planName }}</h4>
+										<small>{{ pl.plan.planDescription}}{{ pl.plan.planCanChoiceCount }}</small>
+									</div>
+									<div>
+									</div>
+									<div class="text-nowrap"><strong class="mr-3">${{ pl.plan.planPrice }}</strong></div>
+								</li>
+								<li class="list-group-item">
+									<div class="input-group">
+										<input type="text" placeholder="SuFood" class="form-control">
+										<div class="input-group-append"><button type="button" class="btn btn-secondary">使用招待券</button></div>
+									</div>
+								</li>
+								<li class="list-group-item text-right"><strong>總計：${{ pl.plan.planPrice }}</strong></li>
+							</ul>
+						</div>
+					</div>
+				</div>
 
-                                <template v-if="status == 'free'">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        <div class="flex-shrink-1">
-                                            <h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{freeChoiceProducts.PlanName}}</h4>
-                                            <ul class="freeChoice-products-details">
-                                                <li v-for="sp in freeChoiceProducts.selectedProducts">
-                                                    <small>{{sp.productName}}</small>
-                                                    <small>X{{sp.quantity}}</small>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </li>
-                                </template>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <input type="text" placeholder="SuFood" class="form-control">
-                                        <div class="input-group-append"><button type="button" class="btn btn-secondary">使用招待券</button></div>
-                                    </div>
-                                </li>
-                                <li class="list-group-item text-right"><strong>總計：${{ freeChoiceProducts.planPrice }}</strong></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-            </template>
-            <template v-else>
-                <div class="col-8 orders__container">
-                    <h1>完成購買</h1>
-                    <img src="~/img/productmanagement/vegetable.png" />
-                    <div class="buttons__container">
-                        <button class="gohome">回到首頁</button>
-                        <button class="checkOrders">查看訂單</button>
-                    </div>
-                </div>
-            </template>
-        </div>
-    </div>
+			</template>
+			<template v-else>
+				<div class="col-8 orders__container">
+					<h1>完成購買</h1>
+					<img src="~/img/productmanagement/vegetable.png" />
+					<div class="buttons__container">
+						<button class="gohome">回到首頁</button>
+						<button class="checkOrders">查看訂單</button>
+					</div>
+				</div>
+			</template>
+		</div>
+	</div>
 </section>
 
-@section scripts{
-    <script src="~/axios/axios.min.js"></script>
-    <script src="~/js/vue.js"></script>
-    <script>
-        const vm = new Vue({
-            el: "#app",
-            data: {
-                tabs: ['1.確認購物車', '2.填寫訂單資訊', '3.完成購買'],
-                currentTab: '1.確認購物車',
-                carts: [
-                    { 'id': 1, 'productName': '建達繽紛樂', 'quantity': 1, 'price': 1200, 'img': '' },
-                    { 'id': 2, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
-                    { 'id': 3, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
-                ],
-                submit: {
-                    RecipientName: '',
-                    Email: '',
-                    Address: '',
-                    Phone: '',
-                },
-                plan: [],
+@section Scripts{
+	<script src="~/axios/axios.min.js"></script>
+	<script src="~/js/vue.js"></script>
+	<script>
+		const vm = new Vue({
+			el: "#app",
+			data: {
+				tabs: ['1.確認購物車', '2.填寫訂單資訊', '3.完成購買'],
+				currentTab: '1.確認購物車',
+				carts: [
+					{ 'id': 1, 'productName': '建達繽紛樂', 'quantity': 1, 'price': 1200, 'img': '' },
+					{ 'id': 2, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
+					{ 'id': 3, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
+				],
+				popupShowing: {
+					showPopup: false,
+				},
+				submit: {
+					RecipientName: '',
+					Email: '',
+					Address: '',
+					Phone: '',
+				},
+				onlinePayment: {
+					"orderId": null,
+					"merchantID": null,
+					"tradeInfo": null,
+					"tradeSha": null,
+					"version": null
+				},
+				plan: [],
+				product: [],
+				paymentData: {
+					MerchantID: '',
+					TradeInfo: '',
+					TradeSha: '',
+					Version: '2.0'
+				},
+				/*RetailOrFreeChoice:'',*/
+				/*isInvalid: true,*/
+			},
+			methods: {
+				SubmitOrder() {
+					this.popupShowing.showPopup = true;
+				},
+				closeOrder() {
+					this.popupShowing.showPopup = false;
+				},
+				pay(orderId) {
+					//this.onlinePayment.OrderId = orderId
+					console.log(orderId)
+					let _this = this;
 
-                //自由選商品明細清單，會從localStorage取得資料
-                status: null,
-                product: [],
-                /*RetailOrFreeChoice:'',*/
-                /*isInvalid: true,*/
-            },
-            methods: {
-                //incrementQuantity(c) {
-                //	if (c.quantity < 100) {
-                //		c.quantity += 1
-                //	}
-                //},
-                //decrementQuantity(c) {
-                //	if (c.quantity > 0) {
-                //		c.quantity -= 1
-                //	}
-                //},
-                //DeleteProducts(id) {
-                //    console.log(this.carts.map(x => x.id).indexOf(id))
-                //    this.carts.splice(this.carts.map(x => x.id).indexOf(id), 1)
-                //},
-                //GetPlanInfo() {
-                //	axios("/CheckOut/GetPlanToCart").then(response => {
-                //		//console.log("data", response.data);
-                //		response.data.forEach(x => console.log('x', x));
-                //		var abc = this.plan.push
+					let onlinePayment = {
+						"orderId": orderId,
+						"merchantID": null,
+						"tradeInfo": "",
+						"tradeSha": "",
+						"version": ""
+					};
+					
 
-                //	})
-                //},
-                GetPlanInfo() {
-                    axios("/CheckOut/GetPlanToCart").then(response => {
-                        this.plan = response.data;
-                        console.log(this.plan);
-                    });
-                }
-                //GetProductInfo(){
-                //	axios("/CheckOut/GetPlanToCart").then(response => {
-                //		this.product = response.data
-                //	})
-                //}
-            },
-            computed: {
-                //自由選商品明細清單，會從localStorage取得資料
-                freeChoiceProducts() {
-                    if (localStorage.getItem("purchaseList") !== null) {
-                        this.currentTab = "2.填寫訂單資訊"
-                        this.status = 'free'
-                        return JSON.parse(localStorage.getItem("purchaseList"))
-                    }
-                }
+					axios.post("/OnlinePayment/Payment", onlinePayment, {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(response => {
+						this.paymentData.MerchantID = response.data.merchantID;
+						this.paymentData.TradeInfo = response.data.tradeInfo;
+						this.paymentData.TradeSha = response.data.tradeSha;
+					})
+				},
+				pay2(id) {
+					this.pay(id)
 
-                //totalPrice() {
-                //    let subTotal = this.carts.map(product => product.quantity * product.price);
-                //    if (this.carts.length > 0) {
-                //        return subTotal.reduce((a, b) => a + b);
-                //    }
-                //},
-                //choicePrice() {
-                //	let total = this.cartsForFreeChoice.m
-                //}
-                //		validationForm() {
-                //	if (this.submit.RecipientName === '123') {
-                //		console.log('123');
-                //		return false;
-                //	}
-                //},
-            },
-            mounted() {
-                //this.GetPlanInfo();
-                this.freeChoiceProducts()
+					var formData = new FormData();
+					formData.append('MerchantID', this.paymentData.MerchantID);
+					formData.append('TradeInfo', this.paymentData.TradeInfo);
+					formData.append('TradeSha', this.paymentData.TradeSha);
+					formData.append('Version', "2.0");
 
-            }
-        })
+					axios.post("https://ccore.newebpay.com/MPG/mpg_gateway", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+						.then(response => {
+							console.log(response.data)
+						})
+				}
+			},
 
-    </script>
+		});
+
+	</script>
 }
+@*
+	//computed: {
+			//	//totalPrice() {
+			//	//    let subTotal = this.carts.map(product => product.quantity * product.price);
+			//	//    if (this.carts.length > 0) {
+			//	//        return subTotal.reduce((a, b) => a + b);
+			//	//    }
+			//	//},
+			//	//choicePrice() {
+			//	//	let total = this.cartsForFreeChoice.m
+			//	//}
+			//	//		validationForm() {
+			//	//	if (this.submit.RecipientName === '123') {
+			//	//		console.log('123');
+			//	//		return false;
+			//	//	}
+			//	//},
+			//},
+			//mounted() {
+			//	this.GetPlanInfo();
+			//}*@

@@ -531,8 +531,7 @@ table tbody tr {
     width: 100%;
 }
 
-.table__container th:nth-child(1),
-.table__container td:nth-child(1),
+
 .table__container th:nth-child(2),
 .table__container td:nth-child(2),
 .table__container th:nth-child(4),
@@ -564,18 +563,31 @@ table tbody tr {
 }
 .table__container th:nth-child(10),
 .table__container td:nth-child(10) {
-    min-width: 105px;
+    min-width: 90px;
 }
 
 
+
+.table__container th:nth-child(9),
 .table__container td:nth-child(9) {
+    min-width: 75px;
+}
+
+.table__container td:nth-child(8) {
+    margin-top: 2px;
     display: flex;
-    align-items: center;
     justify-content: center;
 }
 
 .table__container td:nth-child(4){
     margin: 0 auto;
+}
+
+.table__container th:nth-child(3),
+.table__container td:nth-child(3) {
+    min-width: 230px;
+    max-width: 230px;
+    padding: 0;
 }
 
 

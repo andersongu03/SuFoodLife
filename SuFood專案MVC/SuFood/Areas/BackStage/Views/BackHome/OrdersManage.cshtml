@@ -11,7 +11,7 @@
 
     @*----------1.會員搜尋列----------*@
     <div class="row mb-3">
-        <div class="col-2">
+        <div class="col-4">
             <div class="searchBar">
                 <div class="inputWrapper">
                     <i class='bx bx-search-alt-2 searchIcon'></i>
@@ -29,19 +29,6 @@
                         <option value="all">零售</option>
                         <option value="active">自由選</option>
                         <option value="frozen">幫你選</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-2">
-            <div class="title"></div>
-            <div class="content">
-                <div class="StatusBar">
-                    <select>
-                        <option value="all">訂單制度</option>
-                        <option value="all">一般制</option>
-                        <option value="active">訂閱制</option>
                     </select>
                 </div>
             </div>
@@ -79,27 +66,27 @@
         <table>
             <thead>
                 <tr>
-                    <th>會員ID</th>
-                    <th>姓名</th>
                     <th>訂單編號</th>
+                    <th>會員ID</th>
+                    <th>帳號</th>
                     <th>訂購方案</th>
-                    <th>訂單制度</th>
+                    @*<th>訂單制度</th>*@
                     <th>支付方式</th>
                     <th>成立時間</th>
                     <th>訂單狀態</th>
                     <th>訂單明細</th>
                     <th>總金額</th>
-                    <th>編輯</th>
+                    <th>收件資訊</th>
                     <th>刪除</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>10113</td>
-                    <td>毛毛蟲</td>
                     <td>20230502186</td>
+                    <td>10113</td>
+                    <td>xxxxxxxxxxx@gmail.com</td>
                     <td>零售</td>
-                    <td>一般制</td>
+                    @*<td>一般制</td>*@
                     <td>信用卡</td>
                     <td>2023-05-02 12:08:36</td>
                     <td><button class="pending">處理中</button></td>

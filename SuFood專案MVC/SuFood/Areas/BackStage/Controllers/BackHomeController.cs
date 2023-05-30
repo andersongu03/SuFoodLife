@@ -58,21 +58,6 @@ namespace SuFood.Areas.BackStage.Controllers
             return View();
         }
 
-        public object GetOrdersDetails()
-        {
-            return _context.OrdersDetails.GroupBy(od => od.Order.OrdersId).Select(o => new
-            {
-                OrderId = o.Select(o => o.OrderId).SingleOrDefault()
-            });
-        }
-
-        public object GetOrdersDetails2()
-        {
-            var orderId = _context.Orders.Where(x => x.OrdersId == 2).Select(d => d.OrdersId).FirstOrDefault();
-            var productIdofOrderDetailds = _context.OrdersDetails.Where(od => od.OrderId == orderId);
-            return productIdofOrderDetailds;
-        }
-
         // <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
         //public IActionResult Coupoun()
         //{

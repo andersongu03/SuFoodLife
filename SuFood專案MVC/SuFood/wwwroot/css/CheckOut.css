@@ -405,3 +405,19 @@ label {
     font-size: 80%;
     color: #f13246;
 }*/
+
+
+/*----- 自由選 -----*/
+.freeChoice-products-details {
+    margin-top: 10px;
+    list-style-type: decimal;
+}
+
+.freeChoice-products-details li{
+    display: block;
+    min-width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}

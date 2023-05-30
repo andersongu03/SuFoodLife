@@ -39,7 +39,7 @@ namespace SuFood.Controllers
 					//count(Product_Id) AS 幾筆Product
 					//from ProductsOfPlans
 					//group by PlanId
-				}).SingleOrDefault(),
+				}).FirstOrDefault(),
 				Product = group.Select(p => new VmProductToCart
 				{
 					ProductId = p.Product.ProductId,

@@ -44,60 +44,15 @@
                         <td>{{a.firstName}}{{a.lastName}}</td>
                         <td>{{a.phone}}</td>
                         <td>{{a.role}}</td>
-                        <td>{{a.isActive}}</td>
-                        <td>
-                           @* <button class="reci-btn" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                檢視
-                            </button>
-
-                            <!--Modal start-->
-                            <div class="modal-dialog modal-dialog-centered" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="exampleModalLabel">收件資訊</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div>郵遞區號：<label for="">100</label></div>
-                                            <div>郵寄地址：<label for="">台北市中正區濟南路一段xx號</label></div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <!-- <button type="button" class="btn btn-primary">儲存</button> -->
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--Modal end-->*@
-                        </td>
-                            
-
-
-                        
+                        <td>{{a.isActive}}</td>        
                         <td><a href=""><i class='bx bx-file-find'></i></a></td>
-                        <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                        <td><button class="delete-item" type="button"><i class='bx bx-trash' data-bs-target="#deleteModal" ></i></button>
-						<!--Modal start-->
-                        <div class="modal-dialog modal-dialog-centered" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-							<div class="modal-dialog">
-								<div class="modal-content">
-									<div class="modal-header">
-										<h5 class="modal-title" id="exampleModalLabel">收件資訊</h5>
-										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-									</div>
-									<div class="modal-body">
-										<div>郵遞區號：<label for="">100</label></div>
-										<div>郵寄地址：<label for="">台北市中正區濟南路一段xx號</label></div>
-									</div>
-									<div class="modal-footer">
-										<!-- <button type="button" class="btn btn-primary">儲存</button> -->
-										<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-									</div>
-								</div>
-							</div>
-						</div>
-                        </td>
+                        <td><i class='bx bxs-edit'></i></td>
+                        <td><button type="button" class="btn btn-success">修改</button></td>
+                        <td><button type="button" class="btn btn-danger" @@click="deleteConfirm(a)" data-bs-target="#deleteModal">刪除</button></td>
+
+
+                        <td><button class="delete-item" type="button"><i class='bx bx-trash' data-bs-target="#deleteModal" ></i></button></td>
+
                         <td>{{a.createDatetime}}</td>
                         <td>{{a.lasttImeLogin}}</td>
                     </tr>
@@ -105,9 +60,6 @@
             </table>
         </div>
     </div>
-
-   
-
 </div>
 
 
@@ -119,7 +71,11 @@
         const main = new Vue({
             el: "#main",
             data: {
-                vmAccount: [],            
+                vmAccount: [],
+                delAcc:{
+                    title:"",
+                    msg:""
+                }
             },
             mounted() {   
                 this.getAccounts();
@@ -162,6 +118,10 @@
                 },
                 //deleteAccount: function(id){
                 //    let _this = this;
+
+                deleteConfirm:function(item){
+                    this.delAcc.title = item.
+                }
 
 
 

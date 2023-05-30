@@ -1,151 +1,187 @@
-﻿@section Styles
-{
-	<link href="~/css/accountmanage.css" rel="stylesheet" />
+﻿@section Styles{
+    <link href="~/css/model.css" rel="stylesheet" />
+    <link href="~/css/accountmanage.css" rel="stylesheet" />
 }
 
-<div class="col user__management-content" id="main">
-    <!-- 內容 -->
-    <div class="account-container">
-        <h4>會員列表</h4>
 
-        <div class="wrap">
-            @*篩選欄位*@
-            @*v-model="filter"*@
-            <div class="search">
-                <input class="search-bar form-control col-md-2" type="search" name="search" id="search" placeholder="請輸入會員ID或姓名">
-                <button class="search-btn col-md" type="button"><i class='bx bx-search-alt-2'></i></button>
+<div class="account-container col-10" id="accountManagement">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h2>會員列表</h2>
+    </div>
+
+    @*----------1.會員搜尋列----------*@
+    <div class="content">
+        <div class="searchBar">
+            <div class="inputWrapper">
+                <i class='bx bx-search-alt-2 searchIcon'></i>
+                <input type="text" class="inputSearch" placeholder="Search...">
             </div>
         </div>
+    </div>
 
-        <!-- 2.會員管理區塊-->
-        <div class="form-group accountmanage">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <td>ID</td>
-                        <td>帳號</td>
-                        <td>姓名</td>
-                        <td>手機號碼</td>
-                        <td>角色</td>
-                        <td>狀態</td>
-                        <td>訂單</td>
-                        <td>編輯</td>
-                        <td>刪除</td>
-                        <td>創建時間</td>
-                        <td>最新登入時間</td>
-                    </tr>
-                </thead>
+    @*----------2.資料表格----------*@
+    <div class="table__container">
+        <table>
+            <thead>
+                <tr>
+                    <th>會員ID</th>
+                    <th>會員帳號</th>
+                    <th>姓名</th>
+                    <th>手機號碼</th>
+                    <th>角色</th>
+                    <th>狀態</th>                    
+                    <th>訂單</th>
+                    <th>編輯</th>
+                    <th>刪除</th>
+                    <th>會員創建時間</th>
+                    <th>最新登入時間</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>10113</td>
+                    <td>xxxxxxxxxx@gmail.com</td>
+                    <td>毛毛蟲</td>
+                    <td>0912345678</td>
+                    <td>會員</td>
+                    <td>TRUE</td>
+                    <td><i @@click="viewModal" class='bx bx-file-find sortIcon'></i></td>
+                    <td><i @@click="editModal" class='bx bx bxs-edit sortIcon'></i></td>
+                    <td><i @@click="deleteModal" class='bx bx-trash sortIcon'></i></td>
+                    <td>2023-05-27</td>
+                    <td>2023-05-27</td>
+                </tr>
+            </tbody>
+        </table>
+        @*<template v-if="filterproducts.length == 0">
+        <h1><i class='bx bx-smile'></i>商品不存在喔!!</h1>
+        </template>*@
+    </div>
 
-                <tbody>
-                    <!-- 2-1.會員1號-->
-                    <tr v-for="a in vmAccount">
-                        <th class="th" scope="row">{{a.accountId}}</th>
-                        <td>{{a.account1}}</td>
-                        <td>{{a.firstName}}{{a.lastName}}</td>
-                        <td>{{a.phone}}</td>
-                        <td>{{a.role}}</td>
-                        <td>{{a.isActive}}</td>        
-                        <td><a href=""><i class='bx bx-file-find'></i></a></td>
-                        <td><i class='bx bxs-edit'></i></td>
-                        <td><button type="button" class="btn btn-success">修改</button></td>
-                        <td><button type="button" class="btn btn-danger" @@click="deleteConfirm(a)" data-bs-target="#deleteModal">刪除</button></td>
+    @*----------3.分頁----------*@
+    <div class="paging">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 
+    @*----------4.MODAL----------*@
+    <div class="modal__container" :class="modalContainerStyle" id="modal-container">
+        <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
+            <div v-if="currentStatus == 'edit' ||currentStatus == 'view'" class="modal__close close-modal" @@click="closeModal" title="Close">
+                <i class='bx bx-x'></i>
+            </div>
 
-                        <td><button class="delete-item" type="button"><i class='bx bx-trash' data-bs-target="#deleteModal" ></i></button></td>
+            <h1 class="modal__title">會員資料</h1>
 
-                        <td>{{a.createDatetime}}</td>
-                        <td>{{a.lasttImeLogin}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="model row g-5">
+                @*----------檢視模式----------*@
+                <template v-if="currentStatus == 'view'">
+                    <div class="row mb-3 flexItems">
+                        @*----內容-----*@
+                        <div>檢視</div>
+                    </div>
+
+                    <button class="modal__button modal__butoon-width">
+                        更新  
+                    </button>
+                </template>
+
+                @*----------編輯模式----------*@
+                <template v-if="currentStatus == 'edit'">
+                    <div class="row delete-modal">
+                        @*----內容-----*@
+                        <div>編輯</div>
+                    </div>
+
+                    <button class="modal__button modal__butoon-width">
+                        更新
+                    </button>
+                </template>
+
+                @*----------刪除模式----------*@
+                <template v-if="currentStatus == 'delete'">
+                    <div class="button-container">
+                        <button class="modal__button modal__butoon-width">
+                            刪除
+                        </button>
+
+                        <button class="modal__button-link close-modal" @@click="closeModal">
+                            取消
+                        </button>
+                    </div>
+                </template>
+            </div>
         </div>
     </div>
+
+    @*----------4.提示訊息----------*@
+    @*<div class="message-toast-wrapper" :class="toastHintStlye">
+    <i v-if="toast=='新增成功' || toast=='修改成功'" class='bx bxs-check-circle message-toast-icon'></i>
+    <i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
+    <p class="message-toast-title">{{toast}}</p>
+    </div>*@
 </div>
 
-
-@section Scripts
-{
-	<script src="~/js/vue.js"></script>
-	<script src="~/axios/axios.min.js"></script>
+@section Scripts{
+    <script src="~/js/vue.js"></script>
     <script>
-        const main = new Vue({
-            el: "#main",
+        const vm = new Vue({
+            el: "#accountManagement",
             data: {
-                vmAccount: [],
-                delAcc:{
-                    title:"",
-                    msg:""
-                }
-            },
-            mounted() {   
-                this.getAccounts();
+                //-- 彈出視窗的效果條件 --//
+                modalContainerStyle: {
+                    showModal: false,
+                },
+                modalContentStyle: {
+                    w200: true,
+                    w800: false
+                },
+                currentStatus: '',
             },
             methods: {
-                getAccounts: function () {
-                    let _this = this;
-                    axios.get("/BackStage/AccountManagement/GetAllAccounts").then(res => {
-                        //alert(JSON.stringify(res.data))
-                        _this.vmAccount = res.data;
-                    })
+                openModal() {
+                    this.modalContainerStyle.showModal = true;
                 },
-                //edit: function () {
-                //    let _this = this;
-                //    _this.oldfirstName = vmAccount.firstName;
-                //    _this.oldlastName = vmAccount.lastName;
-                //    _this.oldphone = vmAccount.phone;
-                //},
-                //cancel: function () {
-                //    let _this = this;
-                //    this.vmAccount.firstName = _this.oldfirstName;
-                //    this.vmAccount.lastName = _this.oldlastName;
-                //    this.vmAccount.phone = _this.oldphone;
-
-                //},
-                //update: function () {
-                //    let _this = this;
-                //    var request = {
-                //        AccountId: this.vmAccount.accountId,
-                //        FirstName: this.vmAccount.firstName,
-                //        LastName: this.vmAccount.lastName,
-                //        Phone: this.vmAccount.phone,
-                //    };
-                //    axios.post(`BackStage/AccountManagement/EditAccounts`, request)
-                //        .then(res => {
-                //            alert(res.data); //update成功
-                //            _this.getAccounts();
-                //        })
-                //    }
+                closeModal() {
+                    this.modalContainerStyle.showModal = false;
                 },
-                //deleteAccount: function(id){
-                //    let _this = this;
+                viewModal() {
+                    this.currentStatus = 'view';
+                    this.modalContentStyle.w200 = false;
+                    this.modalContentStyle.w800 = true;
+                    this.openModal();
+                },
+                editModal(){                    
+                    this.currentStatus = 'edit';
+                    this.modalContentStyle.w200 = false;
+                    this.modalContentStyle.w800 = true;
+                    this.openModal();
+                },                
+                deleteModal() {
+                    this.currentStatus = 'delete';
+                    this.modalContentStyle.w200 = true;
+                    this.modalContentStyle.w800 = false;
+                    this.openModal();
+                },
+            },
+            computed: {
 
-                deleteConfirm:function(item){
-                    this.delAcc.title = item.
-                }
-
-
-
-
-
-                    //if(confirm("確定要刪除此帳戶嗎？")){
-                    //axios.delete(`BackStage/AccountManagement/DeleteAccounts/${id}`).then(res =>{
-                    //    // 刪除成功後的處理 
-                    //    console.log("帳戶刪除成功");
-                    //    _this.getAccounts();
-                    //    // 更新 Vue 組件中的狀態或重新載入資料
-
-                    //    }).catch(error => {
-                    //    // 刪除失敗後的處理
-                    //    console.error("帳戶刪除失敗", error);
-                    //    // 處理錯誤，例如顯示錯誤訊息給使用者
-
-                    //    })
-                    //}else{
-                    
-                    //    console.log("取消刪除帳戶");
-                    //}
-
-                //}
-            })
+            }
+        })
     </script>
 }

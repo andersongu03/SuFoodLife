@@ -7,11 +7,12 @@ namespace SuFood.Models
 {
     public partial class OrdersDetails
     {
-        public int OrderId { get; set; }
-        public int ProductId { get; set; }
-        public int UnitPrice { get; set; }
-        public int Quantity { get; set; }
-        public int? CoupounId { get; set; }
+        public int? OrderId { get; set; }
+        public string ProductName { get; set; }
+        public int? UnitPrice { get; set; }
+        public int? Quantity { get; set; }
+        public int? CouponId { get; set; }
+        public int OrdersDetailsId { get; set; }
 
         public virtual Orders Order { get; set; }
     }

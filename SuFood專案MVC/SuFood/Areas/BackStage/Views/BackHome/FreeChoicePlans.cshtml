@@ -47,7 +47,7 @@
     <!-- 所有MODAL -->
     <div class="modal__container " :class="modalContainerStyle" id="modal-container">
         <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
-            <div class="modal__close close-modal" @@click="closeModal" title="Close">
+            <div v-if="EditOrDeleteorCreate == 'Edit' ||EditOrDeleteorCreate == 'Create'" class="modal__close close-modal" @@click="closeModal" title="Close">
                 <i class='bx bx-x'></i>
             </div>
 
@@ -192,7 +192,7 @@
 
             <!--====== 刪除MODAL ======-->
             <template v-else>
-                <div class="d-flex align-content-center justify-content-between">
+                <div class="button-container">
                     <button class="modal__button modal__butoon-width" @@click="DeletePlans(deleteId)">
                         刪除
                     </button>
@@ -207,8 +207,9 @@
 
     <!--========== Messge toast ==========-->
     <div class="message-toast-wrapper" :class="toastHintStlye">
-        <i class='bx bxs-check-circle message-toast-icon'></i>
-        <p class="message-toast-title">{{ModalTitle}}成功</p>
+        <i v-if="toast=='新增成功' || toast=='修改成功'|| toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
+        <i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
+        <p class="message-toast-title">{{toast}}</p>
     </div>
 </div>
 

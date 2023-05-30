@@ -18,24 +18,29 @@ namespace SuFood.Controllers
         [HttpGet]
         public async Task<IEnumerable<ShoppingCartViewModel>> GetShoppingCarts()
         {
+            //var getAccountId = HttpContext.Session.GetString("GetAccountId");
+            string getAccountId ="19";
+
             var shoppingCarts = await _context.ShoppingCart
                 .Include(sc => sc.Product)
                 .ToListAsync();
 
-            var viewModelList = shoppingCarts.Select(sc => new ShoppingCartViewModel
-            {
-                CartId = sc.CartId,
-                AccountId = sc.AccountId,
-                CartQuantity = sc.CartQuantity,
-                ProductId = sc.ProductId,
-                ProductName = sc.Product.ProductName,                
-                Price = sc.Product.Price,
-                Img = sc.Product.Img                
-            }).ToList();
+            var viewModelList = shoppingCarts
+                .Where(sc => sc.AccountId == Convert.ToInt32(getAccountId))
+                .Select(sc => new ShoppingCartViewModel
+                {
+                    CartId = sc.CartId,
+                    AccountId = sc.AccountId,
+                    CartQuantity = sc.CartQuantity,
+                    ProductId = sc.ProductId,
+                    ProductName = sc.Product.ProductName,
+                    Price = sc.Product.Price,
+                    Img = sc.Product.Img
+                }).ToList();
 
             return viewModelList;
         }
-        //Post :
+        
 
     }
 }

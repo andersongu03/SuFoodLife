@@ -36,7 +36,7 @@ namespace SuFood
             {
                 options.Cookie.Name = ".CustomerswebSite.Session";//自session名稱
                 options.Cookie.IsEssential = true;
-                options.IdleTimeout = TimeSpan.FromMinutes(5);//設定網頁5分鐘逾時
+                options.IdleTimeout = TimeSpan.FromDays(5);//設定網頁5分鐘逾時
                 options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });

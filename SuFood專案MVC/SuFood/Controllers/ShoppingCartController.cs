@@ -19,7 +19,7 @@ namespace SuFood.Controllers
         public async Task<IEnumerable<ShoppingCartViewModel>> GetShoppingCarts()
         {
             //var getAccountId = HttpContext.Session.GetString("GetAccountId");
-            int getAccountId ="19";
+            string getAccountId ="19";
 
             var shoppingCarts = await _context.ShoppingCart
                 .Include(sc => sc.Product)

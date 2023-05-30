@@ -105,21 +105,27 @@ namespace SuFood.Controllers
         [HttpPost]
         public async Task<IActionResult> Add2Cart([FromBody] CartViewModels model)
         {
-            var getAccountId = Convert.ToInt32(HttpContext.Session.GetString("GetAccountId"));
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            if (getAccountId == null)
+            {
+                return Json(new { GetAccountId = "null" });
+            }
 
             var existingCart = await _context.ShoppingCart
-        .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == getAccountId);
+        .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
 
             if (existingCart != null)
             {
                 existingCart.CartQuantity++;
+                await _context.SaveChangesAsync();
             }
             else
             {
                 ShoppingCart cart = new ShoppingCart
                 {
                     CartId = model.CartId,
-                    AccountId = getAccountId,
+                    AccountId = Convert.ToInt32(getAccountId),
                     CartQuantity = 1,
                     ProductId = model.ProductId,
                 };
@@ -127,7 +133,7 @@ namespace SuFood.Controllers
                 await _context.SaveChangesAsync();
             }
 
-            return Json( new { GetAccountId = getAccountId });
+            return Json(new { GetAccountId = getAccountId });
         }
         
 

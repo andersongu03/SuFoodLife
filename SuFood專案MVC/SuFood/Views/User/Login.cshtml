@@ -38,12 +38,12 @@
                                          alt="SlIfe-logo" />
                                     <br /><b style="color: black">迎接蔬食人生吧！</b>
                                 </h3>
-                                <div class="form-outline mb-4">
-                                    @if (ViewBag.Error != "")
-                                    {
-                                        <p class="text-danger fw-bold font-weight-bolder"><b>@ViewBag.Error</b></p>
-                                    }
-                                    <input type="email" id="typeEmailX-2" name="Account1" class="form-control form-control-lg" />
+                                @if (ViewBag.Error != "")
+                                {
+                                    <p class="text-danger fw-bold font-weight-bolder"><b>@ViewBag.Error</b></p>
+                                }
+                                <div class="form-outline mb-4">                                    
+                                    <input type="text" id="typeEmailX-2" name="Account1" class="form-control form-control-lg" />
                                     <label class="form-label" for="typeEmailX-2">請輸入信箱</label>
                                 </div>
                                 <div class="form-outline mb-4">
@@ -53,10 +53,11 @@
                                 <!-- Checkbox -->
                                 <div class="form-check d-flex justify-content-start mb-4">
                                     <input class="form-check-input"
+                                           name="RememberAcc"
                                            type="checkbox"
                                            value=""
                                            id="form1Example3" />
-                                    <label class="form-check-label" for="form1Example3">
+                                    <label class="form-check-label" for="RememberAcc">
                                         記住密碼
                                     </label>
                                 </div>

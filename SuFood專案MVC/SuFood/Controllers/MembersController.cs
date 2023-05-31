@@ -21,6 +21,7 @@ namespace SuFood.Controllers
 
         public IActionResult MyOrders()
         {
+            ViewBag.id = HttpContext.Session.GetString("GetAccountId");
             return View();
         }
     }

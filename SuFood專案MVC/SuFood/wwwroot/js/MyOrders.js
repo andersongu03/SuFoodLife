@@ -32,8 +32,8 @@
     },
     request:  //你要抓的model值放這邊
     {
-        AccountId: 4,
-        SetOrdersDateTime: Date,
+        AccountId: 0,
+        SetOrdersDateTime:"",
         OrderStatus: "",
         SubCost: 0,
         Comment:""
@@ -66,8 +66,8 @@
             this.modalContainerStyle.showModal = false;
         },
         //取得後台資料路由丟這邊
-        GetDetail(4) {
-            axios.get(`MyOrders/GetMyOrders/${4}`).then(response => {
+        GetDetail() {
+            axios.get(`https://localhost:7086/MyOrders/GetMyOrders/${id}`).then(response => {
                 this.od = response.data
             })
         },
@@ -75,12 +75,12 @@
             let _this = this;
             var request = null;
             request = {
-                "reviewId": _this.createCommentList.reviewId,
-                "ratingStar": _this.createCommentList.ratingStar,
-                "comment": _this.createCommentList.comment,
-                "ordersId": _this.createCommentList.ordersId
+                reviewId: _this.createCommentList.reviewId,
+                ratingStar: _this.createCommentList.ratingStar,
+                comment: _this.createCommentList.comment,
+                ordersId: _this.createCommentList.ordersId
             }
-            if (this.createCommentList.ordersId == 0 || this.createCommentList.ratingStar > 6 || this.createCommentList.ratingStar < 0) {
+            if (this.createCommentList.ordersId == 0 && this.createCommentList.ratingStar > 6 && this.createCommentList.ratingStar < 0) {
                 alert('客戶ID為必填欄位,星數不得大於5或是小於0')
             }
             else {
@@ -88,7 +88,7 @@
                 ).then(response => {
                     _this.toast = response.data
                     this.closepopupShowHint()
-                    _this.GetComments()
+                    _this.GetDetail()
                 })
             }
         },
@@ -103,6 +103,6 @@
     },
     //抓資料
     mounted() {
-        this.GetDetail(4);
+        this.GetDetail(id);
     }
 })

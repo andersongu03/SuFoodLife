@@ -12,6 +12,7 @@ namespace SuFood.ViewModel
 
 		public int? SubCost { get; set; }
 
-		public virtual ICollection<OrdersReview>? Comment { get; set; }
+		public IEnumerable<string>? Comments { get; set; }
+
 	}
 }

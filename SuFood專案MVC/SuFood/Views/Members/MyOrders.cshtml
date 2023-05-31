@@ -30,19 +30,19 @@
                         <tbody>
                             <tr v-for="o in od">
                                 <td>
-                                    <span>{{o.AccountId}}</span>
+                                    <span>{{o.accountId}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.SetOrdersDateTime}}</span>
+                                    <span>{{o.setOrdersDateTime}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.OrderStatus}}</span>
+                                    <span>{{o.orderStatus}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.SubCost}}</span>
+                                    <span>{{o.comment}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.Comment}}</span>
+                                    <span>{{o.subCost}}</span>
                                 </td>
                                 <td>
                                     <button class="btn" @@click="createComment(o)">新增</button>
@@ -78,7 +78,7 @@
                                         </div>
                                         <div>
                                             <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
-                                            <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(createCommentList)"> 新增 </button>
+                                            <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment()"> 新增 </button>
                                         </div>
                                     </form>
                                 </div>
@@ -97,6 +97,8 @@
 </section>
 
 @section Scripts{
+    <script>var id = @ViewBag.id</script>
     <script src="~/js/vue.js"></script>
 	<script src="~/js/myorders.js"></script>
+    
 }

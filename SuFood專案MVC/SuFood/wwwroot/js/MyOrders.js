@@ -5,7 +5,7 @@
         title: "我的訂單",
         od: [], //orderdetail  你要抓的model值丟這裡
         toast: "", //新增成功用
-        ordersId: undefined,  //要新的Id就新增在這邊
+        ordersId:'',  //要新的Id就新增在這邊
         CreateOrEditOrDelete: "",
         keyword:"",
         popupShowing: {
@@ -32,7 +32,11 @@
     },
     request:  //你要抓的model值放這邊
     {
-        ordersId:0,
+        AccountId: 4,
+        SetOrdersDateTime: Date,
+        OrderStatus: "",
+        SubCost: 0,
+        Comment:""
     },
     methods:
     {
@@ -62,8 +66,8 @@
             this.modalContainerStyle.showModal = false;
         },
         //取得後台資料路由丟這邊
-        GetDetail() {
-            axios.get("").then(response => {
+        GetDetail(4) {
+            axios.get(`MyOrders/GetMyOrders/${4}`).then(response => {
                 this.od = response.data
             })
         },
@@ -99,6 +103,6 @@
     },
     //抓資料
     mounted() {
-        this.GetDetail();
+        this.GetDetail(4);
     }
 })

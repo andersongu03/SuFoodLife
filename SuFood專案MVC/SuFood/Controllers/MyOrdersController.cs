@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿	using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
@@ -25,9 +25,30 @@ namespace SuFood.Controllers
 		{
 			return Json(_context.Orders);
 		}
-		//"/MyOrders/CreateComment"
 
-		[HttpPost]
+        // MyOrders/GetMyOrders/${id}
+        [HttpGet]
+        public object GetMyOrders(int getAccountId)
+        {
+            string AccountId = HttpContext.Session.GetString("GetAccountId");
+            return _context.Orders.Where(o => o.AccountId == Convert.ToInt32(AccountId)).Select(o => new
+            {
+                AccountId = AccountId,
+                SetOrdersDateTime = o.SetOrdersDatetime,
+                OrderStatus = o.OrderStatus,
+                SubCost = o.SubCost,
+                OrderReview = o.OrdersReview.Select(or => new
+                {
+                    ReviewId = or.ReviewId,
+                    RatingStar = or.RatingStar,
+                    Comment = or.Comment
+                })
+            });
+        }
+
+        //"/MyOrders/CreateComment"
+
+        [HttpPost]
 		public async Task<string> CreateComment([FromBody] VmComment x)
 		{
 

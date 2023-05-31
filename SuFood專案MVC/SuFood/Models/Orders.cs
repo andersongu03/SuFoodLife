@@ -30,5 +30,5 @@ namespace SuFood.Models
         public virtual Account Account { get; set; }
         public virtual Coupon Coupon { get; set; }
         public virtual ICollection<OrdersReview> OrdersReview { get; set; }
-    }
+	}
 }

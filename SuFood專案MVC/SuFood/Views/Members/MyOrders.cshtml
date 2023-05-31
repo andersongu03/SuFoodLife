@@ -28,24 +28,24 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>  @*v-for="o in od"抓值用的vue*@
+                            <tr v-for="o in od">
                                 <td>
-                                    <span></span>
+                                    <span>{{o.AccountId}}</span>
                                 </td>
                                 <td>
-                                    <span></span>
+                                    <span>{{o.SetOrdersDateTime}}</span>
                                 </td>
                                 <td>
-                                    <span></span>
+                                    <span>{{o.OrderStatus}}</span>
                                 </td>
                                 <td>
-                                    <span></span>
+                                    <span>{{o.SubCost}}</span>
                                 </td>
                                 <td>
-                                    <span></span>
+                                    <span>{{o.Comment}}</span>
                                 </td>
                                 <td>
-                                    <button class="btn" @@click="createComment()">新增</button>
+                                    <button class="btn" @@click="createComment(o)">新增</button>
                                 </td>
                             </tr>
                         </tbody>

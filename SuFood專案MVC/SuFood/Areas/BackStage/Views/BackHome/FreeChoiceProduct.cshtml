@@ -1,4 +1,4 @@
-﻿@section Styles{
+﻿    @section Styles{
     <link href="~/css/model.css" rel="stylesheet" />
     <link href="~/css/freechoicemanagement.css" rel="stylesheet" />
 }
@@ -9,9 +9,8 @@
         <h2>商品管理</h2>
         <h4>商品總數:{{products.length}}</h4>
     </div>
-    <div class="tableFunction col-12">
+    <div class="row mb-3">
         <div class="col-3">
-            <div class="title">產品名稱</div>
             <div class="content">
                 <div class="searchBar">
                     <div class="inputWrapper">
@@ -22,7 +21,6 @@
             </div>
         </div>
         <div class="col-3">
-            <div class="title">狀態</div>
             <div class="content">
                 <div class="StatusBar">
                     <select v-model="selectedStatus">
@@ -34,7 +32,6 @@
             </div>
         </div>
         <div class="col-3">
-            <div class="title">種類</div>
             <div class="content">
                 <div class="StatusBar">
                     <select v-model="selectedCategory">
@@ -47,7 +44,6 @@
             </div>
         </div>
         <div class="col-3 CreateButton-container">
-            <div class="title">新增商品</div>
             <button @@click="CreateProducts" class="CreateButton">新增</button>
         </div>
     </div>
@@ -121,7 +117,7 @@
 
     <div class="modal__container" :class="modalContainerStyle" id="modal-container">
         <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
-            <div class="modal__close close-modal" @@click="closeModal" title="Close">
+            <div v-if="EditOrDeleteorCreate == 'Edit' || EditOrDeleteorCreate == 'Create'" class="modal__close close-modal" @@click="closeModal" title="Close">
                 <i class='bx bx-x'></i>
             </div>
 
@@ -252,7 +248,7 @@
 
     <!--========== Messge toast ==========-->
     <div class="message-toast-wrapper" :class="toastHintStlye">
-        <i v-if="toast=='新增成功' || toast=='修改成功'" class='bx bxs-check-circle message-toast-icon'></i>
+        <i v-if="toast=='新增成功' || toast=='修改成功'|| toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
         <i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
         <p class="message-toast-title">{{toast}}</p>
     </div>

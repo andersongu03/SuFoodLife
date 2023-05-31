@@ -262,3 +262,25 @@
 	@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+@*@section Scripts{
+    <script>
+        var cart = new Vue
+        {
+            el:'#cart',
+            data:{
+                cart:[]
+            },
+            Methods:{
+                GetPlans() {
+                    axios.get("/ShoppingCart/GetShoppingCarts").then(response => {
+                        response.data(response => {
+                            console.log(response)
+                            this.plans.push(response.plans)
+                        })
+                    })
+                },
+            }
+        }
+
+    </script>
+}*@

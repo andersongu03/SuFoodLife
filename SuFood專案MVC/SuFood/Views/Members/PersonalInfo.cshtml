@@ -26,12 +26,15 @@
 			width: 15%;
 		}
 
-		/*.info-label3{
+		.info-label3{
 			margin-left: 30px;
-		}*/
+		}
 		.info-label4{
 			margin-left: 16px;
 		}
+
+		
+
 	</style>
 
 }
@@ -44,7 +47,7 @@
 
 		<div class="col-10 user__management-content">
 			<!-- 內容 -->
-			<div class="col-6" id="main">
+			<div class="col-6 personalInfo-container" id="main">
 				<div class="profile">
 					<h3>個人資料</h3>
 				</div>
@@ -92,7 +95,7 @@
 							<label for="birthdate" class="info-label3">生日：</label>
 					</div>
 					<div class="col-9">
-						<input type="date" name="birthdate" id="birthdate" v-model="info.birthDate" >
+						<input type="datetime" name="birthdate" id="birthdate" v-model="info.birthDate" >
 					</div>
 				</div>
 				<div class="form row">
@@ -216,6 +219,7 @@
 			data: {
 				info: [],
 				infoEdit: false,
+
 			},
 			mounted() {				
 				this.getInfos();
@@ -267,7 +271,7 @@
 					};
 					axios.post(`/PersonalInfo/EditAccount/${_this.info.accountId}`, request)
 						.then(res => {
-							alert(res.data); //update成功
+							//alert(res.data); //update成功
 							_this.getInfos();
 							this.infoEdit = false;
 						})

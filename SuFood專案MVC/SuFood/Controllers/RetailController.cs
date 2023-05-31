@@ -84,7 +84,6 @@ namespace SuFood.Controllers
 
         //    return singleproducts;
         //}
-
         [HttpGet]
         public async Task<SingleProductViewModel> GetSingleProduct(int productId)
         {
@@ -102,5 +101,41 @@ namespace SuFood.Controllers
 
             return result;
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Add2Cart([FromBody] CartViewModels model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            if (getAccountId == null)
+            {
+                return Json(new { GetAccountId = "null" });
+            }
+
+            var existingCart = await _context.ShoppingCart
+        .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
+
+            if (existingCart != null)
+            {
+                existingCart.CartQuantity++;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ShoppingCart cart = new ShoppingCart
+                {
+                    CartId = model.CartId,
+                    AccountId = Convert.ToInt32(getAccountId),
+                    CartQuantity = 1,
+                    ProductId = model.ProductId,
+                };
+                _context.ShoppingCart.Add(cart);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { GetAccountId = getAccountId });
+        }
+        
+
     }
 }

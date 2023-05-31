@@ -39,10 +39,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Discount]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[FreeChoicePlans]",
          "ObjectType": 0
       },

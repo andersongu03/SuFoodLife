@@ -1,0 +1,31 @@
+﻿/*---------- 基本設定 ----------*/
+.Analysis__container {
+    height: 100%;
+    margin-top: 3rem;
+}
+
+.top-layer {
+    height: 30%;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.w32 {
+    width: 32%;
+}
+
+.w31 {
+    width: 31%;
+}
+
+.col-8 {
+    width: 65.666667%;
+}
+
+/*---------- 卡片 ----------*/
+.card {
+    height: 100%;
+    background: #ffffff;
+    box-shadow: -5px 5px 25px #ededed, 5px -5px 25px #ffffff;
+}
+

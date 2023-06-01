@@ -61,5 +61,16 @@ namespace SuFood.Controllers
                 })
             });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCurrentAccountId()
+        {
+            var currentUserId = HttpContext.Session.GetString("GetAccountId");
+            if (string.IsNullOrEmpty(currentUserId))
+            {
+                return Json(new { AccountId = "null" });
+            }
+            return Json(new {AccountId = currentUserId });
+        }
     }
 }

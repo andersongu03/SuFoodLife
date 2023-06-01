@@ -268,8 +268,7 @@
 				},
 				status: null,
 				OrderIdtoSubmit: 0,
-				/*RetailOrFreeChoice:'',*/
-				/*isInvalid: true,*/
+				AccountId: 0,
 			},
 			computed:{
 				totalPrice(){
@@ -288,6 +287,11 @@
 				},
 			},
 			methods: {
+				GetCurrentAccountId(){
+					axios.get("/CheckOut/GetCurrentAccountId").then(res => {
+						this.AccountId = res.data
+					})
+				},
 				closePopup() {
 					this.popupShowing.showPopup = false;
 				},
@@ -300,8 +304,10 @@
 						"ordersId": 0,
 						"subTotal": list.planPrice,
 						"subCost": 10,
-						"shipAddress": "台北市",
+						"shipAddress": this.submit.ShipAddress,
 						"couponId": null,
+						"AccountId": this.AccountId,
+						"OrderStatus": "未付款",
 						"ordersDetails": list.selectedProducts
 					}
 
@@ -359,6 +365,7 @@
 				}
 			},
 			mounted(){
+				this.GetCurrentAccountId()
 				this.freeChoiceProducts
 			}
 

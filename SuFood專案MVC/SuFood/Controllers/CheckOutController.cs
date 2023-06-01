@@ -61,6 +61,7 @@ namespace SuFood.Controllers
 				ShipAddress = vmParameters.ShipAddress,
 				CouponId = vmParameters.CouponId,
 				OrdersDetails = vmParameters.OrdersDetails,
+				AccountId = vmParameters.AccountId
 			};
 
 			_context.Orders.Add(od);
@@ -68,6 +69,12 @@ namespace SuFood.Controllers
 
 			var id = od.OrdersId;
 			return Json(new {OrderId= id});
+		}
+
+		[HttpGet]
+		public async Task<string> GetCurrentAccountId()
+		{
+			return HttpContext.Session.GetString("GetAccountId");
 		}
 	}
 }

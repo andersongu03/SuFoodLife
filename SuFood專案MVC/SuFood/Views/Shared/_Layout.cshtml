@@ -16,6 +16,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Amatic+SC:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
           rel="stylesheet" />
     <!-- Vendor CSS Files -->
+    <style>
+        .thead-dark {
+            position: sticky;
+            top: -18px;
+            background: #FFF;
+        }
+    </style>
 
     <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
 
@@ -125,22 +132,22 @@
                                                 <img :src="'data:image/png;base64,'+c.img" alt="零售商品圖片" style="width:150px; height:150px" />
                                             </td>
                                             <td>
-                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c.productId)"></button>
+                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c)"></button>
                                             </td>
                                             <td>{{ c.cartQuantity }}</td>
                                             <td>
-                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c.productId)"></button>
+                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c)"></button>
                                             </td>
                                             <td>{{ c.price }}</td>
                                             <td>
-                                                <button class="trashCan" @@click="deleteItem(c.productId)">
+                                                <button class="trashCan" @@click="deleteItem(c)">
                                                     <i class="fa-solid fa-trash fa-sm" style="background-color:white; color: #511f2b; outline:none"></i>
                                                 </button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div style="display: flex; justify-content: space-around;">
+                                <div class="bottomPurchase" style="display: flex; justify-content: space-around;position: sticky;    bottom: -16px;background: #fff;height: 54px;">
 
                                     <div>商品總價：{{getTotal}}</div>
                                     <button type="button" class="btn btn-danger">前往購買<i class="fa-solid fa-arrow-right"></i></button>
@@ -262,32 +269,53 @@
                         console.log(error);
                     });
                 },
-                addItem: function (id) {
+                addItem: function (prod) {
                     let _this = this;
-                    axios.put("/Retail/AddCartItem", { ProductId: id })
+                    axios.post("/Retail/AddCartItem", { ProductId: prod.productId })
                         .then(response => {
+                            if (response.data) {
+                                prod.cartQuantity++;
+                            }
+                            cartttt.GetCart();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    //_this.GetCart();
+                },
+                minusItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/MinusCartItem", { ProductId: prod.productId })
+                        .then(response => {
+                            if (response.data) {
+                                if (prod.cartQuantity == 1) {
+                                    let index = _this.cart.indexOf(prod);
+                                    if (index !== -1) {
+                                        _this.cart.splice(index, 1);
+                                    }
+                                } else {
+                                    prod.cartQuantity--;
+                                }
+                                cartttt.GetCart();
+                            }
 
                         })
                         .catch(error => {
                             console.log(error);
                         });
-                    _this.GetCart();
+                    
                 },
-                minusItem: function (id) {
-                    let _this = this;
-                    axios.put("/Retail/MinusCartItem", { ProductId: id })
+                deleteItem: function (prod) {
+                    let _this = this;                    
+                    axios.post("/Retail/DeleteCartItem", { ProductId: prod.productId })
                         .then(response => {
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                    _this.GetCart();
-                },
-                deleteItem: function (id) {
-                    let _this = this;
-                    axios.put("/Retail/DeleteCartItem", { ProductId: id })
-                        .then(response => {
-
+                            if (response.data) {
+                                let index = _this.cart.indexOf(prod);
+                                if (index !== -1) {
+                                    _this.cart.splice(index, 1);
+                                }
+                            }
+                            cartttt.GetCart();
                         })
                         .catch(error => {
                             console.log(error);

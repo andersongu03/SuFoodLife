@@ -90,68 +90,69 @@
                     <div class="cartsBox iconBox" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                         <i class="bx bx-cart icon"></i>
                     </div>
+                    <div>
+                        <div class="offcanvas offcanvas-end"
+                             data-bs-scroll="true"
+                             tabindex="-1"
+                             id="offcanvasWithBothOptions"
+                             aria-labelledby="offcanvasWithBothOptionsLabel"
+                             style="width: 800px">
+                            <div class="offcanvas-header">
 
-                    <div class="offcanvas offcanvas-end"
-                         data-bs-scroll="true"
-                         tabindex="-1"
-                         id="offcanvasWithBothOptions"
-                         aria-labelledby="offcanvasWithBothOptionsLabel"
-                         style="width: 800px">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasWithBothOptionsLabel">
-                                購物車
-                            </h5>
-                            <button type="button"
-                                    class="btn-close"
-                                    data-bs-dismiss="offcanvas"
-                                    aria-label="Close"></button>
-                        </div>
-                        <div class="offcanvas-body">
-                            <table class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col"></th>
-                                        <th scope="col">商品名稱</th>
-                                        <th scope="col">商品照片</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">數量</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">單價</th>
-                                        <th scope="col">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="cartTb">
-                                    <tr class="cartTr">
-                                        <th scope="row">1</th>
-                                        <td></td>
-                                        <td></td>
-                                        <td>
-                                            <button class="fa-solid fa-plus"
-                                                    style="color: #d52029;border: 0;background-color: white;"></button>
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;"></button>
-                                        </td>
-                                        <td></td>
-                                        <td>
-                                            <button class="trashCan">
-                                                <i class="fa-solid fa-trash fa-sm"
-                                                   style="color: #511f2b"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="cartFooter">
-                                <div class="buyBtn">
-                                    <a href="#about" class="btn-book-a-table">
-                                        前往購買<i class="fa-solid fa-arrow-right"></i>
-                                    </a>
-                                    <div>商品總價：</div>
-                                </div>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="offcanvas"
+                                        aria-label="Close"></button>
                             </div>
+                            <div class="offcanvas-body" id="vueStart">
+                                <table class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col"></th>
+                                            <th scope="col">商品名稱</th>
+                                            <th scope="col">商品照片</th>
+                                            <th scope="col"></th>
+                                            <th scope="col">數量</th>
+                                            <th scope="col"></th>
+                                            <th scope="col">單價</th>
+                                            <th scope="col">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="cartTb">
+                                        <tr class="cartTr" v-for="(c, index) in cart">
+                                            <th scope="row">{{ index + 1 }}</th>
+                                            <td>{{ c.productName }}</td>
+                                            <td>
+                                                <img :src="'data:image/png;base64,'+c.img" alt="零售商品圖片" style="width:150px; height:150px" />
+                                            </td>
+                                            <td>
+                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c.productId)"></button>
+                                            </td>
+                                            <td>{{ c.cartQuantity }}</td>
+                                            <td>
+                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c.productId)"></button>
+                                            </td>
+                                            <td>{{ c.price }}</td>
+                                            <td>
+                                                <button class="trashCan" @@click="deleteItem(c.productId)">
+                                                    <i class="fa-solid fa-trash fa-sm" style="background-color:white; color: #511f2b; outline:none"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div style="display: flex; justify-content: space-around;">
+
+                                    <div>商品總價：{{getTotal}}</div>
+                                    <button type="button" class="btn btn-danger">前往購買<i class="fa-solid fa-arrow-right"></i></button>
+
+
+                                </div>
+                                
+                            </div>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -241,29 +242,75 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/axios/axios.min.js"></script>
     <script src="~/js/vue.js"></script>
+
+    <script>
+        const cartttt = new Vue({
+            el: '#vueStart',
+            data: {
+                cart: [],
+                showModal: ''
+            },
+
+            methods: {
+                GetCart: function () {
+                    let _this = this;
+                    axios.get("/Retail/GetShoppingCarts").then(response => {
+                        this.cart = response.data;
+                        console.log(this.cart);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                },
+                addItem: function (id) {
+                    let _this = this;
+                    axios.put("/Retail/AddCartItem", { ProductId: id })
+                        .then(response => {
+                            _this.GetCart();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+                minusItem: function (id) {
+                    let _this = this;
+                    axios.put("/Retail/MinusCartItem", { ProductId: id })
+                        .then(response => {                           
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    _this.GetCart();
+                },
+                deleteItem: function (id) {
+                    let _this = this;
+                    axios.put("/Retail/DeleteCartItem", { ProductId: id })
+                        .then(response => {
+                            _this.GetCart();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+                
+
+            },
+            computed: {
+                getTotal: function () {
+                    let _this = this;
+                    return _this.cart.reduce(
+                        (sum, item) => sum + (item.cartQuantity * item.price), 0
+                    );
+                    //sum 為目前加總金額，從0開始加總。item為cart目前加總的元素
+                }
+            },
+            mounted() {
+                this.GetCart();
+            }
+        })
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-@*@section Scripts{
-    <script>
-        var cart = new Vue
-        {
-            el:'#cart',
-            data:{
-                cart:[]
-            },
-            Methods:{
-                GetPlans() {
-                    axios.get("/ShoppingCart/GetShoppingCarts").then(response => {
-                        response.data(response => {
-                            console.log(response)
-                            this.plans.push(response.plans)
-                        })
-                    })
-                },
-            }
-        }
-
-    </script>
-}*@

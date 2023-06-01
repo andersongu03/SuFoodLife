@@ -9,6 +9,7 @@ namespace SuFood.Models
     {
         public Account()
         {
+            CustomerPayment = new HashSet<CustomerPayment>();
             Orders = new HashSet<Orders>();
             ShoppingCart = new HashSet<ShoppingCart>();
         }
@@ -30,6 +31,7 @@ namespace SuFood.Models
         public bool? IsActive { get; set; }
         public string HashPassword { get; set; }
 
+        public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }

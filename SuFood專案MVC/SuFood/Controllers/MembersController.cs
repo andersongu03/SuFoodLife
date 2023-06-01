@@ -29,6 +29,11 @@ namespace SuFood.Controllers
         {
             return View();
         }
+        public IActionResult MyOrders()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<IActionResult> MemberChangePassword (ModifyPasswordViewModel model)
         {

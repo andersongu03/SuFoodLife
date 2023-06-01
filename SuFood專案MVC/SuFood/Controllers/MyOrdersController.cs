@@ -17,12 +17,7 @@ namespace SuFood.Controllers
         {
             return View();
         }
-        public IActionResult MyOreders()
-        {
 
-
-            return View();
-        }
         public async Task<JsonResult> Orders()
         {
             return Json(_context.Orders);

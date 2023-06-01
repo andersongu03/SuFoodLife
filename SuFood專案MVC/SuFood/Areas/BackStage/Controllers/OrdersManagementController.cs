@@ -56,7 +56,7 @@ namespace SuFood.Areas.BackStage.Controllers
 					account = x.Account.Account1, 
                     orderTime = x.SetOrdersDatetime,
                     status = x.OrderStatus,
-                    shipMode = x.SingleShippingMethod,
+                    shipMode = x.ShippingMethodId,
                     ordersDetail = x.OrdersDetailsId,
                     subTotal = x.SubTotal
 				}

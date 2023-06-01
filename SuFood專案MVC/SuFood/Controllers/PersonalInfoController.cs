@@ -23,8 +23,8 @@ namespace SuFood.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmAccount>> GetAccount()
         {
-
-            var acc = _context.Account.Where(user => user.AccountId == 1).Select(acc => new VmAccount
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+            var acc = _context.Account.Where(user => user.AccountId == Convert.ToInt32(getAccountId)).Select(acc => new VmAccount
             {
                 AccountId = acc.AccountId,
                 Account1 = acc.Account1,

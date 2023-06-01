@@ -49,21 +49,21 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //修改會員資料
         [HttpPost]
-        public async Task<string> EditAccounts([FromBody] VmAccount account)
+        public async Task<string> EditAccounts([FromBody] VmAccount model)
         {
-                var editacc = await _context.Account.FindAsync(account.AccountId);
+                var editacc = await _context.Account.FindAsync(model.AccountId);
 
                 try
                 {
-                    editacc.FirstName = account.FirstName;
-                    editacc.LastName = account.LastName;
-                    editacc.Phone = account.Phone;
+                    editacc.FirstName = model.FirstName;
+                    editacc.LastName = model.LastName;
+                    editacc.Phone = model.Phone;
                     _context.Update(editacc);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.AccountId))
+                    if (!AccountExists(model.AccountId))
                     {
                         return "修改失敗";
                     }
@@ -97,6 +97,22 @@ namespace SuFood.Areas.BackStage.Controllers
             _context.Account.Remove(account);
             await _context.SaveChangesAsync();
             return "刪除成功";
+        }
+
+        //取得訂單資料
+        [HttpGet]
+        public async Task<IEnumerable<VmOrders>> GetPersonOrders([FromBody] VmOrders model)
+        {
+            
+            return _context.Orders.Where(user => user.AccountId == model.AccountId).Select(o => new VmOrders
+            {
+                OrdersId = o.OrdersId,
+                SubTotal = o.SubTotal,
+                SetOrdersDatetime = o.SetOrdersDatetime,
+                CustomerPaymentId = o.CustomerPaymentId,
+                OrderStatus = o.OrderStatus,
+                AccountId = o.AccountId
+            });
         }
 
 

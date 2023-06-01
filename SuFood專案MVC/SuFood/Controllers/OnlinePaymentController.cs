@@ -29,7 +29,7 @@ namespace SuFood.Controllers
 			//var orderId = _context.Orders.Where(x => x.OrdersId == OrderId).Select(d => d.OrdersId).FirstOrDefault();
 			var productName = _context.OrdersDetails.Where(od => od.OrderId == inModel.OrderId).Select(x => x.ProductName);
 			var totalPrice = _context.Orders.Where(x => x.OrdersId == inModel.OrderId).Select(x => x.SubTotal).First();
-			int TP = totalPrice.Value;
+			int TP = totalPrice;
 			List<KeyValuePair<string, string>> tradeData = new List<KeyValuePair<string, string>>
 			{
 				new KeyValuePair<string, string>("MerchantID", _configuration["OnlinePayment:MerchantID"]),

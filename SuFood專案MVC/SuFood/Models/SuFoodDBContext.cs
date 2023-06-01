@@ -20,6 +20,7 @@ namespace SuFood.Models
 
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
+        public virtual DbSet<CustomerPayment> CustomerPayment { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
@@ -99,6 +100,29 @@ namespace SuFood.Models
                 entity.Property(e => e.MinimumPurchasingAmount).HasColumnName("Minimum_PurchasingAmount");
             });
 
+            modelBuilder.Entity<CustomerPayment>(entity =>
+            {
+                entity.ToTable("Customer_Payment");
+
+                entity.Property(e => e.CustomerPaymentId).HasColumnName("Customer_Payment_Id");
+
+                entity.Property(e => e.CreditCardExpiryDate)
+                    .HasMaxLength(10)
+                    .HasColumnName("CreditCard_ExpiryDate")
+                    .IsFixedLength();
+
+                entity.Property(e => e.CreditCardHolder).HasColumnName("CreditCard_Holder");
+
+                entity.Property(e => e.CreditCardNumber).HasColumnName("CreditCard_Number");
+
+                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
+
+                entity.HasOne(d => d.Orders)
+                    .WithMany(p => p.CustomerPayment)
+                    .HasForeignKey(d => d.OrdersId)
+                    .HasConstraintName("FK_Customer_Payment_Orders");
+            });
+
             modelBuilder.Entity<FreeChoicePlans>(entity =>
             {
                 entity.HasKey(e => e.PlanId)
@@ -125,7 +149,7 @@ namespace SuFood.Models
 
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
+                entity.Property(e => e.CustomerPaymentId).HasColumnName("Customer_Payment_Id");
 
                 entity.Property(e => e.OrderStatus)
                     .HasMaxLength(10)

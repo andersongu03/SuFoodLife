@@ -9,8 +9,8 @@
 <section class="check-out__section" id="app">
 	<div class="check-out__container">
 		<div class="check-out-status-container">
-			<div v-for="tab in tabs" class="check-out-status flexItem" :class="{currentStatus: currentTab === tab}"
-				 @@click="currentTab = tab">
+			<div v-for="tab in tabs" class="check-out-status flexItem" :class="{currentStatus: currentTab === tab}">
+				@*@@click="currentTab = tab"*@
 				<p class="flexItem">{{tab}}</p>
 			</div>
 		</div>
@@ -65,48 +65,71 @@
 			</template>
 			<!-- 填寫訂單資訊 -->
 			<template v-else-if="currentTab == '2.填寫訂單資訊'">
-				<div class="cardContent" id="" :class="popupShowing">
-					<div class="cardPopup-body" style="width: 375px; height:260px">
-						<div class="cardPopup">
-							<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
-								<div class="closeMark" @@click="closeOrder()">
-									<i class="fa-solid fa-circle-xmark fa-lg"></i>
-								</div>
-								<div class="col-12">
-									<h3 style="font-weight: bold">請選擇您的付款方式</h3>
-								</div>
-								<div class="col-12">
-									<!-- 用表單送給藍新  action="https://ccore.newebpay.com/MPG/mpg_gateway"-->
-									<form name='Newebpay' method='post' action="https://ccore.newebpay.com/MPG/mpg_gateway">
-										<!-- 設定 hidden 可以隱藏不用給使用者看的資訊 -->
-										<!-- 藍新金流商店代號 -->
-										<input type='hidden' id='MerchantID' name='MerchantID' v-model="paymentData.MerchantID">
-										<!-- 交易資料透過 Key 及 IV 進行 AES 加密 -->
-										<input type='hidden' id='TradeInfo' name='TradeInfo' v-model="paymentData.TradeInfo">
-										<!-- 經過上述 AES 加密過的字串，透過商店 Key 及 IV 進行 SHA256 加密 -->
-										<input type='hidden' id='TradeSha' name='TradeSha' v-model="paymentData.TradeSha">
-										<!-- 串接程式版本 -->
-										<input type='hidden' id='Version' name='Version' v-model="paymentData.Version">
-										<!-- 直接執行送出 -->
-										<input type='submit' value='前往付款'>
-										@*<button value='前往付款'>123</button>*@
-										<button value='準備' v-on:click.prevent="pay(1)">123</button>
-									</form>
-									<a v-on:click.prevent="pay('credit')" class="btn btnpaymentinstrument paybycreditcard">
-										<i class="fa-solid fa-credit-card fa-2xl"></i>
-										<span style="font-size: 1.3rem">&nbsp信用卡支付</span>
-									</a>
-								</div>
-								<div class="col-12">
-									<a v-on:click.prevent="pay('bank')" class="btn btnpaymentinstrument">
-										<i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
-										<span style="font-size: 1.3rem">&nbsp銀行轉帳</span>
-									</a>
-								</div>
-							</form>
+				<template v-if="SubmitOrPay =='Submit'">
+					<div class="cardContent" id="" :class="popupShowing">
+						<div class="cardPopup-body" style="width: 375px; height:260px">
+							<div class="cardPopup">
+								<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+									<div class="col-12" style="display:flex; flex-direction:column;">
+										<div class="col-12" style="display:flex; justify-content: center;">
+											<h3 style="font-weight: bold; padding-bottom:30px;">確定送出訂單嗎?</h3>
+										</div>
+										<div class="col-12" style="display:flex; justify-content:space-around">
+											<div>
+												<button type="button" class="btn btn-success saveBtn" v-on:click.prevent="prepareInfo(55)"> 走一個!!! </button>
+											</div>
+											<div>
+												<button type="button" class="btn btn-danger" @@click="closePopup"> 下次一定 </button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
 						</div>
 					</div>
-				</div>
+				</template>
+				<template v-else>
+					<div class="cardContent" id="" :class="popupShowing">
+						<div class="cardPopup-body" style="width: 375px; height:260px">
+							<div class="cardPopup">
+								<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+									<div class="closeMark" @@click="closePopup">
+										<i class="fa-solid fa-circle-xmark fa-lg"></i>
+									</div>
+									<div class="col-12">
+										<h3 style="font-weight: bold">請選擇您的付款方式</h3>
+									</div>
+									<div class="col-12">
+										<!-- 用表單送給藍新 -->
+										<form name='Newebpay' method='post' action="https://ccore.newebpay.com/MPG/mpg_gateway">
+											<!-- 設定 hidden 可以隱藏不用給使用者看的資訊 -->
+											<!-- 藍新金流商店代號 -->
+											<input type='hidden' id='MerchantID' name='MerchantID' v-model="paymentData.MerchantID">
+											<!-- 交易資料透過 Key 及 IV 進行 AES 加密 -->
+											<input type='hidden' id='TradeInfo' name='TradeInfo' v-model="paymentData.TradeInfo">
+											<!-- 經過上述 AES 加密過的字串，透過商店 Key 及 IV 進行 SHA256 加密 -->
+											<input type='hidden' id='TradeSha' name='TradeSha' v-model="paymentData.TradeSha">
+											<!-- 串接程式版本 -->
+											<input type='hidden' id='Version' name='Version' v-model="paymentData.Version">
+											<!-- 直接執行送出 -->
+											<i class="fa-solid fa-credit-card fa-2xl" style="padding-left:14px"></i>
+											<input type='submit' value='信用卡支付' style="border:none; font-size: 1.3rem; background-color: white;">
+											@*<button value='前往付款'>123</button>*@
+											@*<button value='準備' v-on:click.prevent="pay(2)">123</button>*@
+										</form>
+									<div class="col-12">
+										<a v-on:click.prevent="pay('bank')" class="btn btnpaymentinstrument">
+											<i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
+											<input type='submit' value='銀行轉帳' style="border:none; font-size: 1.3rem; background-color: white;">
+											@*<span style="font-size: 1.3rem">&nbsp銀行轉帳</span>*@
+										</a>
+									</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</template>
 				<div class="col-md-8 row flex-column-reverse flex-md-row">
 					<div class="col-md-7 orderInfo">
 						<h2 class="section-title">訂單資訊</h2>
@@ -129,7 +152,7 @@
 								</div>
 								<div class="from-group">
 									<label for="tel" class="title">聯絡地址</label>
-									<input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Address">
+									<input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.ShipAddress">
 									@*<small class="invalidFeedback">請填寫聯絡地址</small>*@
 								</div>
 								<div class="from-group">
@@ -148,7 +171,7 @@
 					<div class="col-md-5">
 						<div class="sticky-top commoditiesDetail">
 							<h2 class="section-title">商品明細</h2>
-							<ul class="list-unstyled list-group mb-3" v-for="pl in plan">
+							@*<ul class="list-unstyled list-group mb-3" v-for="pl in plan">
 								<li class="list-group-item d-flex justify-content-between align-items-center">
 									<div class="flex-shrink-1">
 										<h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{ pl.plan.planName }}</h4>
@@ -165,6 +188,28 @@
 									</div>
 								</li>
 								<li class="list-group-item text-right"><strong>總計：${{ pl.plan.planPrice }}</strong></li>
+							</ul>*@
+							<ul class="list-unstyled list-group mb-3">
+								<template v-if="status == 'free'">
+									<li class="list-group-item d-flex justify-content-between align-items-center">
+										<div class="flex-shrink-1">
+											<h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{freeChoiceProducts.PlanName}}</h4>
+											<ul class="freeChoice-products-details">
+												<li v-for="sp in freeChoiceProducts.selectedProducts">
+													<small>{{sp.productName}}</small>
+													<small>X{{sp.quantity}}</small>
+												</li>
+											</ul>
+										</div>
+									</li>
+								</template>
+								<li class="list-group-item">
+									<div class="input-group">
+										<input type="text" placeholder="SuFood" class="form-control">
+										<div class="input-group-append"><button type="button" class="btn btn-secondary">使用招待券</button></div>
+									</div>
+								</li>
+								<li class="list-group-item text-right"><strong>總計：${{ freeChoiceProducts.planPrice }}</strong></li>
 							</ul>
 						</div>
 					</div>
@@ -202,11 +247,9 @@
 				popupShowing: {
 					showPopup: false,
 				},
+				SubmitOrPay:'',
 				submit: {
-					RecipientName: '',
-					Email: '',
-					Address: '',
-					Phone: '',
+					ShipAddress:'',
 				},
 				onlinePayment: {
 					"orderId": null,
@@ -223,17 +266,70 @@
 					TradeSha: '',
 					Version: '2.0'
 				},
+				status: null,
 				/*RetailOrFreeChoice:'',*/
 				/*isInvalid: true,*/
 			},
-			methods: {
-				SubmitOrder() {
-					this.popupShowing.showPopup = true;
+			computed:{
+				totalPrice(){
+					let subTotal = this.carts.map(p => p.quantity * p.price);
+					if(this.carts.length >0){
+						return subTotal.reduce((a,b) => a + b);
+					}
 				},
-				closeOrder() {
+				//自由選商品明細清單，會從localStorage取得資料
+				freeChoiceProducts() {
+					if (localStorage.getItem("purchaseList") !== null) {
+						this.currentTab = "2.填寫訂單資訊"
+						this.status = 'free'
+						return JSON.parse(localStorage.getItem("purchaseList"))
+					}
+				},
+			},
+			methods: {
+				closePopup() {
 					this.popupShowing.showPopup = false;
 				},
-				pay(orderId) {
+				SubmitOrder() {
+					let _this = this;
+
+					//獲得localStorage的資料,包裝成物件送出去
+					var list = JSON.parse(localStorage.getItem("purchaseList"))
+					//this.submit={
+					//	OrderId:0,
+					//	ShipAddress: "大安區羅斯福路",
+					//	SubTotal: list.planPrice,
+					//	CouponId: 1,
+					//	OrdersDetails: list.selectedProducts.map(x => x.productName)
+					//}
+
+					//this.submit = {
+					//	"OrderId": 0,
+					//	"ShipAddress": "大安區羅斯福路",
+					//	"SubTotal": list.planPrice,
+					//	"CouponId": 1
+					//},
+
+					////this.popupShowing.showPopup = true;
+					axios.post('/CheckOut/Create', this.submit, {
+						//	carts: this.carts,
+						//	submit:{
+						//		ShipAddress: this.submit.ShipAddress
+						//	}
+						//}, {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(response => {
+						console.log(response.data);
+						this.SubmitOrPay = "Submit";
+						this.popupShowing.showPopup = true;
+					})
+				},
+				//closeOrder() {
+				//	this.popupShowing.showPopup = false;
+				//},
+				prepareInfo(orderId) {
 					//this.onlinePayment.OrderId = orderId
 					console.log(orderId)
 					let _this = this;
@@ -246,7 +342,6 @@
 						"version": ""
 					};
 					
-
 					axios.post("/OnlinePayment/Payment", onlinePayment, {
 						headers: {
 							'Content-Type': 'application/json'
@@ -255,6 +350,7 @@
 						this.paymentData.MerchantID = response.data.merchantID;
 						this.paymentData.TradeInfo = response.data.tradeInfo;
 						this.paymentData.TradeSha = response.data.tradeSha;
+						this.SubmitOrPay = "Pay";
 					})
 				},
 				pay2(id) {
@@ -272,6 +368,9 @@
 						})
 				}
 			},
+			mounted(){
+				this.freeChoiceProducts
+			}
 
 		});
 
@@ -279,12 +378,6 @@
 }
 @*
 	//computed: {
-			//	//totalPrice() {
-			//	//    let subTotal = this.carts.map(product => product.quantity * product.price);
-			//	//    if (this.carts.length > 0) {
-			//	//        return subTotal.reduce((a, b) => a + b);
-			//	//    }
-			//	//},
 			//	//choicePrice() {
 			//	//	let total = this.cartsForFreeChoice.m
 			//	//}

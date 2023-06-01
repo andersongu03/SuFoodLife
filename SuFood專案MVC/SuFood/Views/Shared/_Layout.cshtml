@@ -125,15 +125,15 @@
                                                 <img :src="'data:image/png;base64,'+c.img" alt="零售商品圖片" style="width:150px; height:150px" />
                                             </td>
                                             <td>
-                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c.productId)"></button>
+                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c)"></button>
                                             </td>
                                             <td>{{ c.cartQuantity }}</td>
                                             <td>
-                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c.productId)"></button>
+                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c)"></button>
                                             </td>
                                             <td>{{ c.price }}</td>
                                             <td>
-                                                <button class="trashCan" @@click="deleteItem(c.productId)">
+                                                <button class="trashCan" @@click="deleteItem(c)">
                                                     <i class="fa-solid fa-trash fa-sm" style="background-color:white; color: #511f2b; outline:none"></i>
                                                 </button>
                                             </td>
@@ -262,32 +262,53 @@
                         console.log(error);
                     });
                 },
-                addItem: function (id) {
+                addItem: function (prod) {
                     let _this = this;
-                    axios.put("/Retail/AddCartItem", { ProductId: id })
+                    axios.post("/Retail/AddCartItem", { ProductId: prod.productId })
                         .then(response => {
+                            if (response.data) {
+                                prod.cartQuantity++;
+                            }
+                            cartttt.GetCart();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    //_this.GetCart();
+                },
+                minusItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/MinusCartItem", { ProductId: prod.productId })
+                        .then(response => {
+                            if (response.data) {
+                                if (prod.cartQuantity == 1) {
+                                    let index = _this.cart.indexOf(prod);
+                                    if (index !== -1) {
+                                        _this.cart.splice(index, 1);
+                                    }
+                                } else {
+                                    prod.cartQuantity--;
+                                }
+                                cartttt.GetCart();
+                            }
 
                         })
                         .catch(error => {
                             console.log(error);
                         });
-                    _this.GetCart();
+                    
                 },
-                minusItem: function (id) {
-                    let _this = this;
-                    axios.put("/Retail/MinusCartItem", { ProductId: id })
+                deleteItem: function (prod) {
+                    let _this = this;                    
+                    axios.post("/Retail/DeleteCartItem", { ProductId: prod.productId })
                         .then(response => {
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                    _this.GetCart();
-                },
-                deleteItem: function (id) {
-                    let _this = this;
-                    axios.put("/Retail/DeleteCartItem", { ProductId: id })
-                        .then(response => {
-
+                            if (response.data) {
+                                let index = _this.cart.indexOf(prod);
+                                if (index !== -1) {
+                                    _this.cart.splice(index, 1);
+                                }
+                            }
+                            cartttt.GetCart();
                         })
                         .catch(error => {
                             console.log(error);

@@ -267,11 +267,12 @@
                     let _this = this;
                     axios.put("/Retail/AddCartItem", { ProductId: id })
                         .then(response => {
-                            _this.GetCart();
+                            
                         })
                         .catch(error => {
                             console.log(error);
                         });
+                        _this.GetCart();
                 },
                 minusItem: function (id) {
                     let _this = this;
@@ -287,11 +288,12 @@
                     let _this = this;
                     axios.put("/Retail/DeleteCartItem", { ProductId: id })
                         .then(response => {
-                            _this.GetCart();
+                            
                         })
                         .catch(error => {
                             console.log(error);
                         });
+                    _this.GetCart();
                 },
                 
 

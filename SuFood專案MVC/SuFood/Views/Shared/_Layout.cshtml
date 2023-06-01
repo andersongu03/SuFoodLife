@@ -16,6 +16,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Amatic+SC:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
           rel="stylesheet" />
     <!-- Vendor CSS Files -->
+    <style>
+        .thead-dark {
+            position: sticky;
+            top: -18px;
+            background: #FFF;
+        }
+    </style>
 
     <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
 
@@ -140,7 +147,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div style="display: flex; justify-content: space-around;">
+                                <div class="bottomPurchase" style="display: flex; justify-content: space-around;position: sticky;    bottom: -16px;background: #fff;height: 54px;">
 
                                     <div>商品總價：{{getTotal}}</div>
                                     <button type="button" class="btn btn-danger">前往購買<i class="fa-solid fa-arrow-right"></i></button>

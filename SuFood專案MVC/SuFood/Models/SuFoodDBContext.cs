@@ -104,7 +104,9 @@ namespace SuFood.Models
             {
                 entity.ToTable("Customer_Payment");
 
-                entity.Property(e => e.CustomerPaymentId).HasColumnName("Customer_Payment_Id");
+                entity.Property(e => e.CustomerPaymentId).HasColumnName("Customer_PaymentId");
+
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
                 entity.Property(e => e.CreditCardExpiryDate)
                     .HasMaxLength(10)
@@ -116,6 +118,11 @@ namespace SuFood.Models
                 entity.Property(e => e.CreditCardNumber).HasColumnName("CreditCard_Number");
 
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.CustomerPayment)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_Customer_Payment_Account");
 
                 entity.HasOne(d => d.Orders)
                     .WithMany(p => p.CustomerPayment)
@@ -149,7 +156,7 @@ namespace SuFood.Models
 
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.CustomerPaymentId).HasColumnName("Customer_Payment_Id");
+                entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
 
                 entity.Property(e => e.OrderStatus)
                     .HasMaxLength(10)

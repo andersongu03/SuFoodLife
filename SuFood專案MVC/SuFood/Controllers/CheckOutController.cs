@@ -51,8 +51,8 @@ namespace SuFood.Controllers
 
 		//送出訂單
 		[HttpPost]
-		public async Task<string> Create([FromBody] VmSubmitOrder vmParameters)
-		{
+		public async Task<IActionResult> Create([FromBody] VmSubmitOrder vmParameters)
+			{
 			Orders od = new Orders
 			{
 				OrdersId = vmParameters.OrdersId,
@@ -66,8 +66,8 @@ namespace SuFood.Controllers
 			_context.Orders.Add(od);
 			await _context.SaveChangesAsync();
 
-			return "新增成功";
+			var id = od.OrdersId;
+			return Json(new {OrderId= id});
 		}
-
 	}
 }

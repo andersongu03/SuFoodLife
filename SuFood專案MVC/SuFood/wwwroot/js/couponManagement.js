@@ -93,14 +93,14 @@
                 CouponStartDate: _this.editCouponList.couponstartdate2String,
                 CouponEndDate: _this.editCouponList.couponenddate2String,
             };
-            axios.put("/BackStage/CouponManagement/Edit/", tempData, {
+            axios.post("/BackStage/CouponManagement/Edit/", tempData, {
                 headers: {
                     'Content-Type':'application/json'
                 }
             }).then(response => {
                 this.toast = response.data
                 /*alert(response.data)*/
-                this.closePopupShowHint()
+                _this.closePopupShowHint()
                 _this.GetCouponInfo()
             })
         },

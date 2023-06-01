@@ -49,46 +49,41 @@ namespace SuFood.Areas.BackStage.Controllers
 		//Create
 		[HttpPost]
 		//[Bind("CouponId,CouponName,CouponDescription,CouponMinusCost,MinimumPurchasingAmount,CouponStartDate,CouponEndDate")]
-		public async Task<string> Create([FromBody] Coupon coupons)
+		public async Task<string> Create([FromBody] VmCoupon vmCoupons)
 		{
-			if(ModelState.IsValid)
+			Coupon coupon = new Coupon
 			{
-				_context.Add(coupons);
-				await _context.SaveChangesAsync();
-				return "新增成功";
-			}
-			//var errorMessages = ModelState
-			//	.Where(abc => abc.Value.ValidationState == ModelValidationState.Invalid)
-			//	.SelectMany(abc => abc.Value.Errors)
-			//	.Select(e => e.ErrorMessage).ToList();
-			return "新增失敗";
+				CouponId = vmCoupons.CouponId,
+				CouponName = vmCoupons.CouponName,
+				CouponDescription = vmCoupons.CouponDescription,
+				CouponMinusCost = (int?)vmCoupons.CouponMinusCost,
+				MinimumPurchasingAmount = vmCoupons.MinimumPurchasingAmount,
+				CouponStartDate = vmCoupons.CouponStartDate,
+				CouponEndDate = vmCoupons.CouponEndDate
+			};
+			
+			_context.Coupon.Add(coupon);
+			await _context.SaveChangesAsync();
+			return "新增成功";
 		}
 
 		//Edit
-		[HttpPut]
-		public async Task<string> Edit([FromBody] Coupon coupons)
+		[HttpPost]
+		public async Task<string> Edit([FromBody] VmCoupon vmCoupons)
 		{
-			if(ModelState.IsValid)
+			Coupon coupon = new Coupon
 			{
-				try
-				{
-					_context.Update(coupons);
-					await _context.SaveChangesAsync();
-				}
-				catch(DbUpdateConcurrencyException)
-				{
-					if (!CouponsExists(coupons.CouponId))
-					{
-						return "修改資料庫失敗";
-					}
-					else
-					{
-						throw;
-					}
-				}
-				return "修改成功";
-			}
-			return "修改失敗";
+				CouponId = vmCoupons.CouponId,
+				CouponName = vmCoupons.CouponName,
+				CouponDescription = vmCoupons.CouponDescription,
+				CouponMinusCost = (int?)vmCoupons.CouponMinusCost,
+				MinimumPurchasingAmount = vmCoupons.MinimumPurchasingAmount,
+				CouponStartDate = vmCoupons.CouponStartDate,
+				CouponEndDate = vmCoupons.CouponEndDate
+			};
+			_context.Update(coupon);
+			await _context.SaveChangesAsync();
+			return "修改成功";
 		}
 
 		//Delete

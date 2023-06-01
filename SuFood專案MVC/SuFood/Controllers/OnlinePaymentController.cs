@@ -113,20 +113,17 @@ namespace SuFood.Controllers
 			if(r_Status == "SUCCESS")
 			{
 				var order = _context.Orders.Where(o => o.OrdersId == orderId).FirstOrDefault();
-				var customerPayment = _context.Orders.Include(CustomerPayment => CustomerPayment.OrdersId).Where(c => c.OrdersId == order.OrdersId);
-				var credit = _context.CustomerPayment.Where(cp => cp.OrdersId == order.OrdersId).FirstOrDefault();
 
 				if(order != null)
 				{
-					order.OrderStatus = "處理中";
+					order.OrderStatus = "已付款";
 					//order.SubTotal = int.Parse(orderTotal);
 
-					//if (paymentType == "CREDIT")
-					//{
-					//	credit.CreditCardHolder = result.Result.PaymentMethod;
-					//	credit.CreditCardNumber = result.Result.Card4No;
-					//}
-					
+					if (paymentType == "CREDIT")
+					{
+						
+					}
+
 				}
 				_context.SaveChanges();
 			}

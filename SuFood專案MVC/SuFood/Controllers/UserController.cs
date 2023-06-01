@@ -116,6 +116,7 @@ namespace SuFood.Controllers
             if (user != null)
             {
                 user.IsActive = true;
+                user.CreateDatetime = DateTime.Now;
                 _context.SaveChanges();
             }
             //return Ok($@"code:{code}  str:{str}");
@@ -182,7 +183,6 @@ namespace SuFood.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
@@ -197,10 +197,12 @@ namespace SuFood.Controllers
             if (user == null)
             {
                 ViewBag.Error = "您還沒有建立帳號哦！！";
+                return View();
             }
             if (user.IsActive != true)
             {
                 ViewBag.Error = "您還沒有啟用帳號哦！！";
+                return View();  
             }
 
             //寄信

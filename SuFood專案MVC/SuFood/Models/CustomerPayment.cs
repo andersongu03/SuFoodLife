@@ -12,9 +12,7 @@ namespace SuFood.Models
         public string CreditCardNumber { get; set; }
         public string CreditCardExpiryDate { get; set; }
         public int? OrdersId { get; set; }
-        public int? AccountId { get; set; }
 
-        public virtual Account Account { get; set; }
         public virtual Orders Orders { get; set; }
     }
 }

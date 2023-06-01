@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
@@ -6,49 +7,49 @@ using SuFood.ViewModel;
 
 namespace SuFood.Areas.BackStage.Controllers
 {
-    [Area("BackStage")] //所有寫在Area裡面的Controller記得都要加這一行
-    public class BackHomeController : Controller
-    {
-        private readonly SuFoodDBContext _context;
+	[AllowAnonymous]
+	[Area("BackStage")] //所有寫在Area裡面的Controller記得都要加這一行
+	public class BackHomeController : Controller
+	{
+		private readonly SuFoodDBContext _context;
+		public BackHomeController(SuFoodDBContext context)
+		{
+			_context = context;
+		}
+		
+		public IActionResult Index()
+		{
+			return View();
+		}
 
-        public BackHomeController(SuFoodDBContext context)
-        {
-            _context = context;
-        }
+		//自由選商品管理頁面
+		public IActionResult FreeChoiceProduct()
+		{
+			return View();
+		}
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        //自由選商品管理頁面
-        public IActionResult FreeChoiceProduct()
-        {
-            return View();
-        }
-
-        public IActionResult Coupon()
-        {
-            return View();
-        }
+		public IActionResult Coupon()
+		{
+			return View();
+		}
 
 
-        //會員管理頁面
+		//會員管理頁面
 		public IActionResult AccountManage()
 		{
 			return View();
 		}
 
-        //訂單管理頁面
+		//訂單管理頁面
 		public IActionResult OrdersManage()
-        {
-            return View();
-        }
+		{
+			return View();
+		}
 
-        public IActionResult FreeChoicePlans()
-        {
-            return View();
-        }
+		public IActionResult FreeChoicePlans()
+		{
+			return View();
+		}
 
 		public IActionResult CommentManagement()
 

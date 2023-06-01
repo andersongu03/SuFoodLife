@@ -222,15 +222,23 @@
                 //將選擇的"方案名稱"、"方案價格"、"選擇的產品與數量"加入localStorage中。
                 checkOut() {
                     if (this.totalQuantity == this.MaxSelectItems) {
-                        let selectedProductsAndQuantity = this.selectProduct.map(product => { return { productId: product.productId, productName: product.productName, quantity: product.quantity }; });
+                        let selectedProductsAndQuantity = this.selectProduct.map(product => { 
+                            return { 
+                                productId: product.productId,
+                                productName: product.productName,
+                                quantity: product.quantity,
+                                unitPrice: product.price,
+                                ordersDetailsId: 0,
+                                couponId:1
+                            }; });
                         let planName = this.choicePlan.planName;
                         let planPrice = this.choicePlan.planPrice;
 
                         let purchaseList = {
                             "PlanName": planName,
                             "planPrice": planPrice,
-                            "selectedProducts": selectedProductsAndQuantity
-                        };
+                            "selectedProducts": selectedProductsAndQuantity                            
+                        };                           
 
                         localStorage.setItem("purchaseList", JSON.stringify(purchaseList))
 

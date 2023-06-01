@@ -76,7 +76,7 @@
 										</div>
 										<div class="col-12" style="display:flex; justify-content:space-around">
 											<div>
-												<button type="button" class="btn btn-success saveBtn" v-on:click.prevent="prepareInfo(58)"> 走一個!!! </button>
+												<button type="button" class="btn btn-success saveBtn" v-on:click.prevent="prepareInfo(1)"> 走一個!!! </button>
 											</div>
 											<div>
 												<button type="button" class="btn btn-danger" @@click="closePopup"> 下次一定 </button>
@@ -267,6 +267,7 @@
 					Version: '2.0'
 				},
 				status: null,
+				OrderIdtoSubmit: 0,
 				/*RetailOrFreeChoice:'',*/
 				/*isInvalid: true,*/
 			},
@@ -295,33 +296,22 @@
 
 					//獲得localStorage的資料,包裝成物件送出去
 					var list = JSON.parse(localStorage.getItem("purchaseList"))
-					//this.submit={
-					//	OrderId:0,
-					//	ShipAddress: "大安區羅斯福路",
-					//	SubTotal: list.planPrice,
-					//	CouponId: 1,
-					//	OrdersDetails: list.selectedProducts.map(x => x.productName)
-					//}
-
-					//this.submit = {
-					//	"OrderId": 0,
-					//	"ShipAddress": "大安區羅斯福路",
-					//	"SubTotal": list.planPrice,
-					//	"CouponId": 1
-					//},
+					this.submit = {
+						"ordersId": 0,
+						"subTotal": list.planPrice,
+						"subCost": 10,
+						"shipAddress": "台北市",
+						"couponId": null,
+						"ordersDetails": list.selectedProducts
+					}
 
 					////this.popupShowing.showPopup = true;
 					axios.post('/CheckOut/Create', this.submit, {
-						//	carts: this.carts,
-						//	submit:{
-						//		ShipAddress: this.submit.ShipAddress
-						//	}
-						//}, {
 						headers: {
 							'Content-Type': 'application/json'
 						}
 					}).then(response => {
-						console.log(response.data);
+						_this.OrderIdtoSubmit = response.data.orderId
 						this.SubmitOrPay = "Submit";
 						this.popupShowing.showPopup = true;
 					})
@@ -335,7 +325,7 @@
 					let _this = this;
 
 					let onlinePayment = {
-						"orderId": orderId,
+						"orderId": this.OrderIdtoSubmit,
 						"merchantID": null,
 						"tradeInfo": "",
 						"tradeSha": "",

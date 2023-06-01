@@ -234,6 +234,7 @@
                     window.location.href = "/Retail/SingleProduct?productId=" + productId;
                 },
                 addCart(productId) {
+                    let _this = this;
                     this.cart = {
                         ProductId: productId,
                     };
@@ -242,9 +243,11 @@
                             'Content-Type': 'application/json'
                         }
                     }).then(response => {
+                        cartttt.GetCart();
                         if (response.data.getAccountId !="null") {
                             this.getAccountId = response.data.getAccountId;
                             this.showAlert = "成功加入購物車";
+                            
                             console.log(this.cart);
                         } else {
                             this.showAlert = "你要先登入哦";
@@ -256,6 +259,8 @@
                     }).catch(error => {
                         console.log(error);
                     });
+
+                   
                 }
             },
             computed: {

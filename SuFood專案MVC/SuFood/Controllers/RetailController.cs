@@ -160,8 +160,8 @@ namespace SuFood.Controllers
 
             return viewModelList;
         }
-        [HttpPut]
-        public async Task<IEnumerable<ShoppingCartViewModel>> AddCartItem([FromBody] ShoppingCartViewModel model)
+        [HttpPost]
+        public async Task<bool> AddCartItem([FromBody] ShoppingCartViewModel model)
         {
             var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
@@ -170,26 +170,28 @@ namespace SuFood.Controllers
 
             if (cartItem == null)
             {
-                return null;
+                return false;
             }
 
             cartItem.CartQuantity++;
             _context.ShoppingCart.Update(cartItem);
             await _context.SaveChangesAsync();
-            await GetShoppingCarts();
-            return (IEnumerable<ShoppingCartViewModel>)cartItem;
+            return true;
         }
 
 
-        [HttpPut]
-        public async Task<IEnumerable<ShoppingCartViewModel>> MinusCartItem([FromBody] ShoppingCartViewModel model)
+        [HttpPost]
+        public async Task<bool> MinusCartItem([FromBody] ShoppingCartViewModel model)
         {
             var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
             var cartItem = await _context.ShoppingCart
                 .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
 
-
+            if (cartItem == null)
+            {
+                return false;
+            }
             cartItem.CartQuantity--;
 
             if (cartItem.CartQuantity == 0)
@@ -203,22 +205,25 @@ namespace SuFood.Controllers
 
             await _context.SaveChangesAsync();
             await GetShoppingCarts();
-            return (IEnumerable<ShoppingCartViewModel>)cartItem;
+            return true;
         }
-        [HttpPut]
-        public async Task<IEnumerable<ShoppingCartViewModel>> DeleteCartItem([FromBody] ShoppingCartViewModel model)
+        [HttpPost]
+        public async Task<bool> DeleteCartItem([FromBody] ShoppingCartViewModel model)
         {
             var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
             var cartItem = await _context.ShoppingCart
                 .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
-
+            if (cartItem == null)
+            {
+                return false;
+            }
 
             _context.ShoppingCart.Remove(cartItem);
 
             await _context.SaveChangesAsync();
             await GetShoppingCarts();
-            return (IEnumerable<ShoppingCartViewModel>)cartItem;
+            return true;
         }
 
     }

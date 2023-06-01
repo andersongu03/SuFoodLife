@@ -4,7 +4,7 @@
     {
         title: "我的訂單",
         od: {
-            mycomment: [],
+            mycomment: "",
         }, //orderdetail  你要抓的model值丟這裡
         toast: "", //新增成功用
         ordersId:'',  //要新的Id就新增在這邊

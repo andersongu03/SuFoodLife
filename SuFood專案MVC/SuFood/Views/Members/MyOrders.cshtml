@@ -28,7 +28,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="o in od">
+                            <tr v-for="o in od" :key="o.accountId">
                                 <td>
                                     <span>{{o.accountId}}</span>
                                 </td>
@@ -39,7 +39,7 @@
                                     <span>{{o.orderStatus}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.comments}}</span>
+                                    <span v-for="mo in o.comments">{{mo}}</span>
                                 </td>
                                 <td>
                                     <span>{{o.subCost}}</span>

@@ -72,13 +72,13 @@
 							<hr>
 							<a asp-area="" asp-controller="Members" asp-action="MyOrders"><span>我的訂單</span></a>
 							<hr>
-							<a asp-area="" asp-controller="Members" asp-action="#"><span>登入</span> </a>
+							<a asp-area="" asp-controller="User" asp-action="Login"><span>登入</span> </a>
 							<!-- 如果是登入狀態顯示這個 -->
 							<!-- <hr>
 									  <a href="#"><span>登出</span> </a> -->
 
 							<div class="header__icon__container">
-								@if (User.Identity.IsAuthenticated)
+								@if(User.Identity.IsAuthenticated)
 								{
 									<div class="userBox iconBox">
 										<i class="bx bx-user icon"></i>

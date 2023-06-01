@@ -39,7 +39,7 @@
                                     <span>{{o.orderStatus}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.comment}}</span>
+                                    <span>{{o.comments}}</span>
                                 </td>
                                 <td>
                                     <span>{{o.subCost}}</span>
@@ -97,7 +97,7 @@
 </section>
 
 @section Scripts{
-    <script>var id = @ViewBag.id</script>
+    <script>var id = "";//@ViewBag.id</script>
     <script src="~/js/vue.js"></script>
 	<script src="~/js/myorders.js"></script>
     

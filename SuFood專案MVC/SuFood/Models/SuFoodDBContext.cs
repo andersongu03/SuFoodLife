@@ -316,15 +316,11 @@ namespace SuFood.Models
 
                 entity.ToTable("Orders_Review");
 
-                entity.Property(e => e.ReviewId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Review_Id");
+                entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
 
                 entity.Property(e => e.Comment).HasMaxLength(100);
 
-                entity.Property(e => e.OrdersId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("Orders_Id");
+                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
 

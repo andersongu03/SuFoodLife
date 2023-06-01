@@ -3,11 +3,13 @@
     data:
     {
         title: "我的訂單",
-        od: [], //orderdetail  你要抓的model值丟這裡
+        od: {
+            mycomment: [],
+        }, //orderdetail  你要抓的model值丟這裡
         toast: "", //新增成功用
         ordersId:'',  //要新的Id就新增在這邊
         CreateOrEditOrDelete: "",
-        keyword:"",
+        keyword: "",
         popupShowing: {
             showPopup:false
         },
@@ -68,10 +70,11 @@
         //取得後台資料路由丟這邊
         GetDetail() {
             axios.get(`https://localhost:7086/MyOrders/GetMyOrders/${id}`).then(response => {
-                this.od = response.data
+                this.od = response.data;
+                this.mycomment = response.data.comment;
             })
         },
-        CreateComment(createCommentList) {
+        async CreateComment() {
             let _this = this;
             var request = null;
             request = {
@@ -80,17 +83,26 @@
                 comment: _this.createCommentList.comment,
                 ordersId: _this.createCommentList.ordersId
             }
-            if (this.createCommentList.ordersId == 0 && this.createCommentList.ratingStar > 6 && this.createCommentList.ratingStar < 0) {
-                alert('客戶ID為必填欄位,星數不得大於5或是小於0')
-            }
-            else {
-                axios.post('MyOrders/CreateComment', request
-                ).then(response => {
-                    _this.toast = response.data
-                    this.closepopupShowHint()
-                    _this.GetDetail()
-                })
-            }
+
+            // newbiew solution
+            /*axios.post('http://localhost:50490/MyOrders/CreateComment', request).then(response => {
+                this.toast = response.data;
+                console.log(`Toast: ${this.toast}`);
+                this.closepopupShowHint();
+                this.GetDetail();
+            })*/
+
+            // Professional solution
+            // 剛才的寫法是打到 web server
+            // 你應該要打 API Server
+            // async/await 處理非同步行為
+            // 使用 await 的 function 必須使用 async
+            const response = await axios.post('https://localhost:7086/MyOrders/CreateComment/', request);
+            this.toast = response.data;
+            console.log(`Toast: ${this.toast}`);
+            this.closepopupShowHint();
+            this.GetDetail();
+            
         },
     },
     //篩選

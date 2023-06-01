@@ -28,7 +28,7 @@ namespace SuFood.Controllers
             return Json(_context.Orders);
         }
 
-        // MyOrders/GetMyOrders/${id}
+        // MyOrders/GetMyOrders/(session的id)
         [HttpGet]
         public async Task<object> GetMyOrders(int getAccountId)
         {
@@ -58,12 +58,10 @@ namespace SuFood.Controllers
             return vmMymodels;
         }
 
-        //"/MyOrders/CreateComment"
 
         [HttpPost]
         public async Task<string> CreateComment([FromBody] VmComment x)
         {
-
             var exsist = _context.Orders.Where(o => o.OrdersId == x.OrdersId).Count();
             var Commented = _context.OrdersReview.Where(o => o.OrdersId == x.OrdersId).Count() == 0;
             if (exsist != 0 && Commented)
@@ -71,7 +69,6 @@ namespace SuFood.Controllers
                 _context.OrdersReview.Add(new Models.OrdersReview()
                 {
                     ReviewId = x.ReviewId,
-
                     Comment = x.Comment,
                     OrdersId = x.OrdersId,
                     RatingStar = x.RatingStar,
@@ -82,6 +79,7 @@ namespace SuFood.Controllers
             }
             return "新增失敗";
         }
+
         [HttpPost]
         public async Task<string> EditComment([FromBody] OrdersReview Comment)
         {

@@ -57,28 +57,27 @@ namespace SuFood.Areas.BackStage.Controllers
 		}
 
 		//   /BackStage/CommentManagement/CreateComment   測試用
-		[HttpPost]
-		public async Task<string> CreateComment([FromBody] VmComment x)
-		{
+		//[HttpPost]
+		//public async Task<string> CreateComment([FromBody] VmComment x)
+		//{
 
-			var exsist = _context.Orders.Where(o => o.OrdersId == x.OrdersId).Count();
-			var Commented = _context.OrdersReview.Where(o => o.OrdersId == x.OrdersId).Count() == 0;
-			if (exsist != 0 && Commented)
-			{
-				_context.OrdersReview.Add(new Models.OrdersReview()
-				{
-					ReviewId = x.ReviewId,
-
-					Comment = x.Comment,
-					OrdersId = x.OrdersId,
-					RatingStar = x.RatingStar,
-				});
-				await _context.SaveChangesAsync();
-				return "新增成功";
+		//	var exsist = _context.Orders.Where(o => o.OrdersId == x.OrdersId).Count();
+		//	var Commented = _context.OrdersReview.Where(o => o.OrdersId == x.OrdersId).Count() == 0;
+		//	if (exsist != 0 && Commented)
+		//	{
+		//		_context.OrdersReview.Add(new Models.OrdersReview()
+		//		{
+		//			ReviewId = x.ReviewId,
+		//			Comment = x.Comment,
+		//			OrdersId = x.OrdersId,
+		//			RatingStar = x.RatingStar,
+		//		});
+		//		await _context.SaveChangesAsync();
+		//		return "新增成功";
 				
-			}
-			return "新增失敗";
-		}
+		//	}
+		//	return "新增失敗";
+		//}
 		//[HttpGet]
 		//public async Task<string> CreateComment([FromBody] VmComment comment)
 		//{

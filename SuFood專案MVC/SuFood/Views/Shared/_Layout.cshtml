@@ -148,7 +148,7 @@
 
 
                                 </div>
-                                
+
                             </div>
 
                         </div>
@@ -267,17 +267,17 @@
                     let _this = this;
                     axios.put("/Retail/AddCartItem", { ProductId: id })
                         .then(response => {
-                            
+
                         })
                         .catch(error => {
                             console.log(error);
                         });
-                        _this.GetCart();
+                    _this.GetCart();
                 },
                 minusItem: function (id) {
                     let _this = this;
                     axios.put("/Retail/MinusCartItem", { ProductId: id })
-                        .then(response => {                           
+                        .then(response => {
                         })
                         .catch(error => {
                             console.log(error);
@@ -288,14 +288,14 @@
                     let _this = this;
                     axios.put("/Retail/DeleteCartItem", { ProductId: id })
                         .then(response => {
-                            
+
                         })
                         .catch(error => {
                             console.log(error);
                         });
                     _this.GetCart();
                 },
-                
+
 
             },
             computed: {

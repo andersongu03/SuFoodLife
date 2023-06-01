@@ -76,5 +76,9 @@ namespace SuFood.Controllers
 		{
 			return HttpContext.Session.GetString("GetAccountId");
 		}
+		//==============================以上阿信的==================================
+		//[HttpGet]
+		//public
+
 	}
 }

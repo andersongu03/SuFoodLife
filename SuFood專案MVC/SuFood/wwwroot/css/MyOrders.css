@@ -1,0 +1,52 @@
+﻿.btn {
+    background-color: #4f8180 !important;
+    color: white !important;
+}
+.Mytitle {
+    font-size: 2.5rem;
+    padding-top: 1rem;
+}
+
+.MyOrders {
+    display: flex;
+    flex-direction: column;
+    min-width: 500px;
+    height: 100vh;
+    font-family: 'Mukta';
+    margin-top: 2rem;
+}
+
+.cardContent {
+    position: absolute;
+    height: 600px;
+    width: 600px;
+    background: #fff;
+    border-radius: 6px;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.1);
+    visibility: hidden;
+    transition: transform 0.4s, top 0.4s;
+    z-index: 1000;
+    position: fixed;
+}
+
+.cardPopup-body {
+    border-radius: 10px;
+    background-color: white;
+    padding: 3%;
+    width: 650px;
+    height: 650px;
+}
+
+.showPopup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: visible;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 100vw;
+    height: 100vh;
+    background-color: hsla(240, 18%, 75%, .97);
+}

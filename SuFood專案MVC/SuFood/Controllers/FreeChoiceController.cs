@@ -39,7 +39,7 @@ namespace SuFood.Controllers
         //GET: /FreeChoice/GetPlansAndProducts 取得方案與方案內的商品 !!有三張表的寫法
         public Object GetPlansAndProducts()
         {
-            return _context.ProductsOfPlans.Where(p=> p.Plan.PlanStatus == true).GroupBy(p => p.PlanId).Select(group => new
+            return _context.ProductsOfPlans.Where(p => p.Plan.PlanStatus == true).GroupBy(p => p.PlanId).Select(group => new
             {
                 plans = group.Select(p => new VmFreeChoicePlans
                 {

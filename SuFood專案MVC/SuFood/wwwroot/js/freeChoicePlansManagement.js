@@ -5,6 +5,7 @@
         plans: [],
         selectedProducts: [],
         deleteId: "",
+        toast: "",
         uplodaImgPreview: {
             preview: null,
             image: null,
@@ -16,7 +17,7 @@
             planTotalCount: "",
             planCanChoiceCount: "",
             planPrice: "",
-            planStatus: true,
+            planStatus: "",
             productsOfPlans: []
         },
         CreateProductsList: {
@@ -25,7 +26,7 @@
             planTotalCount: "50",
             planCanChoiceCount: "25",
             planPrice: "600",
-            planStatus: true,
+            planStatus: "",
             productsOfPlans: []
         },
         EditOrDeleteorCreate: "Edit",
@@ -97,7 +98,7 @@
             this.openModal()
         },
         CreateProducts() {
-            this.selectedProducts = []            
+            this.selectedProducts = []
             this.GetAllProduct()
             this.EditOrDeleteorCreate = "Create"
             this.modalContentStyle.w200 = false
@@ -124,7 +125,7 @@
         closeModal() {
             this.modalContainerStyle.showModal = false;
         },
-        closeModalWithHint() {            
+        closeModalWithHint() {
             this.modalContainerStyle.showModal = false;
             this.toastHint();
         },
@@ -183,15 +184,20 @@
         },
         //新增方案與方案產品
         CreatePlans() {
-            let _this = this;
-            _this.CreateProductsList.planStatus = _this.EditProductsList.planStatus == "true"
-            axios.post("/BackStage/FreeChoicePlansManagement/CreatePlans", this.CreateProductsList, { headers: { 'Content-Type': 'application/json' } })
-                .then(response => {               
-                    _this.toast = response.data
-                    _this.closeModalWithHint()
-                    _this.claerCreateRequest()
-                    _this.GetPlans();
-            })
+            let c = this.CreateProductsList;
+            if (this.RequestIsNotEmpty()) {
+                let _this = this;
+                this.CreateProductsList.planStatus = (this.CreateProductsList.planStatus == "true")
+                axios.post("/BackStage/FreeChoicePlansManagement/CreatePlans", this.CreateProductsList, { headers: { 'Content-Type': 'application/json' } })
+                    .then(response => {
+                        _this.toast = response.data
+                        _this.closeModalWithHint()
+                        _this.claerCreateRequest()
+                        _this.GetPlans();
+                    })
+            }
+            this.toast = "請確認內容";
+            this.toastHint();
         },
         //刪除方案與方案產品
         DeletePlans(planId) {
@@ -212,7 +218,11 @@
                     _this.closeModalWithHint()
                     _this.GetPlans();
                 })
-        }
+        },
+        RequestIsNotEmpty() {
+            let c = this.CreateProductsList;
+            return (c.planName != '' && c.planDescription != '' && c.planTotalCount != '' && c.planCanChoiceCount != '' && c.planPrice != '' && c.planStatus != '' && c.productsOfPlans.length != 0);
+        },
     },
     watch: {
         selectedProducts(newValue, oldValue) {
@@ -220,6 +230,7 @@
             this.CreateProductsList.productsOfPlans = arrayToObject
             this.EditProductsList.productsOfPlans = arrayToObject
         },
+
     },
     mounted() {
         this.GetPlans();

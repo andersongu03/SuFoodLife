@@ -68,7 +68,7 @@ img {
 
 .modal__button {
   display: inline-block;
-  background-color: var(--first-color);
+  background-color: #4f8180;
   color: #fff;
   padding: 1rem 1.25rem;
   border-radius: .5rem;
@@ -182,11 +182,14 @@ img {
   border-radius: .5rem;
   transition: .3s;
 }
-
+.modal__butoon-width,
+.close-modal {
+    margin-top: 2rem;
+}
 /* Show modal */
 .showModal {
-  visibility: visible;
-  opacity: 1;
+    visibility: visible;
+    opacity: 1;
 }
 
 .showModal .modal__content {

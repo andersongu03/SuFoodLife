@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ViewModel\CommentViewModel.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="bundleconfig.json" />
   </ItemGroup>
 
@@ -27,6 +31,8 @@
   <ItemGroup>
     <Folder Include="Areas\BackStage\Data\" />
     <Folder Include="Areas\BackStage\Models\" />
+    <Folder Include="Areas\BackStage\Views\CommentManagement\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 
   <ItemGroup>

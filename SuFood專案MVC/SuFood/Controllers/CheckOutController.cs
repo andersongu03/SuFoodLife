@@ -39,7 +39,7 @@ namespace SuFood.Controllers
 					//count(Product_Id) AS 幾筆Product
 					//from ProductsOfPlans
 					//group by PlanId
-				}).SingleOrDefault(),
+				}).FirstOrDefault(),
 				Product = group.Select(p => new VmProductToCart
 				{
 					ProductId = p.Product.ProductId,
@@ -47,6 +47,34 @@ namespace SuFood.Controllers
 					ProductDescription = p.Product.ProductDescription,
 				})
 			}); ;
+		}
+
+		//送出訂單
+		[HttpPost]
+		public async Task<IActionResult> Create([FromBody] VmSubmitOrder vmParameters)
+			{
+			Orders od = new Orders
+			{
+				OrdersId = vmParameters.OrdersId,
+				SubTotal = vmParameters.SubTotal,
+				SetOrdersDatetime = DateTime.Now.AddMilliseconds(-DateTime.Now.Millisecond),
+				ShipAddress = vmParameters.ShipAddress,
+				CouponId = vmParameters.CouponId,
+				OrdersDetails = vmParameters.OrdersDetails,
+				AccountId = vmParameters.AccountId
+			};
+
+			_context.Orders.Add(od);
+			await _context.SaveChangesAsync();
+
+			var id = od.OrdersId;
+			return Json(new {OrderId= id});
+		}
+
+		[HttpGet]
+		public async Task<string> GetCurrentAccountId()
+		{
+			return HttpContext.Session.GetString("GetAccountId");
 		}
 	}
 }

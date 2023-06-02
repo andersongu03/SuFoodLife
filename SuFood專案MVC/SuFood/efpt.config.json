@@ -43,6 +43,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Messages]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Orders]",
          "ObjectType": 0
       },

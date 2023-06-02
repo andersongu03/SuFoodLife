@@ -56,12 +56,12 @@ namespace SuFood.Controllers
 			Orders od = new Orders
 			{
 				OrdersId = vmParameters.OrdersId,
-				SubTotal = vmParameters.SubTotal,
+				SubTotal = (int)vmParameters.SubTotal,
 				SetOrdersDatetime = DateTime.Now.AddMilliseconds(-DateTime.Now.Millisecond),
 				ShipAddress = vmParameters.ShipAddress,
 				CouponId = vmParameters.CouponId,
 				OrdersDetails = vmParameters.OrdersDetails,
-				AccountId = vmParameters.AccountId
+				AccountId = (int)vmParameters.AccountId
 			};
 
 			_context.Orders.Add(od);

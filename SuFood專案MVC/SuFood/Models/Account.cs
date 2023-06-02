@@ -10,6 +10,7 @@ namespace SuFood.Models
         public Account()
         {
             CustomerPayment = new HashSet<CustomerPayment>();
+            Messages = new HashSet<Messages>();
             Orders = new HashSet<Orders>();
             ShoppingCart = new HashSet<ShoppingCart>();
         }
@@ -25,13 +26,14 @@ namespace SuFood.Models
         public string DefaultShipAddress { get; set; }
         public string DefaultCreditCardNumber { get; set; }
         public string DefaultCreditCardHolder { get; set; }
-        public DateTime? CreateDatetime { get; set; }
+        public DateTime CreateDatetime { get; set; }
         public byte[] LasttImeLogin { get; set; }
         public string Role { get; set; }
         public bool? IsActive { get; set; }
         public string HashPassword { get; set; }
 
         public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
+        public virtual ICollection<Messages> Messages { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }

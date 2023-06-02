@@ -5,6 +5,7 @@ using SuFood.Data;
 using SuFood.Models;
 using SuFood.Services;
 using Microsoft.AspNetCore.Http;
+using SuFood.Hubs;
 
 namespace SuFood
 {
@@ -19,6 +20,8 @@ namespace SuFood
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddSignalR();
 
             //SuFood Connection
             var SuFoodConnection = builder.Configuration.GetConnectionString("SuFood") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
@@ -92,6 +95,8 @@ namespace SuFood
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            app.MapHub<ChatHub>("/chatHub");
 
             app.Run();
         }

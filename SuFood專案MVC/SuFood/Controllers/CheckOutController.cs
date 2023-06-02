@@ -22,31 +22,47 @@ namespace SuFood.Controllers
 		}
 
 		// GET: /CheckOut/GetPlanToCart 
+		//[HttpGet]
+		//public Object GetPlanToCart()
+		//{
+		//	return _context.ProductsOfPlans.GroupBy(p => p.PlanId).Select(group => new
+		//	{
+		//		Plan = group.Select(p => new VmPlanToCart
+		//		{
+		//			PlanId = p.Plan.PlanId,
+		//			PlanName = p.Plan.PlanName,
+		//			PlanDescription = p.Plan.PlanDescription,
+		//			PlanPrice = p.Plan.PlanPrice,
+		//			PlanTotalCount = p.Plan.PlanTotalCount,
+		//			PlanCanChoiceCount = p.Plan.PlanCanChoiceCount,
+		//			//select PlanId AS 訂單編號,
+		//			//count(Product_Id) AS 幾筆Product
+		//			//from ProductsOfPlans
+		//			//group by PlanId
+		//		}).FirstOrDefault(),
+		//		Product = group.Select(p => new VmProductToCart
+		//		{
+		//			ProductId = p.Product.ProductId,
+		//			ProductName = p.Product.ProductName,
+		//			ProductDescription = p.Product.ProductDescription,
+		//		})
+		//	});
+		//}
+
+		//GET優惠券
 		[HttpGet]
-		public Object GetPlanToCart()
+		public async Task<IEnumerable<VmCoupon>> GetCouponsToCart()
 		{
-			return _context.ProductsOfPlans.GroupBy(p => p.PlanId).Select(group => new
+			return _context.Coupon.Select(c => new VmCoupon
 			{
-				Plan = group.Select(p => new VmPlanToCart
-				{
-					PlanId = p.Plan.PlanId,
-					PlanName = p.Plan.PlanName,
-					PlanDescription = p.Plan.PlanDescription,
-					PlanPrice = p.Plan.PlanPrice,
-					PlanTotalCount = p.Plan.PlanTotalCount,
-					PlanCanChoiceCount = p.Plan.PlanCanChoiceCount,
-					//select PlanId AS 訂單編號,
-					//count(Product_Id) AS 幾筆Product
-					//from ProductsOfPlans
-					//group by PlanId
-				}).FirstOrDefault(),
-				Product = group.Select(p => new VmProductToCart
-				{
-					ProductId = p.Product.ProductId,
-					ProductName = p.Product.ProductName,
-					ProductDescription = p.Product.ProductDescription,
-				})
-			}); ;
+				CouponId = c.CouponId,
+				CouponName = c.CouponName,
+				CouponDescription = c.CouponDescription,
+				CouponMinusCost = c.CouponMinusCost,
+				MinimumPurchasingAmount = c.MinimumPurchasingAmount,
+				Couponstartdate2String = c.CouponStartDate.ToString().Substring(0,10),
+				Couponenddate2String = c.CouponEndDate.ToString().Substring(0,10),
+			});
 		}
 
 		//送出訂單

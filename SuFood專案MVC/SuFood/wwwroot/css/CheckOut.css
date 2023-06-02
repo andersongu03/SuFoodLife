@@ -570,3 +570,7 @@ label {
 .circle2 {
     right: -25px;
 }
+
+.selected{
+    opacity:1;
+}

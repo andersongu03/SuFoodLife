@@ -135,13 +135,13 @@
 						<h3 style="color: white;">可使用的優惠券</h3>
 					</div>
 					<div class="couponContent">
-						<div class="eachCoupon" v-for="coupon in coupons" :key="coupon.id">
-							<input type="radio" name="coupon.id">
-							<div class="coupon-card">
+						<div class="eachCoupon" v-for="coupon in coupons" :key="coupon.couponId">
+							<input type="radio" name="check" v-model="selectedOption" :value="coupon.couponId" @@click="toggleSelection(coupon)">
+							<div class="coupon-card" :class="{'selected': isSelected(coupon)}">
 								<div class="coupon-row">
 									<span id="cpnCode" class="fw-bolder">{{ coupon.couponName }}</span>
 								</div>
-								<p class="fw-bolder">有效期限: {{ coupon.couponEndDtae }}</p>
+								<p class="fw-bolder">有效期限: {{ coupon.couponenddate2String }}</p>
 								<div class="circle1"></div>
 								<div class="circle2"></div>
 							</div>
@@ -227,10 +227,20 @@
 								<li class="list-group-item">
 									<div class="input-group">
 										<input type="text" placeholder="SuFood" class="form-control">
-										<div class="input-group-append"><button type="button" class="btn btn-secondary" @@click="usingCoupon()">使用招待券</button></div>
+										<div class="input-group-append"><button type="button" class="btn btn-secondary" @@click="usingCoupon()">使用優惠券</button></div>
 									</div>
 								</li>
-								<li class="list-group-item text-right"><strong>總計：${{ freeChoiceProducts.planPrice }}</strong></li>
+								<li class="list-group-item">
+									<div class="text-right">
+										<div>
+											<strong>小計：${{ freeChoiceProducts.planPrice }}</strong>
+										</div>
+										<div style="color:red">
+											<strong>優惠：<span >{{ getDiscount }}</span></strong>
+										</div>
+									</div>
+								</li>
+								<li class="list-group-item text-right"><strong>總計：${{ totalPrice }}</strong></li>
 							</ul>
 						</div>
 					</div>
@@ -265,11 +275,8 @@
 					{ 'id': 2, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
 					{ 'id': 3, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
 				],
-				coupons: [
-					{ 'id': 1, 'couponName': '黑色星期五', 'couponEndDtae': '2023-12-31' },
-					{ 'id': 2, 'couponName': '新店開幕', 'couponEndDtae': '2023-12-31' },
-					{ 'id': 3, 'couponName': '好禮相送', 'couponEndDtae': '2023-12-31' },
-				],
+				coupons: [],
+				selectedOption: null,
 				modalShowing: {
 					showModal: false,
 				},
@@ -301,10 +308,15 @@
 			},
 			computed:{
 				totalPrice(){
-					let subTotal = this.carts.map(p => p.quantity * p.price);
-					if(this.carts.length >0){
-						return subTotal.reduce((a,b) => a + b);
+					if(this.getDiscount >= 100){
+						return this.freeChoiceProducts.planPrice - this.getDiscount
+					}else if(this.getDiscount < 100){
+						return this.freeChoiceProducts.planPrice * (this.getDiscount / 100);
+					}else{
+						let discount = this.getDiscount.slice(0, 2);
+						return this.freeChoiceProducts.planPrice * (discount / 100)
 					}
+					
 				},
 				//自由選商品明細清單，會從localStorage取得資料
 				freeChoiceProducts() {
@@ -313,6 +325,29 @@
 						this.status = 'free'
 						return JSON.parse(localStorage.getItem("purchaseList"))
 					}
+				},
+				//一次只能check一個radio
+				isSelected(){
+					return (coupon) =>{
+						return coupon.couponId === this.selectedOption;
+					}
+				},
+				getDiscount(){
+					//如果沒有coupon則為0
+					if(this.coupons.length ===0){
+						return 0;
+					}
+					if(this.selectedOption){
+						const selectedCoupon = this.coupons.find(coupon => coupon.couponId == this.selectedOption);
+						if (selectedCoupon){
+							if (selectedCoupon.couponMinusCost > 99){
+								return selectedCoupon.couponMinusCost || 0;
+							}else{
+								return selectedCoupon.couponMinusCost + "%OFF";
+							};
+						}
+					}
+					return 0;
 				},
 			},
 			methods: {
@@ -325,6 +360,14 @@
 				closePopup() {
 					this.popupShowing.showPopup = false;
 				},
+				toggleSelection(coupon) {
+					if (this.selectedOption === coupon.couponId) {
+						this.selectedOption = null;
+					} else {
+						this.selectedOption = coupon.couponId;
+					}
+				},
+				//拿到LocalStorage自由選產品info
 				SubmitOrder() {
 					let _this = this;
 
@@ -361,9 +404,7 @@
 						this.popupShowing.showPopup = true;
 					})
 				},
-				//closeOrder() {
-				//	this.popupShowing.showPopup = false;
-				//},
+				//資料加密送到藍星
 				prepareInfo(orderId) {
 					//this.onlinePayment.OrderId = orderId
 					console.log(orderId)
@@ -388,6 +429,7 @@
 						this.SubmitOrPay = "Pay";
 					})
 				},
+				//支付
 				pay2(id) {
 					this.pay(id)
 
@@ -401,12 +443,18 @@
 						.then(response => {
 							console.log(response.data)
 						})
-				}
+				},
+				//GET優惠券
+				GetCouponsToCart(){
+					let _this = this;
+					axios("/CheckOut/GetCouponsToCart").then(response => {
+						_this.coupons = response.data;
+					});
+				},
 			},
 			mounted(){
-				this.freeChoiceProducts
-			}
-
+				this.GetCouponsToCart();
+			},
 		});
 
 	</script>

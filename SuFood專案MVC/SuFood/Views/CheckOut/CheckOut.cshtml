@@ -130,6 +130,27 @@
 						</div>
 					</div>
 				</template>
+				<div class="couponCart" :class="modalShowing">
+					<div class="couponTable">
+						<h3 style="color: white;">可使用的優惠券</h3>
+					</div>
+					<div class="couponContent">
+						<div class="eachCoupon" v-for="coupon in coupons" :key="coupon.id">
+							<input type="radio" name="coupon.id">
+							<div class="coupon-card">
+								<div class="coupon-row">
+									<span id="cpnCode" class="fw-bolder">{{ coupon.couponName }}</span>
+								</div>
+								<p class="fw-bolder">有效期限: {{ coupon.couponEndDtae }}</p>
+								<div class="circle1"></div>
+								<div class="circle2"></div>
+							</div>
+						</div>
+					</div>
+					<div style="padding: 3%">
+						<button class="btn btn-danger" @@click="closeUsingCoupon()">關閉</button>
+					</div>
+				</div>
 				<div class="col-md-8 row flex-column-reverse flex-md-row">
 					<div class="col-md-7 orderInfo">
 						<h2 class="section-title">訂單資訊</h2>
@@ -206,7 +227,7 @@
 								<li class="list-group-item">
 									<div class="input-group">
 										<input type="text" placeholder="SuFood" class="form-control">
-										<div class="input-group-append"><button type="button" class="btn btn-secondary">使用招待券</button></div>
+										<div class="input-group-append"><button type="button" class="btn btn-secondary" @@click="usingCoupon()">使用招待券</button></div>
 									</div>
 								</li>
 								<li class="list-group-item text-right"><strong>總計：${{ freeChoiceProducts.planPrice }}</strong></li>
@@ -244,6 +265,14 @@
 					{ 'id': 2, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
 					{ 'id': 3, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
 				],
+				coupons: [
+					{ 'id': 1, 'couponName': '黑色星期五', 'couponEndDtae': '2023-12-31' },
+					{ 'id': 2, 'couponName': '新店開幕', 'couponEndDtae': '2023-12-31' },
+					{ 'id': 3, 'couponName': '好禮相送', 'couponEndDtae': '2023-12-31' },
+				],
+				modalShowing: {
+					showModal: false,
+				},
 				popupShowing: {
 					showPopup: false,
 				},
@@ -287,6 +316,12 @@
 				},
 			},
 			methods: {
+				usingCoupon() {
+					this.modalShowing.showModal = true;
+				},
+				closeUsingCoupon() {
+					this.modalShowing.showModal = false;
+				},
 				closePopup() {
 					this.popupShowing.showPopup = false;
 				},

@@ -22,6 +22,29 @@
             top: -18px;
             background: #FFF;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 15%;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 
     <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
@@ -149,12 +172,17 @@
                                 </table>
                                 <div class="bottomPurchase" style="display: flex; justify-content: space-around;position: sticky;    bottom: -16px;background: #fff;height: 54px;">
 
-                                    <div>商品總價：{{getTotal}}</div>
-                                    <button type="button" class="btn btn-danger">前往購買<i class="fa-solid fa-arrow-right"></i></button>
+                                    <div>購物車總計：{{getTotal}}</div>
+                                    <button type="button" class="btn btn-danger" @@click="goOrders()">前往購買<i class="fa-solid fa-arrow-right"></i></button>
 
 
                                 </div>
-
+                                <div class="modal" :style="{ display: modalVisible ? 'block' : 'none' }">
+                                    <div class="modal-content">
+                                        <p class="text-danger fw-bold">{{showAlert }}</p>
+                                        @*<p class="text-danger fw-bold">@ViewBag.Status</p>*@
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -256,10 +284,22 @@
             el: '#vueStart',
             data: {
                 cart: [],
-                showModal: ''
+                modalVisible: false,
+                showAlert: "",
             },
 
             methods: {
+                goOrders: function () {
+                    axios.get("/Retail/IsLogin").then(response => {
+                        if (response.data.getAccountId == null) {
+                            this.showAlert = "你要先登入哦";
+                        } else {
+                            window.location.href = "/CheckOut/Retail2Order";
+                        }
+
+                    })
+
+                },
                 GetCart: function () {
                     let _this = this;
                     axios.get("/Retail/GetShoppingCarts").then(response => {
@@ -277,6 +317,10 @@
                                 prod.cartQuantity++;
                             }
                             cartttt.GetCart();
+                            if (typeof vm !== 'undefined' && vm !== null) {
+                                vm.GetCart();
+                            }
+                            //vm.GetCart();
                         })
                         .catch(error => {
                             console.log(error);
@@ -295,7 +339,12 @@
                                     }
                                 } else {
                                     prod.cartQuantity--;
+
                                 }
+                                if (typeof vm !== 'undefined' && vm !== null) {
+                                    vm.GetCart();
+                                }
+                                //vm.GetCart();
                                 cartttt.GetCart();
                             }
 
@@ -303,10 +352,10 @@
                         .catch(error => {
                             console.log(error);
                         });
-                    
+
                 },
                 deleteItem: function (prod) {
-                    let _this = this;                    
+                    let _this = this;
                     axios.post("/Retail/DeleteCartItem", { ProductId: prod.productId })
                         .then(response => {
                             if (response.data) {
@@ -315,6 +364,10 @@
                                     _this.cart.splice(index, 1);
                                 }
                             }
+                            if (typeof vm !== 'undefined' && vm !== null) {
+                                vm.GetCart();
+                            }
+                            //vm.GetCart();
                             cartttt.GetCart();
                         })
                         .catch(error => {
@@ -322,6 +375,7 @@
                         });
                     _this.GetCart();
                 },
+
 
 
             },

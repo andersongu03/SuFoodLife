@@ -11,8 +11,9 @@ namespace SuFood.Models
         public string AnnouncementContent { get; set; }
         public bool? AnnouncementStatus { get; set; }
         public DateTime AnnouncementStartDate { get; set; }
-        public DateTime AnnouncementEndDate { get; set; }
+        public DateTime? AnnouncementEndDate { get; set; }
         public byte[] AnnouncementImage { get; set; }
-        public string Type { get; set; }
+        public string AnnouncementType { get; set; }
+        public string AnnouncementCreater { get; set; }
     }
 }

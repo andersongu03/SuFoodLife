@@ -37,11 +37,30 @@
 
   <ItemGroup>
     <None Include="bundleconfig.json" />
+    <None Include="Views\CheckOut\CheckOut.cshtml" />
+    <None Include="Views\CheckOut\Retail2Order.cshtml" />
+    <None Include="Views\FreeChoice\FreeChoice.cshtml" />
+    <None Include="Views\Home\Index.cshtml" />
+    <None Include="Views\Home\Privacy.cshtml" />
+    <None Include="Views\Members\CommentPage.cshtml" />
+    <None Include="Views\Members\Coupon.cshtml" />
+    <None Include="Views\Members\ModifyPassword.cshtml" />
+    <None Include="Views\Members\MyOrders.cshtml" />
+    <None Include="Views\Members\PersonalInfo.cshtml" />
+    <None Include="Views\Members\_SidebarPartial.cshtml" />
     <None Include="Views\Retail\Retail.cshtml" />
     <None Include="Views\Retail\SingleProduct.cshtml" />
+    <None Include="Views\Shared\_Layout.cshtml" />
+    <None Include="Views\Shared\_LoginPartial.cshtml" />
+    <None Include="Views\Shared\_ValidationScriptsPartial.cshtml" />
     <None Include="Views\User\Enble.cshtml" />
+    <None Include="Views\User\EnterComfirmPassword.cshtml" />
+    <None Include="Views\User\FogetPassword.cshtml" />
+    <None Include="Views\User\ForgetPassword4Email.cshtml" />
     <None Include="Views\User\Login.cshtml" />
     <None Include="Views\User\Register.cshtml" />
+    <None Include="Views\_ViewImports.cshtml" />
+    <None Include="Views\_ViewStart.cshtml" />
     <None Include="wwwroot\前端登入畫面用到的\css\mdb.dark.min.css.map" />
     <None Include="wwwroot\前端登入畫面用到的\css\mdb.dark.rtl.min.css.map" />
     <None Include="wwwroot\前端登入畫面用到的\css\mdb.min.css.map" />

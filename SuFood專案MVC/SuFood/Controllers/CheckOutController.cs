@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
+using SuFood.Models.DTO;
 using SuFood.ViewModel;
 using System.Net;
 using System.Numerics;
@@ -22,6 +23,14 @@ namespace SuFood.Controllers
             return View();
         }
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult PaymentSucceed()
+        {
+            return View();
+        }
+        public IActionResult PaymentFailed()
         {
             return View();
         }
@@ -54,7 +63,35 @@ namespace SuFood.Controllers
             }); ;
         }
 
-        //送出訂單
+        //GET優惠券
+        [HttpGet]
+        public async Task <IEnumerable<VmCoupon>> GetCouponsToCart()
+        {
+            return _context.Coupon.Select(c => new VmCoupon
+            {
+                CouponId = c.CouponId,
+                CouponName = c.CouponName,
+                CouponDescription = c.CouponDescription,
+                CouponMinusCost = c.CouponMinusCost,
+                MinimumPurchasingAmount = c.MinimumPurchasingAmount,
+                Couponstartdate2String = c.CouponStartDate.ToString().Substring(0, 10),
+                Couponenddate2String = c.CouponEndDate.ToString().Substring(0, 10),
+            });
+        }
+
+        //GET優惠券byID
+        [HttpGet]
+        public async Task<IActionResult> GetCouponsToCartById(int id)
+        {
+            var getCouponId = _context.Coupon.Where(c => c.CouponId == id).Select(c => new VmCoupon
+            {
+                MinimumPurchasingAmount = c.MinimumPurchasingAmount,
+            });
+
+            return Json(new { SelectCouponId = getCouponId });
+        }
+
+        //送出訂單(自由選)
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] VmSubmitOrder vmParameters)
         {
@@ -74,6 +111,19 @@ namespace SuFood.Controllers
 
             var id = od.OrdersId;
             return Json(new { OrderId = id });
+        }
+
+        //付款成功/失敗轉換頁面
+        public IActionResult CheckPayment(OnlinePaymentReturn onlinePaymentReturn)
+        {
+            if (onlinePaymentReturn.Status == "SUCCESS")
+            {
+                return View("PaymentSucceed");
+            }
+            else
+            {
+                return View("PaymentFailed");
+            }
         }
 
         [HttpGet]

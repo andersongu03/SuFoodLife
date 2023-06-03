@@ -26,11 +26,11 @@ namespace SuFood.Controllers
             this._context = context;
             this.encryptService = encryptService;
         }
-        [HttpGet]        
+        [HttpGet]
         public IActionResult Login()
         {
             return PartialView();
-        }        
+        }
         public IActionResult Register()
         {
             return PartialView();
@@ -69,7 +69,8 @@ namespace SuFood.Controllers
                 Account1 = model.Account1,
                 Password = encryptedPassword,
                 Role = "Customer",
-                IsActive = false
+                IsActive = false,
+                CreateDatetime = DateTime.Now,
             });
 
             _context.SaveChanges();
@@ -127,6 +128,8 @@ namespace SuFood.Controllers
         {
             var user = _context.Account.FirstOrDefault(Acc => Acc.Account1 == model.Account1 && Acc.IsActive == true);
 
+
+
             if (user == null)
             {
                 ViewBag.Error = "帳號不存在或未啟用！";
@@ -141,6 +144,8 @@ namespace SuFood.Controllers
                     ViewBag.Error = "管理者的密碼錯誤！";
                     return PartialView("Login");
                 }
+                user.LasttImeLogin = DateTime.Now;
+                _context.SaveChanges();
             }
             else if (user.Role == "Customer")
             {
@@ -152,9 +157,11 @@ namespace SuFood.Controllers
                     ViewBag.Error = "帳號密碼錯誤！";
                     return PartialView("Login");
                 }
+                user.LasttImeLogin = DateTime.Now;
+                _context.SaveChanges();
             }
             if (RememberAcc)
-            {                
+            {
                 Response.Cookies.Append("Account1", model.Account1, new CookieOptions
                 {
                     Expires = DateTime.Now.AddDays(30) // 存在Cookie30天
@@ -177,7 +184,7 @@ namespace SuFood.Controllers
             //宣告一個帳號有幾個憑證            
             var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
             //登入並給一張憑證
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme,claimsPrincipal);
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
 
             HttpContext.Session.SetString("GetAccountId", Convert.ToString(user.AccountId));
 
@@ -202,7 +209,7 @@ namespace SuFood.Controllers
             if (user.IsActive != true)
             {
                 ViewBag.Error = "您還沒有啟用帳號哦！！";
-                return View();  
+                return View();
             }
 
             //寄信
@@ -238,7 +245,7 @@ namespace SuFood.Controllers
         public async Task<IActionResult> EnableChangePassword(string code, ForgetPasswordViewModel model)
         {
             var str = Convert.FromBase64String(code);
-            var obj = JsonSerializer.Deserialize<AesValidationDto>(str); 
+            var obj = JsonSerializer.Deserialize<AesValidationDto>(str);
             //序列化json格式            
             string json = JsonSerializer.Serialize(obj);
             //反序列化json格式
@@ -248,7 +255,7 @@ namespace SuFood.Controllers
             {
                 return BadRequest("過期");
             }
-            
+
             return RedirectToAction("EnterComfirmPassword", "User");
             //return Ok($@"code:{code}  str:{str}");
         }
@@ -257,8 +264,8 @@ namespace SuFood.Controllers
             string obj = HttpContext.Session.GetString("obj");
 
             if (string.IsNullOrEmpty(obj))
-            {               
-                return Ok("驗證信沒過");               
+            {
+                return Ok("驗證信沒過");
             }
             AesValidationDto objOK = JsonSerializer.Deserialize<AesValidationDto>(obj);
 

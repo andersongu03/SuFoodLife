@@ -31,6 +31,7 @@ namespace SuFood.Models
         public string Phone { get; set; }
         public string ReMark { get; set; }
         public string Email { get; set; }
+        public string BuyMethod { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Coupon Coupon { get; set; }

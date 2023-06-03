@@ -6,6 +6,7 @@ using System.Net;
 using System.Numerics;
 using System.Security.Policy;
 using System.Xml.Linq;
+using static SuFood.ViewModel.RetailOrdersViewModel;
 
 namespace SuFood.Controllers
 {
@@ -90,79 +91,103 @@ namespace SuFood.Controllers
         {
             var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
-            var existingOrderId = _context.Orders.Where(o => o.AccountId == Convert.ToInt32(getAccountId) && o.OrderStatus == "未付款").Select(o => o.OrdersId).First();
+            
+            int? existingOrderId =
+                _context.Orders.Where(o => o.AccountId == Convert.ToInt32(getAccountId) && o.OrderStatus == "未付款" && o.BuyMethod == "零售")
+                .Select(o => o.OrdersId).FirstOrDefault();
 
             if (existingOrderId != 0)
             {
-                return await EditRetailOrder(existingOrderId, model);
+                int OldOrderId = (int)existingOrderId;
+                return await EditRetailOrder(OldOrderId, model);
             }
 
-            var getSubCost = _context.Products.Where(p => p.ProductName == model.ProductName).Sum(p => p.Cost);
 
-            if (ModelState.IsValid)
+            var getSubCost = 0;
+            foreach (var details in model.Details)
             {
-                var order = new Orders
-                {
-                    Name = model.Name,
-                    Phone = model.Phone,
-                    ShipAddress = model.ShipAddress,
-                    SubTotal = model.SubTotal,
-                    SubCost = getSubCost,
-                    SubDiscount = model.SubDiscount,
-                    SetOrdersDatetime = DateTime.Now,
-                    AccountId = Convert.ToInt32(getAccountId),
-                    OrderStatus = "未付款",
-                    Email = model.Email
-                };
+                getSubCost = _context.Products.Where(p => p.ProductName == details.ProductName).Sum(p => p.Cost);
+            }
 
-                _context.Orders.Add(order);
-                await _context.SaveChangesAsync();
-                var getNewOrderId = order.OrdersId;
 
+            var order = new Orders
+            {
+                Name = model.Order.Name,
+                Phone = model.Order.Phone,
+                ShipAddress = model.Order.ShipAddress,
+                SubTotal = model.Order.SubTotal,
+                SubCost = getSubCost,
+                SubDiscount = model.Order.SubDiscount,
+                SetOrdersDatetime = DateTime.Now,
+                AccountId = Convert.ToInt32(getAccountId),
+                //AccountId = 19,
+                OrderStatus = "未付款",
+                Email = model.Order.Email,
+                ReMark = model.Order.ReMark,
+                BuyMethod = "零售",
+            };
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            var getNewOrderId = order.OrdersId;
+
+            foreach (var detail in model.Details)
+            {
                 var orderDetails = new OrdersDetails
                 {
                     OrderId = getNewOrderId,
-                    ProductName = model.ProductName,
-                    UnitPrice = model.UnitPrice,
-                    Quantity = model.Quantity,
+                    ProductName = detail.ProductName,
+                    UnitPrice = detail.UnitPrice,
+                    Quantity = detail.Quantity,
                 };
                 _context.OrdersDetails.Add(orderDetails);
                 await _context.SaveChangesAsync();
-                return Json(new { GetOrderId = getNewOrderId });
             }
-            return Ok("我怎麼在這");
+
+            return Json(new { GetOrderId = getNewOrderId });
         }
         [HttpPost]
         public async Task<IActionResult> EditRetailOrder(int orderId, RetailOrdersViewModel model)
         {
             var order = await _context.Orders.FindAsync(orderId);
-            var getSubCost = _context.Products.Where(p => p.ProductName == model.ProductName).Sum(p => p.Cost);
+
+            var getSubCost = 0;
+            foreach (var details in model.Details)
+            {
+                getSubCost = _context.Products.Where(p => p.ProductName == details.ProductName).Sum(p => p.Cost);
+            }
+
+
             if (order == null) { return Ok("我是誰我在哪"); }
 
-            order.Name = model.Name;
-            order.Phone = model.Phone;
-            order.ShipAddress = model.ShipAddress;
+            order.Name = model.Order.Name;
+            order.Phone = model.Order.Phone;
+            order.ShipAddress = model.Order.ShipAddress;
             order.SubCost = getSubCost;
-            order.SubTotal = model.SubTotal;
-            order.SubDiscount = model.SubDiscount;
+            order.SubTotal = model.Order.SubTotal;
+            order.SubDiscount = model.Order.SubDiscount;
             order.SetOrdersDatetime = DateTime.Now;
-            order.ShipAddress = model.ShipAddress;
+            order.ReMark = model.Order.ReMark;
+            order.Email = model.Order.Email;
 
-            
 
             var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
             _context.OrdersDetails.RemoveRange(orderDetails);
 
-            var NewOrderDetails = new OrdersDetails
+            foreach (var detail in model.Details)
             {
-                OrderId = orderId,
-                ProductName = model.ProductName,
-                UnitPrice = model.UnitPrice,
-                Quantity = model.Quantity,
-            };
+                var NewOrderDetails = new OrdersDetails
+                {
+                    OrderId = orderId,
+                    ProductName = detail.ProductName,
+                    UnitPrice = detail.UnitPrice,
+                    Quantity = detail.Quantity,
+                };
+                _context.OrdersDetails.Add(NewOrderDetails);
+                await _context.SaveChangesAsync();
+            }
 
-            _context.OrdersDetails.Add(NewOrderDetails);
-            await _context.SaveChangesAsync();
+
 
             return Json(new { GetOrderId = orderId });
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SuFood.Models;
+using SuFood.Models.DTO;
 using SuFood.ViewModel;
 using System.Numerics;
 
@@ -17,6 +18,14 @@ namespace SuFood.Controllers
 			return View();
 		}
 		public IActionResult Index()
+		{
+			return View();
+		}
+		public IActionResult PaymentSucceed()
+		{
+			return View();
+		}
+		public IActionResult PaymentFailed()
 		{
 			return View();
 		}
@@ -85,5 +94,21 @@ namespace SuFood.Controllers
 			return "新增成功";
 		}
 
+		public IActionResult CheckPayment(OnlinePaymentReturn onlinePaymentReturn)
+		{
+			if (onlinePaymentReturn.Status == "SUCCESS")
+			{
+				//string hashKey = _configuration["OnlinePayment:HashKey"];
+				//string hashIV = _configuration["OnlinePayment:HashIV"];
+				//string decryptTradeInfo = _aes.DecryptAESHex(onlinePaymentReturn.TradeInfo, hashKey, hashIV);
+				//PaymentResult result = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
+
+				return View("PaymentSucceed");
+			}
+			else
+			{
+				return View("PaymentFailed");
+			}
+		}
 	}
 }

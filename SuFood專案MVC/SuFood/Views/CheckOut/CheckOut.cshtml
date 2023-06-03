@@ -16,7 +16,7 @@
 		</div>
 		<div class="check-out-content row">
 			<!-- 確認購物車 -->
-			<template v-if="currentTab == '1.確認購物車'">
+			@*<template v-if="currentTab == '1.確認購物車'">
 				<div class="col-8 carts__container">
 					<h2>購物車</h2>
 					<div class="scroll">
@@ -27,7 +27,6 @@
 							<th>小計</th>
 							<th>刪除</th>
 							</thead>
-							@*零售明細*@
 							<tbody>
 								<tr v-for="c in carts" :key="c.id">
 									<td>
@@ -62,9 +61,9 @@
 					<div class="total">總計: </div>
 					<div><button class="buy" @@click="currentTab = '2.填寫訂單資訊'">購買</button></div>
 				</div>
-			</template>
+			</template>*@
 			<!-- 填寫訂單資訊 -->
-			<template v-else-if="currentTab == '2.填寫訂單資訊'">
+			<template v-if="currentTab == '2.填寫訂單資訊'">
 				<template v-if="SubmitOrPay =='Submit'">
 					<div class="cardContent" id="" :class="popupShowing">
 						<div class="cardPopup-body" style="width: 375px; height:260px">
@@ -226,7 +225,7 @@
 								</template>
 								<li class="list-group-item">
 									<div class="input-group">
-										<input type="text" placeholder="SuFood" class="form-control">
+										<input type="text" placeholder="" class="form-control" v-model="chooseCoupon">
 										<div class="input-group-append"><button type="button" class="btn btn-secondary" @@click="usingCoupon()">使用優惠券</button></div>
 									</div>
 								</li>
@@ -265,18 +264,16 @@
 	<script src="~/axios/axios.min.js"></script>
 	<script src="~/js/vue.js"></script>
 	<script>
+		var list = JSON.parse(localStorage.getItem("purchaseList"))
+
 		const vm = new Vue({
 			el: "#app",
 			data: {
 				tabs: ['1.確認購物車', '2.填寫訂單資訊', '3.完成購買'],
-				currentTab: '1.確認購物車',
-				carts: [
-					{ 'id': 1, 'productName': '建達繽紛樂', 'quantity': 1, 'price': 1200, 'img': '' },
-					{ 'id': 2, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
-					{ 'id': 3, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
-				],
+				currentTab: '2.填寫訂單資訊',
 				coupons: [],
 				selectedOption: null,
+				chooseCoupon: null,
 				modalShowing: {
 					showModal: false,
 				},
@@ -285,7 +282,11 @@
 				},
 				SubmitOrPay:'',
 				submit: {
-					ShipAddress:'',
+					OrderId: 5,
+					ShipAddress: "",
+					SubTotal: list.planPrice,
+					CouponId: 1,
+					OrdersDetails: list.selectedProducts.map(x => x.productName)
 				},
 				onlinePayment: {
 					"orderId": null,
@@ -307,16 +308,26 @@
 				/*isInvalid: true,*/
 			},
 			computed:{
+				//總計
 				totalPrice(){
-					if(this.getDiscount >= 100){
-						return this.freeChoiceProducts.planPrice - this.getDiscount
-					}else if(this.getDiscount < 100){
-						return this.freeChoiceProducts.planPrice * (this.getDiscount / 100);
-					}else{
-						let discount = this.getDiscount.slice(0, 2);
-						return this.freeChoiceProducts.planPrice * (discount / 100)
-					}
-					
+					let local = JSON.parse(localStorage.getItem("purchaseList"));
+					let price = this.freeChoiceProducts.planPrice - this.getDiscount;
+					local.planPrice = price;
+					console.log(local);
+					return local.planPrice;
+
+
+					//return this.freeChoiceProducts.planPrice - this.getDiscount
+
+
+					//if(this.getDiscount >= 100){
+					//	return this.freeChoiceProducts.planPrice - this.getDiscount
+					//}else if(this.getDiscount < 100){
+					//	return this.freeChoiceProducts.planPrice * (this.getDiscount / 100);
+					//}else{
+					//	let discount = this.getDiscount.slice(0, 2);
+					//	return this.freeChoiceProducts.planPrice * (discount / 100)
+					//}
 				},
 				//自由選商品明細清單，會從localStorage取得資料
 				freeChoiceProducts() {
@@ -332,6 +343,7 @@
 						return coupon.couponId === this.selectedOption;
 					}
 				},
+				//優惠
 				getDiscount(){
 					//如果沒有coupon則為0
 					if(this.coupons.length ===0){
@@ -339,15 +351,19 @@
 					}
 					if(this.selectedOption){
 						const selectedCoupon = this.coupons.find(coupon => coupon.couponId == this.selectedOption);
-						if (selectedCoupon){
-							if (selectedCoupon.couponMinusCost > 99){
+						if (selectedCoupon) {
 								return selectedCoupon.couponMinusCost || 0;
-							}else{
-								return selectedCoupon.couponMinusCost + "%OFF";
-							};
+							}
 						}
-					}
 					return 0;
+						//判斷優惠幅度是否大於100? 直接減:打折
+						//if (selectedCoupon){
+						//	if (selectedCoupon.couponMinusCost > 99){
+						//		return selectedCoupon.couponMinusCost || 0;
+						//	}else{
+						//		return selectedCoupon.couponMinusCost + "%OFF";
+						//	};
+						//}
 				},
 			},
 			methods: {
@@ -358,13 +374,17 @@
 					this.modalShowing.showModal = false;
 				},
 				closePopup() {
+					this.chooseCoupon = this.coupons.couponName;
 					this.popupShowing.showPopup = false;
 				},
 				toggleSelection(coupon) {
 					if (this.selectedOption === coupon.couponId) {
 						this.selectedOption = null;
+						this.chooseCoupon = null;
 					} else {
 						this.selectedOption = coupon.couponId;
+						this.chooseCoupon = coupon.couponName;
+
 					}
 				},
 				//拿到LocalStorage自由選產品info
@@ -390,11 +410,6 @@
 
 					////this.popupShowing.showPopup = true;
 					axios.post('/CheckOut/Create', this.submit, {
-						//	carts: this.carts,
-						//	submit:{
-						//		ShipAddress: this.submit.ShipAddress
-						//	}
-						//}, {
 						headers: {
 							'Content-Type': 'application/json'
 						}
@@ -459,18 +474,3 @@
 
 	</script>
 }
-@*
-	//computed: {
-			//	//choicePrice() {
-			//	//	let total = this.cartsForFreeChoice.m
-			//	//}
-			//	//		validationForm() {
-			//	//	if (this.submit.RecipientName === '123') {
-			//	//		console.log('123');
-			//	//		return false;
-			//	//	}
-			//	//},
-			//},
-			//mounted() {
-			//	this.GetPlanInfo();
-			//}*@

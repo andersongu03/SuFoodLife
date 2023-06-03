@@ -24,7 +24,7 @@ namespace SuFood.Controllers
 			_context = context;
 			_configuration = configuration;
 		}
-
+		
 		//傳送訂單付款
 		//測試用，傳入值要修改
 		[HttpPost]
@@ -47,7 +47,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://6f89-211-21-101-140.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://89ed-2407-4d00-1c01-7e46-5861-5b26-84cb-783b.ngrok-free.app/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 
@@ -119,10 +119,10 @@ namespace SuFood.Controllers
 					order.OrderStatus = "已付款";
 					//order.SubTotal = int.Parse(orderTotal);
 
-					if (paymentType == "CREDIT")
-					{
+					//if (paymentType == "CREDIT")
+					//{
 						
-					}
+					//}
 
 				}
 				_context.SaveChanges();
@@ -137,25 +137,10 @@ namespace SuFood.Controllers
 				Version = r_Version,
 			};
 
-			return RedirectToAction("CheckPayment", "OnlinePayment", onlinePaymentReturn);
+			return RedirectToAction("CheckPayment", "Check", onlinePaymentReturn);
 			/*return RedirectToAction("Index")*/
 		}
 
-		public IActionResult CheckPayment(OnlinePaymentReturn onlinePaymentReturn)
-		{
-			if (onlinePaymentReturn.Status == "SUCCESS")
-			{
-				//string hashKey = _configuration["OnlinePayment:HashKey"];
-				//string hashIV = _configuration["OnlinePayment:HashIV"];
-				//string decryptTradeInfo = _aes.DecryptAESHex(onlinePaymentReturn.TradeInfo, hashKey, hashIV);
-				//PaymentResult result = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
-
-				return View("CheckOut");
-			}
-			else
-			{
-				return View("Index");
-			}
-		}
+		
 	}
 }

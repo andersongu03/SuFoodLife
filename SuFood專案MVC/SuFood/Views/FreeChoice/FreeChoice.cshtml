@@ -120,6 +120,12 @@
             </div>
         </div>
     </section>
+
+    <!--========== Messge toast ==========-->
+    <div class="message-toast-wrapper" :class="toastHintStlye">
+        <i class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
+        <p class="message-toast-title">{{toast}}</p>
+    </div>
 </main><!-- End #main -->
 @section scripts{
     <script src="~/axios/axios.min.js"></script>
@@ -133,9 +139,19 @@
                 products: [], //45
                 plans: [],
                 MaxSelectItems: 20,
-                choicePlan: ""
+                choicePlan: "",
+                toastHintStlye: {
+                    fadeInUp: false
+                },
+                toast: ""
             },
             methods: {
+                toastHint() {
+                    this.toastHintStlye.fadeInUp = true
+                    setTimeout(() => {
+                        this.toastHintStlye.fadeInUp = false
+                    }, 2100)
+                },
                 ScrollAction() {
                     const sections = document.querySelectorAll('section[id]')
                     const scrollY = window.pageYOffset
@@ -198,7 +214,6 @@
                         console.log(this.products)
                     })
                 },
-
                 //取得方案
                 GetPlans() {
                     axios.get("/FreeChoice/GetPlansAndProducts").then(response => {
@@ -221,24 +236,42 @@
                 },
                 //將選擇的"方案名稱"、"方案價格"、"選擇的產品與數量"加入localStorage中。
                 checkOut() {
-                    if (this.totalQuantity == this.MaxSelectItems) {
-                        let selectedProductsAndQuantity = this.selectProduct.map(product => { return { productId: product.productId, productName: product.productName, quantity: product.quantity }; });
-                        let planName = this.choicePlan.planName;
-                        let planPrice = this.choicePlan.planPrice;
+                    //確認登入
+                    let currentUser = axios.get("/FreeChoice/GetCurrentAccountId").then(response => {
+                        if(response.data.accountId == "null"){
+                            this.toast = "請先登入喔!"
+                            this.toastHint()
+                        }else{
+                            if (this.totalQuantity == this.MaxSelectItems) {
+                                let selectedProductsAndQuantity = this.selectProduct.map(product => {
+                                    return {
+                                        productId: product.productId,
+                                        productName: product.productName,
+                                        quantity: product.quantity,
+                                        unitPrice: product.price,
+                                        ordersDetailsId: 0,
+                                        couponId: 1
+                                    };
+                                });
+                                let planName = this.choicePlan.planName;
+                                let planPrice = this.choicePlan.planPrice;
 
-                        let purchaseList = {
-                            "PlanName": planName,
-                            "planPrice": planPrice,
-                            "selectedProducts": selectedProductsAndQuantity
-                        };
+                                let purchaseList = {
+                                    "PlanName": planName,
+                                    "planPrice": planPrice,
+                                    "selectedProducts": selectedProductsAndQuantity
+                                };
 
-                        localStorage.setItem("purchaseList", JSON.stringify(purchaseList))
+                                localStorage.setItem("purchaseList", JSON.stringify(purchaseList))
 
-                        window.location.href = "/CheckOut/CheckOut";
-                    } else {
-                        this.ToNextSection("match")
-                        this.toastHint()
-                    }
+                                window.location.href = "/CheckOut/CheckOut";
+                            } else {
+                                this.ToNextSection("match")
+                                this.toast = "請選擇商品"
+                                this.toastHint()
+                            }
+                        }
+                    });
                 },
 
             },

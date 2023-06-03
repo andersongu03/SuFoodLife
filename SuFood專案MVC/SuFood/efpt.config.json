@@ -19,6 +19,14 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[Announcement]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ComeStore2Take_SingleOrders]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Coupon]",
          "ObjectType": 0
       },
@@ -28,6 +36,10 @@
       },
       {
          "Name": "[dbo].[FreeChoicePlans]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[FreeChoiceProducts]",
          "ObjectType": 0
       },
       {
@@ -51,7 +63,31 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[RecyleSubscribe_Orders]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Retails_List]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Shipping_SingleOrders]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Shopping_Cart]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Shopping_method]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[SingleShipping_method]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Subscribe_List]",
          "ObjectType": 0
       }
    ],

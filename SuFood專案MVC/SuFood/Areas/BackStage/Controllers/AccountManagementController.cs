@@ -25,80 +25,76 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //取得會員資料 ("/BackStage/AccountManagement/GetAccount")
         [HttpGet]
-        public async Task<IEnumerable<VmAccount>> GetAcc()
+        public async Task<IEnumerable<VmAccount>> GetAllAccounts()
         {
-            return _context.Account.Select(acc => new VmAccount
+            return _context.Account.Select(x => new VmAccount
             {
-                AccountId = acc.AccountId,
-                Account1 = acc.Account1,
-                Password = acc.Password,
-                FirstName = acc.FirstName,
-                LastName = acc.LastName,
-                BirthDate = acc.BirthDate,
-                Gender = acc.Gender,
-                Phone = acc.Phone,
-                DefaultShipAddress = acc.DefaultShipAddress,
-                DefaultCreditCardNumber = acc.DefaultCreditCardNumber,
-                DefaultCreditCardHolder = acc.DefaultCreditCardHolder,
-                CreateDatetime = acc.CreateDatetime,
-                LasttImeLogin = acc.LasttImeLogin,
-                Role = acc.Role,
-                IsActive = acc.IsActive,
+                AccountId = x.AccountId,
+                Account1 = x.Account1,
+                Password = x.Password,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                BirthDate = x.BirthDate,
+                Gender = x.Gender,
+                Phone = x.Phone,
+                DefaultShipAddress = x.DefaultShipAddress,
+                DefaultCreditCardNumber = x.DefaultCreditCardNumber,
+                DefaultCreditCardHolder = x.DefaultCreditCardHolder,
+                CreateDatetime = x.CreateDatetime,
+                LasttImeLogin = x.LasttImeLogin,
+                Role = x.Role,
+                IsActive = x.IsActive,
             });
         }
 
         //修改會員資料
         [HttpPost]
-        public async Task<string> EditAcc([FromBody] VmAccount account)
+        public async Task<string> EditAccounts([FromBody] VmAccount account)
         {
-            if (account.AccountId == null)
-            {
-                return "修改失敗";
-            }
+                var editacc = await _context.Account.FindAsync(account.AccountId);
 
-            var alertacc = await _context.Account.FindAsync(account.AccountId);
-            alertacc.FirstName = account.FirstName;
-            alertacc.LastName = account.LastName;
-            alertacc.BirthDate = account.BirthDate;
-            alertacc.Gender = account.Gender;
-            alertacc.Phone = account.Phone;
-            alertacc.DefaultShipAddress = account.DefaultShipAddress;
-            alertacc.DefaultCreditCardNumber = account.DefaultCreditCardNumber;
-            alertacc.DefaultCreditCardHolder = account.DefaultCreditCardHolder;
-
-            try
-            {
-                _context.Account.Update(alertacc);
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AccountExists(account.AccountId))
+                try
                 {
-                    return "修改失敗";
+                    editacc.FirstName = account.FirstName;
+                    editacc.LastName = account.LastName;
+                    editacc.Phone = account.Phone;
+                    _context.Update(editacc);
+                    await _context.SaveChangesAsync();
                 }
-                else
+                catch (DbUpdateConcurrencyException)
                 {
-                    throw;
+                    if (!AccountExists(account.AccountId))
+                    {
+                        return "修改失敗";
+                    }
+                    else
+                    {
+                        throw;
+                    }
                 }
-            }
-            return "修改成功";
+                return "修改成功";
         }
 
+
+
+
         //刪除會員資料
-        [HttpPost]
-        public async Task<string> DeleteAcc(int id)
+        [HttpDelete]
+        public async Task<string> DeleteAccounts(int id)
         {
+
             if (_context.Account == null)
             {
                 return "刪除失敗";
             }
+
             var account = await _context.Account.FindAsync(id);
-            if (account != null)
+            if (account == null)
             {
-                _context.Account.Remove(account);
+                return "找不到此帳戶，刪除失敗";
             }
 
+            _context.Account.Remove(account);
             await _context.SaveChangesAsync();
             return "刪除成功";
         }

@@ -16,6 +16,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Amatic+SC:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
           rel="stylesheet" />
     <!-- Vendor CSS Files -->
+    <style>
+        .thead-dark {
+            position: sticky;
+            top: -18px;
+            background: #FFF;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 15%;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
 
     <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
 
@@ -69,16 +99,15 @@
                                 <div class="users__info">
                                     <a asp-area="" asp-controller="Members" asp-action="PersonalInfo"><span>帳戶資料</span></a>
                                     <hr />
-                                    <a asp-area="" asp-controller="Members" asp-action="#"><span>變更密碼</span></a>
+                                    <a asp-area="" asp-controller="Members" asp-action="ModifyPassword"><span>變更密碼</span></a>
                                     <hr />
                                     <a asp-area="" asp-controller="Members" asp-action="Coupon"><span>我的優惠券</span></a>
                                     <hr />
-                                    <a asp-area="" asp-controller="Members" asp-action="#"><span>我的訂單</span></a>
+                                    <a asp-area="" asp-controller="Members" asp-action="MyOrders"><span>我的訂單</span></a>
                                     <hr />
                                     <a asp-area="" asp-controller="User" asp-action="Logout"><span>登出</span></a>
                                 </div>
                             </div>
-
                         }
                         else
                         {
@@ -88,7 +117,7 @@
                         }
                     </div>
                     <div class="cartsBox iconBox" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                        <i class="bx bx-cart icon"></i>
+                        <i class="bx bx-cart icon"></i>                        
                     </div>
                     <div>
                         <div class="offcanvas offcanvas-end"
@@ -126,29 +155,34 @@
                                                 <img :src="'data:image/png;base64,'+c.img" alt="零售商品圖片" style="width:150px; height:150px" />
                                             </td>
                                             <td>
-                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c.productId)"></button>
+                                                <button class="fa-solid fa-plus" style="color: #d52029;border: 0;background-color: white;" @@click="addItem(c)"></button>
                                             </td>
                                             <td>{{ c.cartQuantity }}</td>
                                             <td>
-                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c.productId)"></button>
+                                                <button class="fa-solid fa-minus" style="color: #d52029;border: 0;background-color: white;" @@click="minusItem(c)"></button>
                                             </td>
                                             <td>{{ c.price }}</td>
                                             <td>
-                                                <button class="trashCan" @@click="deleteItem(c.productId)">
+                                                <button class="trashCan" @@click="deleteItem(c)">
                                                     <i class="fa-solid fa-trash fa-sm" style="background-color:white; color: #511f2b; outline:none"></i>
                                                 </button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div style="display: flex; justify-content: space-around;">
+                                <div class="bottomPurchase" style="display: flex; justify-content: space-around;position: sticky;    bottom: -16px;background: #fff;height: 54px;">
 
-                                    <div>商品總價：{{getTotal}}</div>
-                                    <button type="button" class="btn btn-danger">前往購買<i class="fa-solid fa-arrow-right"></i></button>
+                                    <div>購物車總計：{{getTotal}}</div>
+                                    <button type="button" class="btn btn-danger" @@click="goOrders()">前往購買<i class="fa-solid fa-arrow-right"></i></button>
 
 
                                 </div>
-
+                                <div class="modal" :style="{ display: modalVisible ? 'block' : 'none' }">
+                                    <div class="modal-content">
+                                        <p class="text-danger fw-bold">{{showAlert }}</p>
+                                        @*<p class="text-danger fw-bold">@ViewBag.Status</p>*@
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -250,10 +284,22 @@
             el: '#vueStart',
             data: {
                 cart: [],
-                showModal: ''
+                modalVisible: false,
+                showAlert: "",
             },
 
             methods: {
+                goOrders: function () {
+                    axios.get("/Retail/IsLogin").then(response => {
+                        if (response.data.getAccountId == null) {
+                            this.showAlert = "你要先登入哦";
+                        } else {
+                            window.location.href = "/CheckOut/Retail2Order";
+                        }
+
+                    })
+
+                },
                 GetCart: function () {
                     let _this = this;
                     axios.get("/Retail/GetShoppingCarts").then(response => {
@@ -263,38 +309,73 @@
                         console.log(error);
                     });
                 },
-                addItem: function (id) {
+                addItem: function (prod) {
                     let _this = this;
-                    axios.put("/Retail/AddCartItem", { ProductId: id })
+                    axios.post("/Retail/AddCartItem", { ProductId: prod.productId })
                         .then(response => {
+                            if (response.data) {
+                                prod.cartQuantity++;
+                            }
+                            cartttt.GetCart();
+                            if (typeof vm !== 'undefined' && vm !== null) {
+                                vm.GetCart();
+                            }
+                            //vm.GetCart();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    //_this.GetCart();
+                },
+                minusItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/MinusCartItem", { ProductId: prod.productId })
+                        .then(response => {
+                            if (response.data) {
+                                if (prod.cartQuantity == 1) {
+                                    let index = _this.cart.indexOf(prod);
+                                    if (index !== -1) {
+                                        _this.cart.splice(index, 1);
+                                    }
+                                } else {
+                                    prod.cartQuantity--;
+
+                                }
+                                if (typeof vm !== 'undefined' && vm !== null) {
+                                    vm.GetCart();
+                                }
+                                //vm.GetCart();
+                                cartttt.GetCart();
+                            }
 
                         })
                         .catch(error => {
                             console.log(error);
                         });
-                    _this.GetCart();
-                },
-                minusItem: function (id) {
-                    let _this = this;
-                    axios.put("/Retail/MinusCartItem", { ProductId: id })
-                        .then(response => {
-                        })
-                        .catch(error => {
-                            console.log(error);
-                        });
-                    _this.GetCart();
-                },
-                deleteItem: function (id) {
-                    let _this = this;
-                    axios.put("/Retail/DeleteCartItem", { ProductId: id })
-                        .then(response => {
 
+                },
+                deleteItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/DeleteCartItem", { ProductId: prod.productId })
+                        .then(response => {
+                            if (response.data) {
+                                let index = _this.cart.indexOf(prod);
+                                if (index !== -1) {
+                                    _this.cart.splice(index, 1);
+                                }
+                            }
+                            if (typeof vm !== 'undefined' && vm !== null) {
+                                vm.GetCart();
+                            }
+                            //vm.GetCart();
+                            cartttt.GetCart();
                         })
                         .catch(error => {
                             console.log(error);
                         });
                     _this.GetCart();
                 },
+
 
 
             },
@@ -305,7 +386,23 @@
                         (sum, item) => sum + (item.cartQuantity * item.price), 0
                     );
                     //sum 為目前加總金額，從0開始加總。item為cart目前加總的元素
-                }
+                },
+                cartStyle:function() {
+                    return {
+                        content: this.cartttt.cart.length.toString(),
+                        fontSize: '10px',
+                        width: '20px',
+                        height: '20px',
+                        display: 'grid',
+                        placeItems: 'center',
+                        backgroundColor: 'red',
+                        borderRadius: '50%',
+                        color: '#fff',
+                        position: 'absolute',
+                        right: '-3px',
+                        top: '-7px',
+                    };
+                },
             },
             mounted() {
                 this.GetCart();

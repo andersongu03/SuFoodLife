@@ -388,3 +388,65 @@ li {
     align-items: center;
     justify-content: center;
 }
+
+body{
+    position: relative !important;
+}
+
+/*========== Toast ==========*/
+.message-toast-wrapper {
+    position: fixed;
+    top: 150px;
+    left: calc(50% - 125px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #fff;
+    width: 250px;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 1px 1px 15px hsl(1, 1%, 0.3);
+    transition: all .3s;
+    opacity: 0;
+}
+
+.message-toast-icon {
+    color: green;
+    font-size: 2rem;
+    height: 100%;
+}
+
+.message-toast-icon-error {
+    font-size: 2rem;
+}
+
+.message-toast-title {
+    font-size: 2rem;
+    font-weight: bolder;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.fadeInUp {
+    opacity: 0;
+    animation: fadeInUp 2s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-30px)
+    }
+}

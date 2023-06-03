@@ -1,0 +1,331 @@
+﻿@section styles{
+    <link href="~/css/checkout.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+}
+
+<section class="check-out__section" id="app">
+    <div class="check-out__container">
+        <div class="check-out-status-container">
+            <div v-for="tab in tabs"
+                 class="check-out-status flexItem"
+                 :class="{currentStatus: currentTab === tab}">
+                <p class="flexItem">{{tab}}</p>
+            </div>
+        </div>
+        <div class="check-out-content row">
+            <!-- 確認購物車 -->
+            <template v-if="currentTab == '1.確認購物車'">
+                <div class="col-8 carts__container">
+                    <h2>購物車</h2>
+                    <div class="scroll">
+                        <table>
+                            <thead>
+                            <th>商品</th>
+                            <th></th>
+                            <th>小計</th>
+                            <th>刪除</th>
+                            </thead>
+                            <tbody>
+                                <tr v-for="c in carts">
+                                    <td>
+                                        <div class="productItem">
+                                            <div>
+                                                <img :src="'data:image/png;base64,'+c.img" alt="" />
+                                            </div>
+                                            <div class="product-body">
+                                                <p>{{ c.productName }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="plusAndMinus">
+                                            <button @@click="minusItem(c)">
+                                                <i class="bx bx-minus cartsIcon plus"></i>
+                                            </button>
+                                            <p>{{ c.cartQuantity }}</p>
+                                            <button @@click="addItem(c)">
+                                                <i class="bx bx-plus cartsIcon minus"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td>${{c.price * c.cartQuantity}}</td>
+                                    <td>
+                                        <button @@click="deleteItem(c)">
+                                            <i class="bx bxs-trash tableIcon"></i>
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="total">購物車總計:{{myTotal}}</div>
+                    <div>
+                        <button class="buy" :disabled="isCartEmpty" @@click="currentTab = '2.填寫訂單資訊'">
+                            購買
+                        </button>
+                    </div>
+                </div>
+            </template>
+            <!-- 填寫訂單資訊 -->
+            <template v-else-if="currentTab == '2.填寫訂單資訊'">
+                <div class="col-md-8 row flex-column-reverse flex-md-row">
+                    <div class="col-md-7 orderInfo">
+                        <h2 class="section-title">訂單資訊</h2>
+                        <div class="card">
+                            <form action="" class="card-body">
+                                <div class="from-group">
+                                    <label for="name" class="title">收件人姓名</label>
+                                    <input type="text"
+                                           id="name"
+                                           name="name"
+                                           class="form-control isInvalid"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="retailOrder.Order.Name" />
+                                    <small class="invalidFeedback">請填寫姓名</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="email" class="title">Email</label>
+                                    <input type="text"
+                                           id="email"
+                                           name="email"
+                                           class="form-control"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="retailOrder.Order.Email" />
+                                    <small class="invalidFeedback">Email不能為空</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="tel" class="title">電話</label>
+                                    <input type="text"
+                                           id="tel"
+                                           name="tel"
+                                           class="form-control"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="retailOrder.Order.Phone" />
+                                    <small class="invalidFeedback">請填寫聯絡電話</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="address" class="title">聯絡地址</label>
+                                    <input type="text"
+                                           id="address"
+                                           name="address"
+                                           class="form-control"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="retailOrder.Order.ShipAddress" />
+                                    <small class="invalidFeedback">請填寫聯絡地址</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="message" class="title">
+                                        備註
+                                        <small class="text-primary" style="color: #6527a0 !important">此欄位非必填</small>
+                                    </label>
+                                    <textarea name="message"
+                                              id="message"
+                                              cols="30"
+                                              rows="6"
+                                              class="form-control"
+                                              v-model="retailOrder.Order.ReMark"></textarea>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-success" @@click.prevent="createOrder()">
+                                        送出訂單
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="sticky-top commoditiesDetail">
+                            <h2 class="section-title">商品明細</h2>
+                            <ul class="list-unstyled list-group mb-3" v-for="od in carts">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="flex-shrink-1">
+                                        <h5 class="font-weight-bold mb-0">
+                                            {{od.productName}}
+                                        </h5>
+                                        <!----><small class="text-muted">{{od.price}} X {{od.cartQuantity}}</small>
+                                    </div>
+                                    <div class="text-nowrap">
+                                        <strong class="mr-3">{{od.price * od.cartQuantity}}</strong>
+                                    </div>
+                                </li>
+                            </ul>
+                            <div class="input-group">
+                                <div class="input-group-append">
+                                    <h3 class="fw-bold">總計：{{myTotal}}</h3>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input type="text"
+                                       placeholder="SuFood"
+                                       class="form-control" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-secondary">
+                                        使用招待券
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        const vm = new Vue({
+            el: "#app",
+            data: {
+                tabs: ["1.確認購物車", "2.填寫訂單資訊"],
+                currentTab: "1.確認購物車",
+                carts: [],
+                retailOrder: {
+                    Order: {
+                        Name: '',
+                        Email: '',
+                        Phone: '',
+                        ShipAddress: '',
+                        SubTotal: 0,
+                        SubDiscount: 0,
+                        ReMark: '',
+                    },
+                    Details: [],
+                },
+
+                isInvalid: true,
+            },
+            methods: {
+                abc() {
+                    alert('123');
+                },
+                GetCart: function () {
+                    let _this = this;
+                    axios.get("/Retail/GetShoppingCarts").then(response => {
+                        this.carts = response.data;
+                        console.log(this.carts);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                },
+                addItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/AddCartItem", { ProductId: prod.productId })
+                        .then(response => {
+                            vm.GetCart();
+                            if (response.data) {
+                                prod.cartQuantity++;
+
+                            }
+                            cartttt.GetCart();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+                },
+                minusItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/MinusCartItem", { ProductId: prod.productId })
+                        .then(response => {
+                            if (response.data) {
+                                if (prod.cartQuantity == 1) {
+                                    let index = _this.carts.indexOf(prod);
+                                    if (index !== -1) {
+                                        _this.carts.splice(index, 1);
+                                    }
+                                } else {
+                                    prod.cartQuantity--;
+
+                                }
+                                cartttt.GetCart();
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+
+                },
+                deleteItem: function (prod) {
+                    let _this = this;
+                    axios.post("/Retail/DeleteCartItem", { ProductId: prod.productId }).then(response => {
+                        vm.GetCart();
+                        if (response.data) {
+                            let index = _this.carts.indexOf(prod);
+                            if (index !== -1) {
+                                _this.carts.splice(index, 1);
+                                vm.GetCart();
+                            }
+                        }
+                        cartttt.GetCart();
+                    })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    _this.GetCart();
+                },
+                createOrder: function () {                    
+                    let orderDetails = this.carts.map(c => {
+                        return {
+                            productName: c.productName,
+                            quantity: c.cartQuantity,
+                            unitPrice: c.price,
+                        }
+                    });
+                    this.retailOrder.Order = {
+                        Name: this.retailOrder.Order.Name,
+                        Email: this.retailOrder.Order.Email,
+                        Phone: this.retailOrder.Order.Phone,
+                        ShipAddress: this.retailOrder.Order.ShipAddress,
+                        ReMark: this.retailOrder.Order.ReMark,
+                        SubTotal: this.myTotal,
+                    }
+                    this.retailOrder.Details = orderDetails
+
+
+                    axios.post("/CheckOut/CreateRetailOrder", this.retailOrder)
+                    .then(response => {
+                        console.log(response.data);
+                    });
+                }
+            },
+            computed: {
+                validationForm() {
+                    if (this.submit.RecipientName === "123") {
+                        console.log("123");
+                        return false;
+                    }
+                },
+                myTotal: function () {
+                    let _this = this;
+                    return _this.carts.reduce(
+                        (sum, item) => sum + (item.cartQuantity * item.price), 0
+                    );
+                    //sum 為目前加總金額，從0開始加總。item為cart目前加總的元素
+                },
+                isCartEmpty() {
+                    return this.$data.carts.length === 0;
+                },
+            },
+            watch:{
+                myTotal(newTotal) {
+                    this.retailOrder.Order.SubTotal = newTotal;
+                }
+            },
+            mounted() {
+                let _this = this;
+                _this.GetCart();
+            }
+        });
+    </script>
+}
+

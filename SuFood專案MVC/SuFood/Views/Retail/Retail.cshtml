@@ -53,6 +53,8 @@
         transition: opacity 0.5s ease-in-out;
     }
 
+
+
 </style>
 
 <main id="main">
@@ -234,6 +236,7 @@
                     window.location.href = "/Retail/SingleProduct?productId=" + productId;
                 },
                 addCart(productId) {
+                    let _this = this;
                     this.cart = {
                         ProductId: productId,
                     };
@@ -242,9 +245,11 @@
                             'Content-Type': 'application/json'
                         }
                     }).then(response => {
+                        cartttt.GetCart();
                         if (response.data.getAccountId !="null") {
                             this.getAccountId = response.data.getAccountId;
                             this.showAlert = "成功加入購物車";
+                            
                             console.log(this.cart);
                         } else {
                             this.showAlert = "你要先登入哦";
@@ -252,10 +257,10 @@
                         this.modalVisible = true;
                         setTimeout(() => {
                             this.modalVisible = false;
-                        }, 2000);
+                        }, 1500);
                     }).catch(error => {
                         console.log(error);
-                    });
+                    });                  
                 }
             },
             computed: {

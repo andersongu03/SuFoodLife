@@ -9,6 +9,7 @@ namespace SuFood.Models
     {
         public FreeChoicePlans()
         {
+            FreeChoiceProducts = new HashSet<FreeChoiceProducts>();
             ProductsOfPlans = new HashSet<ProductsOfPlans>();
         }
 
@@ -20,6 +21,7 @@ namespace SuFood.Models
         public int? PlanPrice { get; set; }
         public bool? PlanStatus { get; set; }
 
+        public virtual ICollection<FreeChoiceProducts> FreeChoiceProducts { get; set; }
         public virtual ICollection<ProductsOfPlans> ProductsOfPlans { get; set; }
     }
 }

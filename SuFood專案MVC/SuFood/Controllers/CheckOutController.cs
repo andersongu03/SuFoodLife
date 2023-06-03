@@ -1,114 +1,197 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
-using SuFood.Models.DTO;
 using SuFood.ViewModel;
+using System.Net;
 using System.Numerics;
+using System.Security.Policy;
+using System.Xml.Linq;
+using static SuFood.ViewModel.RetailOrdersViewModel;
 
 namespace SuFood.Controllers
 {
-	public class CheckOutController : Controller
-	{
-		private readonly SuFoodDBContext _context;
-		public CheckOutController(SuFoodDBContext context)
-		{
-			_context = context;
-		}
-		public IActionResult CheckOut()
-		{
-			return View();
-		}
-		public IActionResult Index()
-		{
-			return View();
-		}
-		public IActionResult PaymentSucceed()
-		{
-			return View();
-		}
-		public IActionResult PaymentFailed()
-		{
-			return View();
-		}
+    public class CheckOutController : Controller
+    {
+        private readonly SuFoodDBContext _context;
+        public CheckOutController(SuFoodDBContext context)
+        {
+            _context = context;
+        }
+        public IActionResult CheckOut()
+        {
+            return View();
+        }
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-		// GET: /CheckOut/GetPlanToCart 
-		//[HttpGet]
-		//public Object GetPlanToCart()
-		//{
-		//	return _context.ProductsOfPlans.GroupBy(p => p.PlanId).Select(group => new
-		//	{
-		//		Plan = group.Select(p => new VmPlanToCart
-		//		{
-		//			PlanId = p.Plan.PlanId,
-		//			PlanName = p.Plan.PlanName,
-		//			PlanDescription = p.Plan.PlanDescription,
-		//			PlanPrice = p.Plan.PlanPrice,
-		//			PlanTotalCount = p.Plan.PlanTotalCount,
-		//			PlanCanChoiceCount = p.Plan.PlanCanChoiceCount,
-		//			//select PlanId AS 訂單編號,
-		//			//count(Product_Id) AS 幾筆Product
-		//			//from ProductsOfPlans
-		//			//group by PlanId
-		//		}).FirstOrDefault(),
-		//		Product = group.Select(p => new VmProductToCart
-		//		{
-		//			ProductId = p.Product.ProductId,
-		//			ProductName = p.Product.ProductName,
-		//			ProductDescription = p.Product.ProductDescription,
-		//		})
-		//	});
-		//}
+        // GET: /CheckOut/GetPlanToCart 
+        [HttpGet]
+        public Object GetPlanToCart()
+        {
+            return _context.ProductsOfPlans.GroupBy(p => p.PlanId).Select(group => new
+            {
+                Plan = group.Select(p => new VmPlanToCart
+                {
+                    PlanId = p.Plan.PlanId,
+                    PlanName = p.Plan.PlanName,
+                    PlanDescription = p.Plan.PlanDescription,
+                    PlanPrice = p.Plan.PlanPrice,
+                    PlanTotalCount = p.Plan.PlanTotalCount,
+                    PlanCanChoiceCount = p.Plan.PlanCanChoiceCount,
+                    //select PlanId AS 訂單編號,
+                    //count(Product_Id) AS 幾筆Product
+                    //from ProductsOfPlans
+                    //group by PlanId
+                }).FirstOrDefault(),
+                Product = group.Select(p => new VmProductToCart
+                {
+                    ProductId = p.Product.ProductId,
+                    ProductName = p.Product.ProductName,
+                    ProductDescription = p.Product.ProductDescription,
+                })
+            }); ;
+        }
 
-		//GET優惠券
-		[HttpGet]
-		public async Task<IEnumerable<VmCoupon>> GetCouponsToCart()
-		{
-			return _context.Coupon.Select(c => new VmCoupon
-			{
-				CouponId = c.CouponId,
-				CouponName = c.CouponName,
-				CouponDescription = c.CouponDescription,
-				CouponMinusCost = c.CouponMinusCost,
-				MinimumPurchasingAmount = c.MinimumPurchasingAmount,
-				Couponstartdate2String = c.CouponStartDate.ToString().Substring(0,10),
-				Couponenddate2String = c.CouponEndDate.ToString().Substring(0,10),
-			});
-		}
+        //送出訂單
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] VmSubmitOrder vmParameters)
+        {
+            Orders od = new Orders
+            {
+                OrdersId = vmParameters.OrdersId,
+                SubTotal = vmParameters.SubTotal,
+                SetOrdersDatetime = DateTime.Now.AddMilliseconds(-DateTime.Now.Millisecond),
+                ShipAddress = vmParameters.ShipAddress,
+                CouponId = vmParameters.CouponId,
+                OrdersDetails = vmParameters.OrdersDetails,
+                AccountId = vmParameters.AccountId
+            };
 
-		//送出訂單
-		[HttpPost]
-		public async Task<string> Create([FromBody] VmSubmitOrder vmParameters)
-		{
-			Orders od = new Orders
-			{
-				OrdersId = vmParameters.OrdersId,
-				SubTotal = vmParameters.SubTotal,
-				SetOrdersDatetime = DateTime.Now.AddMilliseconds(-DateTime.Now.Millisecond),
-				ShipAddress = vmParameters.ShipAddress,
-				CouponId = vmParameters.CouponId,
-				OrdersDetails = vmParameters.OrdersDetails,
-			};
+            _context.Orders.Add(od);
+            await _context.SaveChangesAsync();
 
-			_context.Orders.Add(od);
-			await _context.SaveChangesAsync();
+            var id = od.OrdersId;
+            return Json(new { OrderId = id });
+        }
 
-			return "新增成功";
-		}
+        [HttpGet]
+        public async Task<string> GetCurrentAccountId()
+        {
+            return HttpContext.Session.GetString("GetAccountId");
+        }
+        //==============================以上阿信的==================================
+        public IActionResult Retail2Order()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateRetailOrder([FromBody] RetailOrdersViewModel model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
-		public IActionResult CheckPayment(OnlinePaymentReturn onlinePaymentReturn)
-		{
-			if (onlinePaymentReturn.Status == "SUCCESS")
-			{
-				//string hashKey = _configuration["OnlinePayment:HashKey"];
-				//string hashIV = _configuration["OnlinePayment:HashIV"];
-				//string decryptTradeInfo = _aes.DecryptAESHex(onlinePaymentReturn.TradeInfo, hashKey, hashIV);
-				//PaymentResult result = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
+            
+            int? existingOrderId =
+                _context.Orders.Where(o => o.AccountId == Convert.ToInt32(getAccountId) && o.OrderStatus == "未付款" && o.BuyMethod == "零售")
+                .Select(o => o.OrdersId).FirstOrDefault();
 
-				return View("PaymentSucceed");
-			}
-			else
-			{
-				return View("PaymentFailed");
-			}
-		}
-	}
+            if (existingOrderId != 0)
+            {
+                int OldOrderId = (int)existingOrderId;
+                return await EditRetailOrder(OldOrderId, model);
+            }
+
+
+            var getSubCost = 0;
+            foreach (var details in model.Details)
+            {
+                getSubCost = _context.Products.Where(p => p.ProductName == details.ProductName).Sum(p => p.Cost);
+            }
+
+
+            var order = new Orders
+            {
+                Name = model.Order.Name,
+                Phone = model.Order.Phone,
+                ShipAddress = model.Order.ShipAddress,
+                SubTotal = model.Order.SubTotal,
+                SubCost = getSubCost,
+                SubDiscount = model.Order.SubDiscount,
+                SetOrdersDatetime = DateTime.Now,
+                AccountId = Convert.ToInt32(getAccountId),
+                //AccountId = 19,
+                OrderStatus = "未付款",
+                Email = model.Order.Email,
+                ReMark = model.Order.ReMark,
+                BuyMethod = "零售",
+            };
+
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+            var getNewOrderId = order.OrdersId;
+
+            foreach (var detail in model.Details)
+            {
+                var orderDetails = new OrdersDetails
+                {
+                    OrderId = getNewOrderId,
+                    ProductName = detail.ProductName,
+                    UnitPrice = detail.UnitPrice,
+                    Quantity = detail.Quantity,
+                };
+                _context.OrdersDetails.Add(orderDetails);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { GetOrderId = getNewOrderId });
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditRetailOrder(int orderId, RetailOrdersViewModel model)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+
+            var getSubCost = 0;
+            foreach (var details in model.Details)
+            {
+                getSubCost = _context.Products.Where(p => p.ProductName == details.ProductName).Sum(p => p.Cost);
+            }
+
+
+            if (order == null) { return Ok("我是誰我在哪"); }
+
+            order.Name = model.Order.Name;
+            order.Phone = model.Order.Phone;
+            order.ShipAddress = model.Order.ShipAddress;
+            order.SubCost = getSubCost;
+            order.SubTotal = model.Order.SubTotal;
+            order.SubDiscount = model.Order.SubDiscount;
+            order.SetOrdersDatetime = DateTime.Now;
+            order.ReMark = model.Order.ReMark;
+            order.Email = model.Order.Email;
+
+            await _context.SaveChangesAsync();
+
+            var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
+            _context.OrdersDetails.RemoveRange(orderDetails);
+
+            foreach (var detail in model.Details)
+            {
+                var NewOrderDetails = new OrdersDetails
+                {
+                    OrderId = orderId,
+                    ProductName = detail.ProductName,
+                    UnitPrice = detail.UnitPrice,
+                    Quantity = detail.Quantity,
+                };
+                _context.OrdersDetails.Add(NewOrderDetails);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { GetOrderId = orderId });
+        }
+
+    }
+
 }
+

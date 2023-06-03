@@ -1,68 +1,5 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap');
 
-/*===== VARIABLES CSS =====*/
-:root {
-    --header-height: 3rem;
-    /*========== Colors ==========*/
-    /* Change favorite color */
-    --hue-color: 250;
-    /*Purple 250 - Green 142 - Blue 230 - Pink 340*/
-    /* HSL color mode */
-    --first-color: hsl(var(--hue-color), 69%, 61%);
-    --first-color-second: hsl(var(--hue-color), 69%, 61%);
-    --first-color-alt: hsl(var(--hue-color), 57%, 53%);
-    --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
-    --title-color: hsl(var(--hue-color), 8%, 15%);
-    --text-color: hsl(var(--hue-color), 8%, 45%);
-    --text-color-light: hsl(var(--hue-color), 8%, 65%);
-    --input-color: hsl(var(--hue-color), 70%, 96%);
-    --body-color: hsl(var(--hue-color), 60%, 99%);
-    --container-color: #fff;
-    --scroll-bar-color: hsl(var(--hue-color), 12%, 90%);
-    --scroll-thumb-color: hsl(var(--hue-color), 12%, 80%);
-    /*========== Font and typography ==========*/
-    --body-font: 'Mukta', sans-serif;
-    ;
-    /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
-    --big-font-size: 2rem;
-    --h1-font-size: 1.5rem;
-    --h2-font-size: 1.25rem;
-    --h3-font-size: 1.125rem;
-    --normal-font-size: .938rem;
-    --small-font-size: .813rem;
-    --smaller-font-size: .75rem;
-    /*========== Font weight ==========*/
-    --font-medium: 500;
-    --font-semi-bold: 600;
-    /*========== Margenes Bottom ==========*/
-    /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
-    --mb-0-25: .25rem;
-    --mb-0-5: .5rem;
-    --mb-0-75: .75rem;
-    --mb-1: 1rem;
-    --mb-1-5: 1.5rem;
-    --mb-2: 2rem;
-    --mb-2-5: 2.5rem;
-    --mb-3: 3rem;
-    /*========== z index ==========*/
-    --z-tooltip: 10;
-    --z-fixed: 100;
-    --z-modal: 1000;
-}
-
-/* Font size for large devices */
-@media screen and (min-width: 968px) {
-    :root {
-        --big-font-size: 3rem;
-        --h1-font-size: 2.25rem;
-        --h2-font-size: 1.5rem;
-        --h3-font-size: 1.25rem;
-        --normal-font-size: 1rem;
-        --small-font-size: .875rem;
-        --smaller-font-size: .813rem;
-    }
-}
-
 * {
     padding: 0;
     margin: 0;
@@ -234,20 +171,6 @@ select {
     cursor: pointer;
 }
 
-/*===== Arrow =====*/
-.arrow-down {
-    width: 100%;
-}
-
-    .arrow-down i {
-        background-color: #e1e1e1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        border-radius: 0 0 1rem 1rem;
-    }
-
 /*===== UploadFile input =====*/
 input[type="file"] {
     display: none;
@@ -336,25 +259,6 @@ input[type="file"] {
 }
 
 /*===== 警示訊息 =====*/
-.input-group {
-    position: relative;
-}
-
-.warm {
-    border: 1px solid red;
-}
-
-.invalidFeedback {
-    position: absolute;
-    top: 15px;
-    right: 10px;
-    display: block;
-    width: fit-content;
-    margin-top: 0.25rem;
-    font-size: 80%;
-    color: #f13246;
-    text-align: start;
-}
 
 .message-toast-icon-error {
     font-size: 2rem;
@@ -367,10 +271,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 /*---------table---------*/
-.table__container {
-    height: 500px;
-    overflow: auto;
-}
 
     .table__container h1 {
         display: flex;
@@ -477,56 +377,6 @@ table tbody tr {
     width: 30%;
 }
 
-/*.table__container th:nth-child(1),
-.table__container td:nth-child(1) {
-    min-width: 65px;
-}
-.table__container th:nth-child(2),
-.table__container td:nth-child(2) {
-    min-width: 150px;
-}
-.table__container th:nth-child(3), 
-.table__container td:nth-child(3) {
-    min-width: 60px;
-}
-.table__container th:nth-child(4),
-.table__container td:nth-child(4) {
-    min-width: 120px;
-}
-.table__container th:nth-child(5),
-.table__container td:nth-child(5) {
-    min-width: 60px;
-}
-.table__container th:nth-child(6),
-.table__container td:nth-child(6) {
-    min-width: 60px;
-}
-.table__container th:nth-child(7),
-.table__container td:nth-child(7){
-    min-width: 40px;
-}
-.table__container th:nth-child(8),
-.table__container td:nth-child(8) {
-    min-width: 40px;
-}
-.table__container th:nth-child(9),
-.table__container td:nth-child(9) {
-    min-width: 40px;
-}
-.table__container th:nth-child(10),
-.table__container td:nth-child(10) {
-    min-width: 124px;
-}
-.table__container th:nth-child(10),
-.table__container td:nth-child(10) {
-    min-width: 124px;
-}
-
-.table__container th:nth-child(11),
-.table__container td:nth-child(11) {
-    min-width: 110px;
-}*/
-
 
 table {
     width: fit-content;
@@ -541,8 +391,7 @@ table {
 
 .table__container {
     height: 400px;
-    overflow: auto;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 .account-container h4 {
@@ -601,10 +450,79 @@ table {
 
 .table__container {
     height: 500px;
-    overflow: auto;
+    /*overflow: auto;*/
     overflow-x: hidden !important;
 }
 
     .table__container table {
         font-size: .9rem;
     }
+
+/*-- 圖示 hover 特效 --*/
+.delete-item:hover {
+    color: #cc2a2a;
+}
+
+.orders-item:hover,
+.edit-item:hover {
+    color: #0a9090;
+}
+
+/*----*/
+.modal-title {
+    font-weight:bold;
+}
+
+/*-- Toast --*/
+.message-toast-wrapper {
+    position: fixed;
+    top: 70px;
+    left: calc(50% - 125px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #fff;
+    width: 250px;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 0px 15px hsl(0, 0%, 0.3);
+    transition: all .3s;
+    opacity: 0;
+}
+
+.message-toast-icon {
+    color: green;
+    font-size: 2rem;
+    height: 100%;
+}
+
+.message-toast-title {
+    font-size: 2rem;
+    font-weight: bolder;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.fadeInUp {
+    opacity: 0;
+    animation: fadeInUp 2s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-30px)
+    }
+}

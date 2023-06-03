@@ -27,7 +27,7 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmAccount>> GetAllAccounts()
         {
-            return _context.Account.Select(x => new VmAccount
+            return _context.Account.Where( x => x.Role == "Customer").Select(x => new VmAccount
             {
                 AccountId = x.AccountId,
                 Account1 = x.Account1,
@@ -43,7 +43,7 @@ namespace SuFood.Areas.BackStage.Controllers
                 CreateDatetime = x.CreateDatetime,
                 LasttImeLogin = x.LasttImeLogin,
                 Role = x.Role,
-                IsActive = x.IsActive,
+                IsActive = x.IsActive
             });
         }
 
@@ -51,9 +51,9 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpPost]
         public async Task<string> EditAccounts([FromBody] VmAccount model)
         {
-                var editacc = await _context.Account.FindAsync(model.AccountId);
-
-                try
+            var editacc = await _context.Account.FirstOrDefaultAsync(x => x.AccountId == model.AccountId);
+           
+            try
                 {
                     editacc.FirstName = model.FirstName;
                     editacc.LastName = model.LastName;
@@ -101,19 +101,25 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //取得訂單資料
         [HttpGet]
-        public async Task<IEnumerable<VmOrders>> GetPersonOrders([FromBody] VmOrders model)
+        public async Task<IEnumerable<VmOrders>> GetOrdersByAccountId(int accountId)
         {
-            
-            return _context.Orders.Where(user => user.AccountId == model.AccountId).Select(o => new VmOrders
-            {
-                OrdersId = o.OrdersId,
-                SubTotal = o.SubTotal,
-                SetOrdersDatetime = o.SetOrdersDatetime,
-                CustomerPaymentId = o.CustomerPaymentId,
-                OrderStatus = o.OrderStatus,
-                AccountId = o.AccountId
-            });
+            var orders = await _context.Orders
+                .Where(x => x.AccountId == accountId)
+                .Select(o => new VmOrders
+                {
+                    OrdersId = o.OrdersId,
+                    SubTotal = o.SubTotal,
+                    SubDiscount= o.SubDiscount,
+                    SetOrdersDatetime = o.SetOrdersDatetime,
+                    CustomerPaymentId = o.CustomerPaymentId,
+                    OrderStatus = o.OrderStatus,
+                    AccountId = o.AccountId
+                })
+                .ToListAsync();
+
+            return orders;
         }
+
 
 
 

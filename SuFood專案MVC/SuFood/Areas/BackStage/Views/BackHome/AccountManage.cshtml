@@ -1,286 +1,307 @@
 ﻿@section Styles{
 	<link href="~/css/accountmanagement.css" rel="stylesheet" />
+
 }
 
 
 <div class="account-container col-10" id="accountManagement">
-    <div class="d-flex align-items-center justify-content-between mb-2">
-        <h4>會員列表</h4>
-    </div>
+	<div class="d-flex align-items-center justify-content-between mb-2">
+		<h4>會員列表</h4>
+	</div>
 
-    <!-- 1.會員搜尋列 -->
-    <div class="content">
-        <div class="searchBar">
-            <div class="inputWrapper">
-                <i class='bx bx-search-alt-2 searchIcon'></i>
-                <input type="text" class="inputSearch" v-model="searchText" placeholder="請輸入會員ID、帳號、姓名">
-            </div>
-        </div>
-    </div>
+	<!-- 1.會員搜尋列 -->
+	<div class="content">
+		<div class="searchBar">
+			<div class="inputWrapper">
+				<i class='bx bx-search-alt-2 searchIcon'></i>
+				<input type="text" class="inputSearch" v-model="searchText" placeholder="請輸入帳號、姓名">
+			</div>
+		</div>
+	</div>
 
-    <!-- 2.資料表格 -->
-    <div class="table__container">
-        <table>
-            <thead>
-                <tr>
-                    <th>&nbsp;</th>
-                    <th>ID</th>
-                    <th>帳號</th>
-                    <th>姓名</th>
-                    <th>手機號碼</th>
-                    <th>角色</th>
-                    <th>狀態</th>                    
-                    <th>訂單</th>
-                    <th>編輯</th>
-                    <th>刪除</th>
-                    <th>會員創建時間</th>
-                    <th>最新登入時間</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="a in vmAccount">
-                    <td>&nbsp;</td>
-                    <td>{{a.accountId}}</td>
-                    <td>{{a.account1}}</td>
-                    <td>{{a.firstName}}{{a.lastName}}</td>
-                    <td>{{a.phone}}</td>
-                    <td>{{a.role}}</td>
-                    <td>{{a.isActive}}</td>
-                    <td><i class='bx bx-file-find sortIcon' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(item)"></i></td>
-                    <td><i class='bx bx bxs-edit sortIcon' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(a)"></i></td>
-                    <td><i class='bx bx-trash sortIcon' data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteConfirm(a)"></i></td>
-                    <td>{{(a.createDatetime).slice(0,10)}}</td>
-                    <td>{{a.lasttImeLogin}}</td>
-                </tr>
-            </tbody>
-        </table>
-        </div>
-        <!-- 3.分頁 -->
-        <div>
-            <paginate :page-count="pageCount"
-                      :click-handler="changePage"
-                      :prev-text="'&laquo;'"
-                      :next-text="'&raquo;'"
-                      :page-class="'page-item'"
-                      :page-link-class="'page-link'"
-                      :prev-class="'page-item'"
-                      :prev-link-class="'page-link'"
-                      :next-class="'page-item'"
-                      :next-link-class="'page-link'"
-                      :container-class="'pagination justify-content-center'">
-            </paginate>
-        </div>
+	<!-- 2.資料表格 -->
+	<div class="table__container">
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>帳號</th>
+					<th>姓名</th>
+					<th>手機號碼</th>
+					<th>狀態</th>
+					<th>訂單</th>
+					<th>編輯</th>
+					<th>刪除</th>
+					<th>會員創建時間</th>
+					<th>最新登入時間</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="a in accountsInPage">
+					<td>{{a.accountId}}</td>
+					<td>{{a.account1}}</td>
+					<td>{{a.firstName}}{{a.lastName}}</td>
+					<td>{{a.phone}}</td>
+					<td>{{a.isActive}}</td>
+					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(a)"></i></td>
+					<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(a)"></i></td>
+					<td><i class='bx bx-trash sortIcon delete-item' data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteConfirm(a)"></i></td>
+					<td>{{(a.createDatetime).slice(0,10)}}</td>
+					<td>{{a.lasttImeLogin}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<!-- 3.分頁 -->
+	<div>
+		<paginate :page-count="pageCount"
+				  :click-handler="changePage"
+				  :prev-text="'&laquo;'"
+				  :next-text="'&raquo;'"
+				  :page-class="'page-item'"
+				  :page-link-class="'page-link'"
+				  :prev-class="'page-item'"
+				  :prev-link-class="'page-link'"
+				  :next-class="'page-item'"
+				  :next-link-class="'page-link'"
+				  :container-class="'pagination justify-content-center'">
+		</paginate>
+	</div>
 
 
-    <!-- OrdersModal -->
-    <div class="modal fade" id="ordersModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="ordersModal">歷史訂單</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="myorders_table">
-                    <!--內容-->
-                    <table>
-                            <thead>
-                                @*<p>訂單編號：</p>*@
-                            <tr>
-                                <p>訂單編號：</p>
-                                    <th>日期</th>
-                                    <th>總金額</th>
-                                    <th>付款方式</th>
-                                    <th>狀態</th>
-                                </tr>
-                            </thead>
-                        <tbody>
-                            <tr v-for="item in vmOrders">
-                                <td>{{item.setOrdersDatetime}}</td>
-                                <td>{{item.subTotal}}</td>
-                                <td>{{item.customerPaymentId}}</td>
-                                <td>{{item.orderStatus}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- OrdersModal -->
+	<div class="modal fade" id="ordersModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="ordersModal">歷史訂單</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="myorders_table">
+					<!--內容-->
+					<table>
+						<thead>
+							<tr>
+								<th>訂單編號</th>
+								<th>日期</th>
+								<th>總金額</th>
+								<th>付款狀態</th>
+								<th>訂單狀態</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr v-for="item in vmOrders">
+								<td>{{item.ordersId}}</td>
+								<td>{{(item.setOrdersDatetime).slice(0,10)}}</td>
+								<td>{{item.subTotal-item.subDiscount}}</td>
+								<td>{{item.customerPaymentId}}</td>
+								<td>{{item.orderStatus}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
+	<!-- EditModal -->
+	<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="editModal">編輯資料</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3 row">
+						<label for="type" class="col-sm-2 col-form-label">姓名</label>
+						<div class="col-sm-10">
+							<input type="text" name="firstname" id="firstname" v-model="editAcc.firstName" required size="4">
+							<input type="text" name="lastname" id="lastname" v-model="editAcc.lastName" required size="4">
+						</div>
+					</div>
+					<div class="mb-3 row">
+						<label for="price" class="col-sm-2 col-form-label">電話</label>
+						<div class="col-sm-10">
+							<input type="tel" class="form-control" id="phone" v-model="editAcc.phone" required size="10">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" @@click="editAccount">儲存</button>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    <!-- EditModal -->
-    <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editModal">編輯資料</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3 row">
-                        <label for="type" class="col-sm-2 col-form-label">姓名</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="firstname" id="firstname" v-model="editAcc.firstName" required size="4">
-                            <input type="text" name="lastname" id="lastname" v-model="editAcc.lastName" required size="4">
-                        </div>
-                    </div>
-                    <div class="mb-3 row">
-                        <label for="price" class="col-sm-2 col-form-label">電話</label>
-                        <div class="col-sm-10">
-                            <input type="tel" class="form-control" id="phone" v-model="editAcc.phone" required size="10">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @@click="editAccount">儲存</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- DeleteModal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <h5 id="exampleModalLabel">確定要刪除此帳戶嗎？{{delAcc.number}}</h5>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" @@click="deleteAccount(id)">確定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+	<!-- DeleteModal -->
+	<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<h5 id="exampleModalLabel">確定要刪除此帳戶嗎？{{delAcc.number}}</h5>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" @@click="deleteAccount">確定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!--4.刪除、編輯後的提示訊息-->
+	<div class="message-toast-wrapper" :class="toastHintStlye">
+	<i v-if="toast=='新增成功' || toast=='修改成功'|| toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
+	<i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
+	<p class="message-toast-title">{{toast}}</p>
+	</div>
 
 </div>
 
 @section Scripts{
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
+	<script src="~/js/vue.js"></script>
+	<script src="~/axios/axios.min.js"></script>
+	<script>
+		Vue.component('paginate', VuejsPaginate)
 
-    <script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
-    <script src="~/js/vue.js"></script>
-    <script src="~/axios/axios.min.js"></script>
-    <script>
-        Vue.component('paginate', VuejsPaginate)
+		const vm = new Vue({
+			el: "#accountManagement",
+			data: {
+				searchText: "",
+				cPage: "1",
+				pageItems: "7",
+				toast: "",
 
-        const vm = new Vue({
-            el: "#accountManagement",
-            data: {
-                searchText:"",
-                cPage: "1",
-                pageItems: "10",
-
-                vmAccount:[],
-                vmOrders:[
-                    //{ ordersId: "1", setOrdersDatetime: "1", subTotal: "1", customerPaymentId: "1", orderStatus: "1" },
-                    //{ ordersId: "2", setOrdersDatetime: "2", subTotal: "2", customerPaymentId: "2", orderStatus: "2" }
-                ],
-                ordersAcc:{
-                    ordersId:"",
-                    date:"",
-                    total:"",
-                    payment:"",
-                    status:""
-                },
-                delAcc:{
-                    accid:"",
-                    number:""
-                },
-                editAcc:{
-                    accountId:0,
-                    firstName:"",
-                    lastName: "",
-                    phone: ""
-                },     
-
-            },
-            mounted(){
-                this.getAccounts();
-            },
-            methods: {
-                getAccounts(){
-                    let _this = this;
-                    axios.get("/BackStage/AccountManagement/GetAllAccounts").then(res => {
-                        //alert(JSON.stringify(res.data))
-                        _this.vmAccount = res.data;
-                    })
-                },
-                getOrders() {
-                    let _this = this;
-                    axios.get("/BackStage/AccountManagement/GetPersonOrders").then(res => {
-                        _this.vmOrders = res.data;
-                    })
-                },
-                editAccount: function () {
-                    let _this = this;
-                    var request = {
-                        AccountId: this.editAcc.accountId,
-                        FirstName: this.editAcc.firstName,
-                        LastName: this.editAcc.lastName,
-                        Phone: this.editAcc.phone
-                    };
-                    axios.post("/BackStage/AccountManagement/EditAccounts", request).then(res => {
-                        _this.getAccounts();
-                        $("#editModal").modal({show:false});   //modal無法關閉              
-                    });
-                },             
-                deleteAccount: function (id) {  //傳id發api去把資料刪掉
-                    axios.delete(`/BackStage/AccountManagement/DeleteAccounts/${id}`).then(res => {
-                        if (res.data) { //如果 return"刪除成功"，就會執行這段
-                            var idx = this.vmAccount.findIndex(x => x.vmAccount.accountId == id)
-                            this.vmAccount.splice(idx, 1)
-                            //$("#deleteModal").modal("hide");
-                        }
-                        //不是的話，我畫面就不動
-                    });
-                    //refresh
-                },
-                ordersConfirm: function (item) {
-                    this.ordersAcc.ordersId = item.ordersId;
-                    this.ordersAcc.date = item.setOrdersDatetime;
-                    this.ordersAcc.total = item.subTotal;
-                    this.ordersAcc.payment = item.customerPaymentId;
-                    this.ordersAcc.status = item.orderStatus;
-                },
-                editConfirm:function (a) {
-                    this.editAcc.accountId = a.accountId;
-                    this.editAcc.firstName = a.firstName;
-                    this.editAcc.lastName = a.lastName;
-                    this.editAcc.phone = a.phone;
-                },
-                deleteConfirm:function (a) {
-                    this.delAcc.accid = a.accountId;
-                    this.delAcc.number = a.account1;
-                },
-                changePage:function(currentpage){
-                console.log(currentpage);
-                this.cPage = currentpage;
-                },
-            },
-            computed: {
-                pageCount: function () {
-                    //return Math.ceil(this.filterSearchText.length / this.pageItems);
-                    return Math.ceil(this.vmAccount.length / this.pageItems);
-                },
-                accountsInPage:function(){
-                    var max = this.cPage * this.pageItems;
-                    var min = this.pageItems * (this.cPage - 1) + 1;
-                    //return this.filterSearchText.slice(min - 1, max)
-                    return this.vmAccount.slice(min - 1, max)
-                },
-                //filterSearchText:function(){
-                //    let _this = this;
-                //    return _this.vmAccount.filter(x => x.vmAccount.includes(_this.searchText));
-                //},
-            }
-        })
-    </script>
+				vmAccount: [],
+				vmOrders: [],
+				ordersAcc: {
+					accountId: "",
+					ordersId: "",
+					date: "",
+					total: "",
+					discount:"",
+					payment: "",
+					status: ""
+				},
+				delAcc: {
+					accid: "",
+					number: ""
+				},
+				editAcc: {
+					accountId: 0,
+					firstName: "",
+					lastName: "",
+					phone: ""
+				},
+				toastHintStlye: {
+					fadeInUp: false
+				},
+			},
+			mounted() {
+				let _this = this;
+				_this.getAccounts();
+			},
+			methods: {
+				getAccounts: function () {
+					let _this = this;
+					axios.get(`/BackStage/AccountManagement/GetAllAccounts`).then(res => {
+						//alert(JSON.stringify(res.data))
+						_this.vmAccount = res.data;
+					})
+				},
+				getOrders: function () {
+					let _this = this;
+					axios.get(`/BackStage/AccountManagement/GetOrdersByAccountId?accountId=${this.ordersAcc.accountId}`).then(res => {
+						//alert(JSON.stringify(res.data))
+						_this.vmOrders = res.data;
+						
+					})
+				},
+				editAccount: function () {
+					let _this = this;
+					var request = {
+						AccountId: this.editAcc.accountId,
+						FirstName: this.editAcc.firstName,
+						LastName: this.editAcc.lastName,
+						Phone: this.editAcc.phone
+					};
+					axios.post(`/BackStage/AccountManagement/EditAccounts`, request).then(res => {
+						$("#editModal").modal('hide'); 
+						_this.getAccounts();
+						_this.toast = "修改成功";
+						_this.toastHint();
+					});
+					
+				},
+				deleteAccount: function () {
+					let _this = this;
+					axios.delete(`/backstage/accountmanagement/deleteaccounts/${this.delAcc.accid}`).then(res => {
+						$("#deleteModal").modal("hide");
+						_this.toast = "刪除成功";
+						_this.toastHint();
+						_this.getAccounts();
+					});
+				},
+				ordersConfirm: function (a) {
+					this.ordersAcc.accountId = a.accountId;
+					this.ordersAcc.ordersId = a.ordersId;
+					this.ordersAcc.date = a.setOrdersDatetime;
+					this.ordersAcc.total = a.subTotal;
+					this.ordersAcc.discount = a.subDiscount;
+					this.ordersAcc.payment = a.customerPaymentId;
+					this.ordersAcc.status = a.orderStatus;
+					this.getOrders();
+				},
+				editConfirm: function (a) {
+					this.editAcc.accountId = a.accountId;
+					this.editAcc.firstName = a.firstName;
+					this.editAcc.lastName = a.lastName;
+					this.editAcc.phone = a.phone;
+				},
+				deleteConfirm: function (a) {
+					this.delAcc.accid = a.accountId;
+					this.delAcc.number = a.account1;
+				},
+				changePage: function (currentpage) {
+					console.log(currentpage);
+					this.cPage = currentpage;
+				},
+				toastHint: function () {
+					this.toastHintStlye.fadeInUp = true;
+					setTimeout(() => {
+						this.toastHintStlye.fadeInUp = false
+					}, 2100)
+				}
+			},
+			computed: {
+				pageCount:function () {
+					return Math.ceil(this.filterSearchText.length / this.pageItems);
+					//return Math.ceil(this.vmAccount.length / this.pageItems);
+				},
+				accountsInPage:function () {
+					var max = this.cPage * this.pageItems;
+					var min = this.pageItems * (this.cPage - 1) + 1;
+					return this.filterSearchText.slice(min - 1, max)
+					//return this.vmAccount.slice(min - 1, max)
+				},
+				//篩選帳號、姓名
+				filterSearchText:function(){
+					return this.vmAccount.filter((x)=>{
+						return x.account1.indexOf(this.searchText) !== -1 || x.firstName.indexOf(this.searchText) !== -1 || x.lastName.indexOf(this.searchText) !== -1;
+					})
+					
+				},
+			}
+		})
+	</script>
 }

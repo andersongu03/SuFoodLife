@@ -9,13 +9,13 @@
         <h4>訂單列表</h4>
     </div>
 
-    @*----------1.會員搜尋列----------*@
+    <!-- 1.搜尋列 -->
     <div class="row mb-3">
         <div class="col-3">
             <div class="searchBar">
                 <div class="inputWrapper">
                     <i class='bx bx-search-alt-2 searchIcon'></i>
-                    <input type="text" class="inputSearch" placeholder="Search...">
+                    <input type="text" class="inputSearch" placeholder="請輸入訂單編號、會員ID">
                 </div>
             </div>
         </div>
@@ -49,21 +49,19 @@
         <div class="col-5">
             <div class="content">
                 <div class="date-picker">
-                    <input type="date"></input>
-                    <input type="date"></input>
+                    <input type="date">
+                    <input type="date">
                     <button>搜尋</button>
                 </div>
             </div>
         </div>
     </div>
 
-
-    @*----------2.資料表格----------*@
-    <!-- 2.一般會員訂單區塊-->
+    <!-- 2.訂單-->
     <div class="general-order">
         <table class="table table-hover">
             <thead>
-                <tr class="tr">
+                <tr class="tr" >
                     <th scope="col">訂單編號</th>
                     <th scope="col">會員ID</th>
                     <th scope="col">帳號</th>
@@ -78,130 +76,42 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- 2-1.會員1號-->
                 <tr>
-                    <td>1</td>
-                    <th class="th" scope="row">10113</th>
-                    <td>XXX@gmail.com</td>
-                    <td>零售</td>
-                    <td>信用卡</td>
-                    <td>2023-05-02 12:08:36</td>
-                    <td><span class="pending">處理中</span></td>
-                    <td>
-                        <button class="orderdetail-btn">檢視</button>
-                    </td>
-                    <td>2300</td>
-                    <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                    <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
+                 @*   <td>{{a.accountId}}</td>
+					<td>{{a.account1}}</td>
+					<td>{{a.firstName}}{{a.lastName}}</td>
+					<td>{{a.phone}}</td>
+					<td>{{a.isActive}}</td>
+					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(a)"></i></td>
+					<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(a)"></i></td>
+					<td><i class='bx bx-trash sortIcon delete-item' data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteConfirm(a)"></i></td>
+					<td>{{(a.createDatetime).slice(0,10)}}</td>
+					<td>{{a.lasttImeLogin}}</td>*@
                 </tr>
-                <!-- 2-1.會員2號-->
-                @*<tr>
-                <th class="th" scope="row">10113</th>
-                <td>洪崇信</td>
-                <td>202305020186</td>
-                <td>零售</td>
-                <td>2023-05-02 12:08:36</td>
-                <td><span class="completed">已完成</span></td>
-                <td>
-                <button class="orderdetail-btn" >檢視</button>
-                </td>
-                <td>2300</td>
-                <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
-                </tr>
-                <!-- 2-1.會員3號-->
-                <tr>
-                <th class="th" scope="row">10113</th>
-                <td>洪崇信</td>
-                <td>202305020186</td>
-                <td>零售</td>
-                <td>2023-05-02 12:08:36</td>
-                <td><span class="cancel">已取消</span></td>
-                <td>
-                <button class="orderdetail-btn" >檢視</button>
-                </td>
-                <td>2300</td>
-                <td><a href=""><i class='bx bxs-edit'></i></a></td>
-                <td><button class="delete-item" type="submit"><i class='bx bx-trash'></i></button></td>
-                </tr>*@
-
             </tbody>
         </table>
     </div>
 
-    @*----------3.分頁----------*@
-    <div class="paging">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    <!-- 3.分頁 -->
+    <div>
+        <paginate :page-count="pageCount"
+                  :click-handler="changePage"
+                  :prev-text="'&laquo;'"
+                  :next-text="'&raquo;'"
+                  :page-class="'page-item'"
+                  :page-link-class="'page-link'"
+                  :prev-class="'page-item'"
+                  :prev-link-class="'page-link'"
+                  :next-class="'page-item'"
+                  :next-link-class="'page-link'"
+                  :container-class="'pagination justify-content-center'">
+        </paginate>
     </div>
 
-    @*----------4.MODAL----------*@
-    <div class="modal__container" :class="modalContainerStyle" id="modal-container">
-        <div class="modal__content d-flex flex-column justify-content-around" :class="modalContentStyle">
-            <div v-if="currentStatus == 'edit' ||currentStatus == 'view'" class="modal__close close-modal" @@click="closeModal" title="Close">
-                <i class='bx bx-x'></i>
-            </div>
+    <!-- 4.Modal -->
 
 
-
-            <div class="model row g-5">
-                @*----------檢視模式----------*@
-                <template v-if="currentStatus == 'view'">
-                    <div class="row mb-3 flexItems">
-                        @*----內容-----*@
-                        <h3 class="modal__title">會員資料</h3>
-                        <div>檢視</div>
-                    </div>
-
-                    <button class="modal__button modal__butoon-width">
-                        更新
-                    </button>
-                </template>
-
-                @*----------編輯模式----------*@
-                <template v-if="currentStatus == 'edit'">
-                    <div class="row delete-modal">
-                        @*----內容-----*@
-                        <div>編輯</div>
-                    </div>
-
-                    <button class="modal__button modal__butoon-width">
-                        更新
-                    </button>
-                </template>
-
-                @*----------刪除模式----------*@
-                <template v-if="currentStatus == 'delete'">
-                    <div class="button-container">
-                        <button class="modal__button modal__butoon-width">
-                            刪除
-                        </button>
-
-                        <button class="modal__button-link close-modal" @@click="closeModal">
-                            取消
-                        </button>
-                    </div>
-                </template>
-            </div>
-        </div>
-    </div>
-
-    @*----------5.提示訊息----------*@
+    <!-- 5.提示訊息 -->
     @*<div class="message-toast-wrapper" :class="toastHintStlye">
     <i v-if="toast=='新增成功' || toast=='修改成功'" class='bx bxs-check-circle message-toast-icon'></i>
     <i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
@@ -210,45 +120,21 @@
 </div>
 
 @section Scripts{
+    Vue.component('paginate', VuejsPaginate)
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
     <script src="~/js/vue.js"></script>
+    <script src="~/axios/axios.min.js"></script>
     <script>
         const vm = new Vue({
             el: "#ordersManagement",
             data: {
-                //-- 彈出視窗的效果條件 --//
-                modalContainerStyle: {
-                    showModal: false,
-                },
-                modalContentStyle: {
-                    w200: true,
-                    w800: false
-                },
-                currentStatus: '',
+               
+               
             },
             methods: {
-                openModal() {
-                    this.modalContainerStyle.showModal = true;
-                },
-                closeModal() {
-                    this.modalContainerStyle.showModal = false;
-                },
-                viewModal() {
-                    this.currentStatus = 'view';
-                    this.modalContentStyle.w200 = false;
-                    this.modalContentStyle.w800 = true;
-                    this.openModal();
-                },
-                editModal() {
-                    this.currentStatus = 'edit';
-                    this.modalContentStyle.w200 = false;
-                    this.modalContentStyle.w800 = true;
-                    this.openModal();
-                },
-                deleteModal() {
-                    this.currentStatus = 'delete';
-                    this.modalContentStyle.w200 = true;
-                    this.modalContentStyle.w800 = false;
-                    this.openModal();
+                
                 },
             },
             computed: {

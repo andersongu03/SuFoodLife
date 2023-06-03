@@ -64,32 +64,26 @@ namespace SuFood.Models
                     .HasColumnName("Default_CreditCard_Number");
 
                 entity.Property(e => e.DefaultShipAddress)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("Default_ShipAddress");
 
                 entity.Property(e => e.FirstName)
-                    .IsRequired()
                     .HasMaxLength(15)
                     .HasColumnName("First_Name");
 
                 entity.Property(e => e.Gender).HasMaxLength(5);
 
                 entity.Property(e => e.LastName)
-                    .IsRequired()
                     .HasMaxLength(15)
                     .HasColumnName("Last_Name");
 
                 entity.Property(e => e.LasttImeLogin)
-                    .IsRowVersion()
-                    .IsConcurrencyToken()
+                    .HasColumnType("datetime")
                     .HasColumnName("LasttIme_Login");
 
                 entity.Property(e => e.Password).IsRequired();
 
-                entity.Property(e => e.Phone)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.Property(e => e.Phone).HasMaxLength(10);
             });
 
             modelBuilder.Entity<Announcement>(entity =>
@@ -278,9 +272,17 @@ namespace SuFood.Models
 
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
+                entity.Property(e => e.BuyMethod)
+                    .HasMaxLength(50)
+                    .HasColumnName("Buy_Method");
+
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
                 entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
+
+                entity.Property(e => e.Email).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.OrderStatus)
                     .IsRequired()
@@ -288,6 +290,10 @@ namespace SuFood.Models
                     .HasColumnName("Order_Status");
 
                 entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
+
+                entity.Property(e => e.Phone).HasMaxLength(50);
+
+                entity.Property(e => e.ReMark).HasMaxLength(50);
 
                 entity.Property(e => e.SetOrdersDatetime)
                     .HasColumnType("datetime")

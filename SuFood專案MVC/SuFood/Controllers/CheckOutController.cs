@@ -170,6 +170,7 @@ namespace SuFood.Controllers
             order.ReMark = model.Order.ReMark;
             order.Email = model.Order.Email;
 
+            await _context.SaveChangesAsync();
 
             var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
             _context.OrdersDetails.RemoveRange(orderDetails);
@@ -186,8 +187,6 @@ namespace SuFood.Controllers
                 _context.OrdersDetails.Add(NewOrderDetails);
                 await _context.SaveChangesAsync();
             }
-
-
 
             return Json(new { GetOrderId = orderId });
         }

@@ -246,16 +246,23 @@ namespace SuFood.Models
 
             modelBuilder.Entity<Messages>(entity =>
             {
-                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+                entity.Property(e => e.ReceiverId).HasColumnName("Receiver_Id");
+
+                entity.Property(e => e.SenderId).HasColumnName("Sender_Id");
 
                 entity.Property(e => e.Text).IsRequired();
 
                 entity.Property(e => e.UserName).IsRequired();
 
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK_Messages_Account");
+                entity.HasOne(d => d.Receiver)
+                    .WithMany(p => p.MessagesReceiver)
+                    .HasForeignKey(d => d.ReceiverId)
+                    .HasConstraintName("FK_Messages_Account2");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.MessagesSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("FK_Messages_Account1");
             });
 
             modelBuilder.Entity<Orders>(entity =>

@@ -10,7 +10,8 @@ namespace SuFood.Models
         public Account()
         {
             CustomerPayment = new HashSet<CustomerPayment>();
-            Messages = new HashSet<Messages>();
+            MessagesReceiver = new HashSet<Messages>();
+            MessagesSender = new HashSet<Messages>();
             Orders = new HashSet<Orders>();
             ShoppingCart = new HashSet<ShoppingCart>();
         }
@@ -33,7 +34,8 @@ namespace SuFood.Models
         public string HashPassword { get; set; }
 
         public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
-        public virtual ICollection<Messages> Messages { get; set; }
+        public virtual ICollection<Messages> MessagesReceiver { get; set; }
+        public virtual ICollection<Messages> MessagesSender { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }

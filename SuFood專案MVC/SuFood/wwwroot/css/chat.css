@@ -1,0 +1,274 @@
+/*---------- 基礎設定 ----------*/
+#body {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    background: rgb(249 248 248);
+}
+
+/*---------- 字型(粉圓體) ----------*/
+/*@font-face {
+    font-family: 'CustomFont';
+    src: url('./jf-openhuninn-1.0.699905d9.ttf') format('truetype');
+}*/
+
+
+/*---------- 基礎設定 ----------*/
+#footer{
+    width: 100vw !important;
+}
+
+main{
+    padding-top:5rem;
+    height: 100vh;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /*font-family: 'CustomFont', sans-serif;*/
+}
+
+/* 調整滾動條的寬度 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* 調整滾動條的背景顏色 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* 調整滾動條滑塊的顏色 */
+::-webkit-scrollbar-thumb {
+    background-color: hsl(210, 2%, 83%);
+}
+
+/*---------- 聊天卡片 ----------*/
+.chat__container {
+    max-width: 80%;
+    min-height: 80%;
+    min-width: 80%;
+    background: #fff;
+    border-radius: .5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    max-height: 560px;
+    overflow: hidden;
+}
+
+/*---------- 左半邊使用者容器 ----------*/
+.user__container {
+    height: 100%;
+    background: #fff;
+    padding-right: 0;
+}
+
+/*---------- 左側名字搜尋框 ----------*/
+.user__container .search__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 0 1.5rem;
+    background-color: hsl(210, 17%, 98%);
+    border-radius: 10px;
+    padding: .4rem .8rem;
+    cursor: pointer;
+}
+
+.search-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+    .search-input::placeholder {
+        color: hsl(0, 0%, 73%);
+    }
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translate(-50%, -50%);
+    font-size: 1.2rem;
+}
+
+/*---------- 所有聊天者資訊 ----------*/
+.users {
+    height: 100%;
+}
+
+.users-list {
+    max-height: 700px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+/*---------- 個人聊天者資訊 ----------*/
+.user-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid hsl(0, 0%, 87%);
+    transition: all .3s ease-in-out;
+    cursor: pointer;
+}
+
+/*---------- 左邊使用者頭貼 ----------*/
+.user-item-avatar {
+    object-fit: cover;
+    height: 45px;
+    width: 45px;
+    border-radius: 50%;
+    margin-left: 1rem;
+    /* border: 1px solid hsl(0, 0%, 73%); */
+}
+
+.user-item-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/*---------- 使用者名稱 ----------*/
+.user-item-name {
+    width: 65px;
+    font-size: 1.2rem;
+    margin: 0;
+    text-align: left;
+}
+
+.status-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*---------- 上線狀態圓點 ----------*/
+.status-circle {
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    transform: translate(-50%, -50%);
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+}
+
+/*---------- 上線狀態(上線) ----------*/
+.statusOnline {
+    background-color: green;
+}
+
+/*---------- 上線狀態(離線) ----------*/
+.statusOffline {
+    background-color: red;
+}
+
+.user-item-status {
+    /* font-size: 1rem; */
+    text-align: left;
+}
+
+/*---------- 右半邊聊天紀錄容器 ----------*/
+.history__container {
+    /* height: 100%; */
+    background-color: hsl(0, 0%, 93%);
+    padding-right: 0;
+}
+
+/*---------- 聊天訊息 ----------*/
+.chat-history {
+    padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    /* 大螢幕 */
+    height: 60%;
+    /* 小螢幕 */
+    /* height: 60%; */
+    max-height: 800px;
+    min-height: 590px;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.otherSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    max-width: 50%;
+}
+
+.selfSide {
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: end;
+}
+
+.otherSide p,
+.selfSide p {
+    max-width: fit-content;
+    min-width: fit-content;
+    height: fit-content;
+    background-color: hsl(0, 0%, 100%);
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 0;
+}
+
+/* .otherSide .time,
+.selfSide .time{
+    width: 100%;
+    font-size: 8px;
+    text-align: right;
+} */
+
+/*---------- 右側文字輸入框 ----------*/
+.history__container .input__bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem 1rem 1.5rem;
+    background-color: hsl(210, 17%, 98%);
+    border-radius: 10px;
+    padding: .4rem .8rem;
+    cursor: pointer;
+}
+
+.input-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+    .input-input::placeholder {
+        color: hsl(0, 0%, 73%);
+    }
+
+.send-icon {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translate(-50%, -50%);
+    font-size: 1.4rem;
+}
+
+/*---------- 選擇的樣式 ----------*/
+.selectedPerson {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    background-color: hsl(210, 17%, 98%);
+    background-color: #4f8180 !important;
+    color: white !important;
+}

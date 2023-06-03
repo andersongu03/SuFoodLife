@@ -1,0 +1,140 @@
+﻿@section Styles{
+    <link href="~/css/chat.css" rel="stylesheet" />
+}
+
+<div id="body">
+    <div class="chat__container row" id="chat">
+    <div class="col-2 col-md-3 col-sm-6 user__container">
+        <div class="search__bar">
+            <input class="search-input" type="text" placeholder="輸入名字" v-model="keyword">
+            <i class='bx bx-search search-icon'></i>
+        </div>
+        <div class="users">
+                <ul class="users-list">
+                    <li class="user-item" v-for="u in filterPerson" v-on:click="choicePerson(u)" :class="{selectedPerson: currentUserName == u.name}" :key="u.id">
+                    <img class="user-item-avatar" src="~/img/chat/customer.png" alt="">
+                    <div class="user-item-info">
+                        <p class="user-item-name">{{u.name}}</p>
+                        <div class="status-wrapper">
+                            <div class="status-circle statusOnline"></div>
+                            <small class="user-item-status">上線</small>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-10 col-md-9 col-sm-6 history__container">
+        <div class="chat-history">
+            @*<div v-for="h in historty" :class="h.status" :key="h.id">
+                <p>{{h.content}}</p>
+            </div>*@
+            @*<div class="otherSide">
+                <p>幹嘛學我講話</p>
+            </div>*@
+            <template v-if="messages">
+                    <div v-for="m in messages" :class="senderId == m.sender? 'selfSide':'otherSide'">
+                    <p>{{m.text}}</p>
+                </div>
+            </template>
+            <template v-else>
+                    <h1>目前沒有訊息喔~</h1>
+                </div>
+            </template>
+        </div>
+        <div class="input__bar">
+            <input class="input-input" type="text" placeholder="..." v-model="inputMessage">
+            <i class='bx bx-send send-icon' v-on:click="sendMessage"></i>
+        </div>
+    </div>
+</div>
+</div>
+<script src="~/axios/axios.min.js"></script>
+<script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#chat",
+        data: {
+            users: [],
+            historty: [
+                { id: "1", content: "明天早餐想吃啥", status: "otherSide" },
+                { id: "2", content: "我想來點玉米蛋餅", status: "selfSide" },
+                { id: "3", content: "吃這樣會飽? 要不要再來點漢堡薯條玉米濃湯巧克力吐司肉鬆蛋吐司熱狗雞塊大杯紅茶微糖去冰", status: "otherSide" },
+                { id: "4", content: "好胖喔", status: "selfSide" },
+                { id: "5", content: "好胖喔", status: "otherSide" },
+                { id: "6", content: "幹嘛學我講話", status: "selfSide" },
+                { id: "7", content: "哈哈", status: "otherSide" },
+                { id: "8", content: "哈哈", status: "selfSide" },
+                { id: "9", content: "走啦", status: "otherSide" },
+            ],
+            messages:[],
+            selectedPerson: false,//搜尋功能
+            currentUserName: null,//搜尋功能
+            keyword: "",//搜尋功能
+            inputMessage: "",//對話框的內容
+            ReceiverId: null,//選取選擇聊天對象的ID
+            senderId:0,
+        },
+        methods: {
+            //選擇想聊天的對象，更改樣式
+            choicePerson(u) {
+                this.currentUserName = u.name
+                this.ReceiverId = u.id
+                this.GetChatHistory();
+            },
+            //獲取所有用戶資訊
+            getAllUserInfo(){
+                axios.get("/Chat/GetAllUsersInfo").then(res => {
+                    this.users = res.data;
+                    this.senderId = res.data[0].myId
+                })
+            },
+            // 傳送訊息至 SignalR Hub
+            sendMessage() {
+                this.connection.invoke("SendMessageToSpecifiedUser", this.ReceiverId, this.inputMessage);
+                this.inputMessage = "";
+            },
+            //點擊左邊User框獲取該使用者與聊天對象的聊天紀錄
+            GetChatHistory(){
+                this.connection.invoke("GetChatHistory", this.ReceiverId);
+            }
+        },
+        computed: {
+            //搜尋功能
+            filterPerson() {
+                return this.users.filter((p) => {
+                    return p.name.indexOf(this.keyword) !== -1
+                })
+            }
+        },
+        mounted() {
+            //獲取所有用戶資訊
+            this.getAllUserInfo()
+
+            // 建立 SignalR 連線
+            this.connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .build();
+
+            // 設定接收訊息的處理程式(使用資料庫的訊息，歷史訊息)
+            this.connection.on("ReceiveMessage", chatHistory => {
+                // 將接收到的對話紀錄加入到 messages 陣列中
+                this.messages = chatHistory.map(item => ({
+                    sender: item.senderId,
+                    receiver: item.receiverId,
+                    user: item.userName,
+                    text: item.text,
+                    when: item.when
+                }));
+            });
+
+            // 開始連線
+            this.connection.start()
+            .catch(error => {
+                console.error(error);
+            });
+        }
+    })
+</script>
+

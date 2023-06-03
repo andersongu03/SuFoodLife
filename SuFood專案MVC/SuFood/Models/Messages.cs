@@ -11,8 +11,10 @@ namespace SuFood.Models
         public string UserName { get; set; }
         public string Text { get; set; }
         public DateTime When { get; set; }
-        public int? AccountId { get; set; }
+        public int? SenderId { get; set; }
+        public int? ReceiverId { get; set; }
 
-        public virtual Account Account { get; set; }
+        public virtual Account Receiver { get; set; }
+        public virtual Account Sender { get; set; }
     }
 }

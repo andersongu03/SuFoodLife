@@ -156,7 +156,10 @@ namespace SuFood.Controllers
             var getSubCost = 0;
             foreach (var details in model.Details)
             {
-                getSubCost = _context.Products.Where(p => p.ProductName == details.ProductName).Sum(p => p.Cost);
+                var getSingleCost = _context.Products.Where(p => p.ProductName == details.ProductName).Select(p => p.Cost).First();
+                var getCartQuantity = details.Quantity;
+                getSubCost += getSingleCost * getCartQuantity;
+
             }
 
 
@@ -204,9 +207,11 @@ namespace SuFood.Controllers
             var getSubCost = 0;
             foreach (var details in model.Details)
             {
-                getSubCost = _context.Products.Where(p => p.ProductName == details.ProductName).Sum(p => p.Cost);
-            }
+                var getSingleCost = _context.Products.Where(p => p.ProductName == details.ProductName).Select(p => p.Cost).First();
+                var getCartQuantity = details.Quantity;
+                getSubCost += getSingleCost * getCartQuantity;
 
+            }
 
             if (order == null) { return Ok("我是誰我在哪"); }
 

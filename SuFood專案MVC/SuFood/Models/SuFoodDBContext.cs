@@ -44,7 +44,9 @@ namespace SuFood.Models
             {
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
-                entity.Property(e => e.Account1).HasMaxLength(50);
+                entity.Property(e => e.Account1)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.BirthDate).HasColumnType("date");
 
@@ -57,7 +59,7 @@ namespace SuFood.Models
                     .HasColumnName("Default_CreditCard_Holder");
 
                 entity.Property(e => e.DefaultCreditCardNumber)
-                    .HasMaxLength(10)
+                    .HasMaxLength(16)
                     .HasColumnName("Default_CreditCard_Number");
 
                 entity.Property(e => e.DefaultShipAddress)
@@ -75,9 +77,10 @@ namespace SuFood.Models
                     .HasColumnName("Last_Name");
 
                 entity.Property(e => e.LasttImeLogin)
-                    .IsRowVersion()
-                    .IsConcurrencyToken()
+                    .HasColumnType("datetime")
                     .HasColumnName("LasttIme_Login");
+
+                entity.Property(e => e.Password).IsRequired();
 
                 entity.Property(e => e.Phone).HasMaxLength(10);
             });
@@ -91,17 +94,25 @@ namespace SuFood.Models
                     .HasMaxLength(300)
                     .HasColumnName("Announcement_Content");
 
+                entity.Property(e => e.AnnouncementCreater)
+                    .HasMaxLength(50)
+                    .HasColumnName("Announcement_Creater");
+
                 entity.Property(e => e.AnnouncementEndDate)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("Announcement_EndDate");
 
                 entity.Property(e => e.AnnouncementImage).HasColumnName("Announcement_Image");
 
                 entity.Property(e => e.AnnouncementStartDate)
-                    .HasColumnType("date")
+                    .HasColumnType("datetime")
                     .HasColumnName("Announcement_StartDate");
 
                 entity.Property(e => e.AnnouncementStatus).HasColumnName("Announcement_Status");
+
+                entity.Property(e => e.AnnouncementType)
+                    .HasMaxLength(50)
+                    .HasColumnName("Announcement_Type");
             });
 
             modelBuilder.Entity<ComeStore2TakeSingleOrders>(entity =>
@@ -232,27 +243,43 @@ namespace SuFood.Models
 
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
+                entity.Property(e => e.BuyMethod)
+                    .HasMaxLength(50)
+                    .HasColumnName("Buy_Method");
+
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
                 entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
 
+                entity.Property(e => e.Email).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
+
                 entity.Property(e => e.OrderStatus)
+                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
                 entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
 
+                entity.Property(e => e.Phone).HasMaxLength(50);
+
+                entity.Property(e => e.ReMark).HasMaxLength(50);
+
                 entity.Property(e => e.SetOrdersDatetime)
                     .HasColumnType("datetime")
                     .HasColumnName("SetOrders_Datetime");
 
-                entity.Property(e => e.ShipAddress).HasMaxLength(50);
+                entity.Property(e => e.ShipAddress)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.AccountId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_TO_Orders");
 
                 entity.HasOne(d => d.Coupon)
@@ -287,11 +314,15 @@ namespace SuFood.Models
 
                 entity.ToTable("Orders_Review");
 
-                entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
+                entity.Property(e => e.ReviewId)
+                    .ValueGeneratedNever()
+                    .HasColumnName("Review_Id");
 
                 entity.Property(e => e.Comment).HasMaxLength(100);
 
-                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
+                entity.Property(e => e.OrdersId)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
 

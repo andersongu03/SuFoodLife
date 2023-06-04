@@ -290,6 +290,7 @@
 						SubTotal: 0,
 						SubDiscount: 0,
 						ReMark: '',
+						CouponId :'',
 					},
 					Details: [],
 				},
@@ -410,6 +411,7 @@
 						ShipAddress: this.retailOrder.Order.ShipAddress,
 						ReMark: this.retailOrder.Order.ReMark,
 						SubTotal: this.retailOrder.Order.SubTotal,
+						CouponId: this.selectedOption,
 					}
 					this.retailOrder.Details = orderDetails
 

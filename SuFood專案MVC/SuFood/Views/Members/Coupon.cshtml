@@ -74,14 +74,12 @@
 						if (response.data){
 							this.GetCouponFromDb();
 						}else {
-							cartttt.modalVisible
+							alert('你已經有此優惠券');
+							this.GetCouponFromDb();
 						}
 						console.log(response.data);
-<<<<<<< HEAD
 						
-=======
-						this.GetCouponFromDb();
->>>>>>> origin/main
+
 					})
 				},
 			},

@@ -171,6 +171,7 @@ namespace SuFood.Controllers
 				SubDiscount = model.Order.SubDiscount,
 				SetOrdersDatetime = DateTime.Now,
 				AccountId = Convert.ToInt32(getAccountId),
+				CouponId = model.Order.CouponId,
 				//AccountId = 19,
 				OrderStatus = "未付款",
 				Email = model.Order.Email,

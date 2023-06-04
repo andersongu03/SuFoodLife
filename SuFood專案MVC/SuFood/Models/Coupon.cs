@@ -9,6 +9,7 @@ namespace SuFood.Models
     {
         public Coupon()
         {
+            CouponUsedList = new HashSet<CouponUsedList>();
             Orders = new HashSet<Orders>();
         }
 
@@ -20,6 +21,7 @@ namespace SuFood.Models
         public DateTime? CouponStartDate { get; set; }
         public DateTime? CouponEndDate { get; set; }
 
+        public virtual ICollection<CouponUsedList> CouponUsedList { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
     }
 }

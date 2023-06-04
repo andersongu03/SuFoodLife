@@ -117,7 +117,10 @@
                         }
                     </div>
                     <div class="cartsBox iconBox" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                        <i class="bx bx-cart icon"></i>                        
+                        <i class="bx bx-cart icon"></i>
+                        <div :class="[{'cartsBoxNum': true}, {'active': cartNum > 0}]" style="font-size: 10px">
+                            {{ cartNum }}
+                        </div>
                     </div>
                     <div>
                         <div class="offcanvas offcanvas-end"
@@ -281,13 +284,12 @@
 
     <script>
         const cartttt = new Vue({
-            el: '#vueStart',
+            el: '#header',
             data: {
                 cart: [],
                 modalVisible: false,
                 showAlert: "",
             },
-
             methods: {
                 goOrders: function () {
                     axios.get("/Retail/IsLogin").then(response => {
@@ -375,9 +377,6 @@
                         });
                     _this.GetCart();
                 },
-
-
-
             },
             computed: {
                 getTotal: function () {
@@ -402,6 +401,9 @@
                         right: '-3px',
                         top: '-7px',
                     };
+                },
+                cartNum(){
+                    return this.cart.map(c => c.cartQuantity).reduce((a , c)=> a+c , 0)
                 },
             },
             mounted() {

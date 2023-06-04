@@ -31,6 +31,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[CouponUsed_List]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[Customer_Payment]",
          "ObjectType": 0
       },

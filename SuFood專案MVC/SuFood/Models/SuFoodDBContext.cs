@@ -166,30 +166,27 @@ namespace SuFood.Models
 
             modelBuilder.Entity<CouponUsedList>(entity =>
             {
-                entity.HasKey(e => e.CouponUsedId)
-                    .HasName("PK_CooponUSE_List");
+                entity.HasKey(e => e.CouponUsedId);
 
                 entity.ToTable("CouponUsed_List");
 
                 entity.Property(e => e.CouponUsedId).HasColumnName("CouponUsed_Id");
 
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.CustomerId).HasColumnName("Customer_Id");
+                entity.Property(e => e.CouponUsedOrNot).HasColumnType("date");
 
-                entity.Property(e => e.UseCouponDate)
-                    .HasColumnType("date")
-                    .HasColumnName("UseCoupon_Date");
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_CouponUsed_List_Account");
 
                 entity.HasOne(d => d.Coupon)
                     .WithMany(p => p.CouponUsedList)
                     .HasForeignKey(d => d.CouponId)
-                    .HasConstraintName("FK_Coopon_TO_CooponUSE_List");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CouponUsedList)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Account_TO_CooponUSE_List");
+                    .HasConstraintName("FK_CouponUsed_List_Coupon");
             });
 
             modelBuilder.Entity<CustomerPayment>(entity =>

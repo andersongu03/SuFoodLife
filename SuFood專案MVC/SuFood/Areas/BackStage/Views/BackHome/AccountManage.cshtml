@@ -9,7 +9,7 @@
 		<h4>會員列表</h4>
 	</div>
 
-	<!-- 1.會員搜尋列 -->
+	<!-- 1.搜尋列 -->
 	<div class="content">
 		<div class="searchBar">
 			<div class="inputWrapper">
@@ -19,7 +19,7 @@
 		</div>
 	</div>
 
-	<!-- 2.資料表格 -->
+	<!-- 2.會員資料 -->
 	<div class="table__container">
 		<table>
 			<thead>
@@ -40,7 +40,7 @@
 				<tr v-for="a in accountsInPage">
 					<td>{{a.accountId}}</td>
 					<td>{{a.account1}}</td>
-					<td>{{a.firstName}}{{a.lastName}}</td>
+					<td>{{a.firstName}}</td>
 					<td>{{a.phone}}</td>
 					<td>{{a.isActive}}</td>
 					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(a)"></i></td>
@@ -70,6 +70,7 @@
 	</div>
 
 
+	<!--4.所有Modal-->
 	<!-- OrdersModal -->
 	<div class="modal fade" id="ordersModal" tabindex="-1" aria-hidden="true">
 		<div class="modal-dialog">
@@ -86,7 +87,7 @@
 								<th>訂單編號</th>
 								<th>日期</th>
 								<th>總金額</th>
-								<th>付款狀態</th>
+								<th>付款狀態</th> 
 								<th>訂單狀態</th>
 							</tr>
 						</thead>
@@ -95,7 +96,7 @@
 								<td>{{item.ordersId}}</td>
 								<td>{{(item.setOrdersDatetime).slice(0,10)}}</td>
 								<td>{{item.subTotal-item.subDiscount}}</td>
-								<td>{{item.customerPaymentId}}</td>
+								<td>{{item.customerPaymentId}}</td>  @*要改成付款狀態*@
 								<td>{{item.orderStatus}}</td>
 							</tr>
 						</tbody>
@@ -121,7 +122,6 @@
 						<label for="type" class="col-sm-2 col-form-label">姓名</label>
 						<div class="col-sm-10">
 							<input type="text" name="firstname" id="firstname" v-model="editAcc.firstName" required size="4">
-							<input type="text" name="lastname" id="lastname" v-model="editAcc.lastName" required size="4">
 						</div>
 					</div>
 					<div class="mb-3 row">
@@ -157,12 +157,13 @@
 		</div>
 	</div>
 	
-	<!--4.刪除、編輯後的提示訊息-->
-	<div class="message-toast-wrapper" :class="toastHintStlye">
+
+	<!--5.刪除、編輯後的提示訊息-->
+@*	<div class="message-toast-wrapper" :class="toastHintStlye">
 	<i v-if="toast=='新增成功' || toast=='修改成功'|| toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
 	<i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
 	<p class="message-toast-title">{{toast}}</p>
-	</div>
+	</div>*@
 
 </div>
 
@@ -190,7 +191,7 @@
 					date: "",
 					total: "",
 					discount:"",
-					payment: "",
+					payment: "", //改成付款狀態
 					status: ""
 				},
 				delAcc: {
@@ -203,9 +204,9 @@
 					lastName: "",
 					phone: ""
 				},
-				toastHintStlye: {
-					fadeInUp: false
-				},
+				//toastHintStlye: {
+				//	fadeInUp: false
+				//},
 			},
 			mounted() {
 				let _this = this;
@@ -224,7 +225,6 @@
 					axios.get(`/BackStage/AccountManagement/GetOrdersByAccountId?accountId=${this.ordersAcc.accountId}`).then(res => {
 						//alert(JSON.stringify(res.data))
 						_this.vmOrders = res.data;
-						
 					})
 				},
 				editAccount: function () {
@@ -238,8 +238,8 @@
 					axios.post(`/BackStage/AccountManagement/EditAccounts`, request).then(res => {
 						$("#editModal").modal('hide'); 
 						_this.getAccounts();
-						_this.toast = "修改成功";
-						_this.toastHint();
+						//_this.toast = "修改成功";
+						//_this.toastHint();
 					});
 					
 				},
@@ -247,8 +247,8 @@
 					let _this = this;
 					axios.delete(`/backstage/accountmanagement/deleteaccounts/${this.delAcc.accid}`).then(res => {
 						$("#deleteModal").modal("hide");
-						_this.toast = "刪除成功";
-						_this.toastHint();
+						//_this.toast = "刪除成功";
+						//_this.toastHint();
 						_this.getAccounts();
 					});
 				},
@@ -258,7 +258,7 @@
 					this.ordersAcc.date = a.setOrdersDatetime;
 					this.ordersAcc.total = a.subTotal;
 					this.ordersAcc.discount = a.subDiscount;
-					this.ordersAcc.payment = a.customerPaymentId;
+					this.ordersAcc.payment = a.customerPaymentId; //改成付款狀態
 					this.ordersAcc.status = a.orderStatus;
 					this.getOrders();
 				},
@@ -276,12 +276,12 @@
 					console.log(currentpage);
 					this.cPage = currentpage;
 				},
-				toastHint: function () {
-					this.toastHintStlye.fadeInUp = true;
-					setTimeout(() => {
-						this.toastHintStlye.fadeInUp = false
-					}, 2100)
-				}
+				//toastHint: function () {
+				//	this.toastHintStlye.fadeInUp = true;
+				//	setTimeout(() => {
+				//		this.toastHintStlye.fadeInUp = false
+				//	}, 2100)
+				//}
 			},
 			computed: {
 				pageCount:function () {
@@ -297,7 +297,7 @@
 				//篩選帳號、姓名
 				filterSearchText:function(){
 					return this.vmAccount.filter((x)=>{
-						return x.account1.indexOf(this.searchText) !== -1 || x.firstName.indexOf(this.searchText) !== -1 || x.lastName.indexOf(this.searchText) !== -1;
+						return x.account1.indexOf(this.searchText) !== -1|| x.firstName.indexOf(this.searchText) !== -1 ;
 					})
 					
 				},

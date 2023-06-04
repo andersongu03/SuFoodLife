@@ -8,11 +8,11 @@ namespace SuFood.Models
     public partial class CouponUsedList
     {
         public int CouponUsedId { get; set; }
-        public DateTime? UseCouponDate { get; set; }
-        public int? CustomerId { get; set; }
+        public DateTime? CouponUsedOrNot { get; set; }
+        public int? AccountId { get; set; }
         public int? CouponId { get; set; }
 
+        public virtual Account Account { get; set; }
         public virtual Coupon Coupon { get; set; }
-        public virtual Account Customer { get; set; }
     }
 }

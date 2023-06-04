@@ -490,6 +490,7 @@ table {
     box-shadow: 0px 0px 15px hsl(0, 0%, 0.3);
     transition: all .3s;
     opacity: 0;
+    display: none;
 }
 
 .message-toast-icon {
@@ -513,16 +514,19 @@ table {
 @keyframes fadeInUp {
     0% {
         opacity: 0;
+        display: none;
         transform: translateY(30px);
     }
 
     50% {
         opacity: 1;
+        display: flex;
         transform: translateY(0);
     }
 
     100% {
         opacity: 0;
+        display: none;
         transform: translateY(-30px)
     }
 }

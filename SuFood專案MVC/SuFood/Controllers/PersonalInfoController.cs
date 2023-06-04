@@ -28,15 +28,12 @@ namespace SuFood.Controllers
             {
                 AccountId = acc.AccountId,
                 Account1 = acc.Account1,
-                Password = acc.Password,
                 FirstName = acc.FirstName,
                 LastName = acc.LastName,
                 BirthDate = acc.BirthDate,
                 Gender = acc.Gender,
                 Phone = acc.Phone,
                 DefaultShipAddress = acc.DefaultShipAddress,
-                DefaultCreditCardNumber = acc.DefaultCreditCardNumber,
-                DefaultCreditCardHolder = acc.DefaultCreditCardHolder
             });
             return acc;
         }
@@ -61,8 +58,6 @@ namespace SuFood.Controllers
             alertacc.Gender = account.Gender;
             alertacc.Phone = account.Phone;
             alertacc.DefaultShipAddress = account.DefaultShipAddress;
-            alertacc.DefaultCreditCardNumber = account.DefaultCreditCardNumber;
-            alertacc.DefaultCreditCardHolder = account.DefaultCreditCardHolder;
 
             try
             {

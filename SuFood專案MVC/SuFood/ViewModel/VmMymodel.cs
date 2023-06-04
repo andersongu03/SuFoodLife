@@ -12,6 +12,10 @@ namespace SuFood.ViewModel
 
 		public int? SubCost { get; set; }
 
+		public int? SubTotal { get; set; }
+
+		public double? SubDiscount { get; set; }
+
 		public IEnumerable<string>? Comments { get; set; }
 
 	}

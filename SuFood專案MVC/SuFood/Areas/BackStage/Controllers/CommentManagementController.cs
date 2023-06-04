@@ -13,26 +13,39 @@ namespace SuFood.Areas.BackStage.Controllers
 		{
 			_context = context;
 		}
-		public IActionResult Index()
-		{
-			return View();
-		}
-		public IActionResult CommentManagement()
-		{
-			return View();
-		}
+		//public IActionResult Index()
+		//{
+		//	return View();
+		//}
+		//public IActionResult CommentManagement()
+		//{
+		//	return View();
+		//}
 		//取得資料功能 get:"/BackStage/CommentManagement/GetComment"
 		[HttpGet]
-		public async Task<IEnumerable<VmComment>> GetComment()
+		public async Task<object> GetComment()
 		{
-			return _context.OrdersReview.Select(or => new VmComment
+			List<VmComment> vmComments = new List<VmComment>();
+			await _context.OrdersReview.Include(o => o.Orders).ForEachAsync(o => vmComments.Add(new VmComment()
 			{
-				ReviewId = or.ReviewId,
-				RatingStar = or.RatingStar,
-				Comment = or.Comment,
-				OrdersId = or.OrdersId,
-			});
+				ReviewId = o.ReviewId,
+				RatingStar = o.RatingStar,
+				Comment = o.Comment,
+				OrdersId = o.OrdersId,
+				AccountId =o.Orders.AccountId
+			}));
+			return vmComments;
 		}
+		//public async Task<IEnumerable<VmComment>> GetComment()
+		//{
+		//	return _context.OrdersReview.Select(or => new VmComment
+		//	{
+		//		ReviewId = or.ReviewId,
+		//		RatingStar = or.RatingStar,
+		//		Comment = or.Comment,
+		//		OrdersId = or.OrdersId,
+		//	});
+		//}
 		//get:"/BackStage/CommentManagement/Comment"
 		public async Task<JsonResult> Comment()
 		{
@@ -56,33 +69,6 @@ namespace SuFood.Areas.BackStage.Controllers
 			return "刪除成功";
 		}
 
-		//   /BackStage/CommentManagement/CreateComment   測試用
-		//[HttpPost]
-		//public async Task<string> CreateComment([FromBody] VmComment x)
-		//{
-
-		//	var exsist = _context.Orders.Where(o => o.OrdersId == x.OrdersId).Count();
-		//	var Commented = _context.OrdersReview.Where(o => o.OrdersId == x.OrdersId).Count() == 0;
-		//	if (exsist != 0 && Commented)
-		//	{
-		//		_context.OrdersReview.Add(new Models.OrdersReview()
-		//		{
-		//			ReviewId = x.ReviewId,
-		//			Comment = x.Comment,
-		//			OrdersId = x.OrdersId,
-		//			RatingStar = x.RatingStar,
-		//		});
-		//		await _context.SaveChangesAsync();
-		//		return "新增成功";
-				
-		//	}
-		//	return "新增失敗";
-		//}
-		//[HttpGet]
-		//public async Task<string> CreateComment([FromBody] VmComment comment)
-		//{
-		//	return "成功";
-		//}
 
 
 		//   /BackStage/CommentManagement/EditComment

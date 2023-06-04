@@ -46,7 +46,7 @@ namespace SuFood.Controllers
                         Comments = o.OrdersReview.Select(x => x.Comment),
                         OrderStatus = o.OrderStatus,
                         SetOrdersDateTime = o.SetOrdersDatetime,
-                        SubCost = o.SubCost,
+                        SubTotal = o.SubTotal,
                     });
                 });
 

@@ -143,11 +143,13 @@
             })
         }
     },
-    computed: {
-        filter() {
-            arr = this.or.filter(o => {return o.or.indexOf(this.keyword)!=-1})
-        }
-    },
+    //computed: {
+    //    filterComments() {
+    //        let _this = this; 
+    //        arr = _this.or.filter(o => { return o.reviewId.indexOf(_this.keyword) != -1 });
+    //        return arr;
+    //    }
+    //},
     mounted() {
         this.GetComments();
     }

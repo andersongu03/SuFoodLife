@@ -18,15 +18,15 @@ namespace SuFood.Areas.BackStage.Controllers
         {
             return View();
         }
-        [HttpGet]
-        public async Task<IEnumerable<VmHelpUChoose>> GetData()
-        {
-            return _context.HelpUchoose.Select(huc => new VmHelpUChoose
-            {
-                HelpUchooseId=huc.HelpUchooseId,
-                ProductId=huc.ProductId,
-                Price = huc.Price,
-            });
-        }
+        //[HttpGet]
+        //public async Task<IEnumerable<VmHelpUChoose>> GetData()
+        //{
+        //    return _context.HelpUchoose.Select(huc => new VmHelpUChoose
+        //    {
+        //        HelpUchooseId=huc.HelpUchooseId,
+        //        ProductId=huc.ProductId,
+        //        Price = huc.Price,
+        //    });
+        //}
     }
 }

@@ -39,15 +39,23 @@ namespace SuFood.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> EnterCouponForFront([FromBody]GetCouponViewModel model)
+		public async Task<bool> EnterCouponForFront([FromBody] GetCouponViewModel model)
 		{
 			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+			var existingCoupon = _context.CouponUsedList
+				.FirstOrDefault(x => x.Coupon.CouponName == model.CouponName && x.AccountId == Convert.ToInt32(getAccountId));
+
+			if (existingCoupon != null)
+			{
+				return false;
+			}
 
 			var canUseCouponId =
 				 _context.Coupon.Where(x => x.CouponStartDate <= DateTime.Now && x.CouponEndDate >= DateTime.Now && x.CouponName == model.CouponName)
 				.Select(x => x.CouponId).First();
 
-			var newCoupon =  new CouponUsedList
+			var newCoupon = new CouponUsedList
 			{
 				CouponId = canUseCouponId,
 				CouponUsedOrNot = 1,
@@ -57,7 +65,7 @@ namespace SuFood.Controllers
 			_context.CouponUsedList.Add(newCoupon);
 			await _context.SaveChangesAsync();
 
-			return Json(canUseCouponId);
+			return true;
 		}
 
 	}

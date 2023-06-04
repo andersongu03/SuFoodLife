@@ -71,8 +71,13 @@
 							'Content-Type': 'application/json'
 						}
 					}).then(response =>{ 
+						if (response.data){
+							this.GetCouponFromDb();
+						}else {
+							cartttt.modalVisible
+						}
 						console.log(response.data);
-						GetCouponFromDb();
+						
 					})
 				},
 			},

@@ -79,18 +79,6 @@ namespace SuFood.Controllers
 			});
 		}
 
-		//GET優惠券byID
-		[HttpGet]
-		public async Task<IActionResult> GetCouponsToCartById(int id)
-		{
-			var getCouponId = _context.Coupon.Where(c => c.CouponId == id).Select(c => new VmCoupon
-			{
-				MinimumPurchasingAmount = c.MinimumPurchasingAmount,
-			});
-
-			return Json(new { SelectCouponId = getCouponId });
-		}
-
 		//送出訂單(自由選)
 		[HttpPost]
 		public async Task<IActionResult> CreateFreeChoiceOrder([FromBody] VmSubmitOrder vmParameters)

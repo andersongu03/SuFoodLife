@@ -22,6 +22,7 @@ namespace SuFood.Models
         public virtual DbSet<Announcement> Announcement { get; set; }
         public virtual DbSet<ComeStore2TakeSingleOrders> ComeStore2TakeSingleOrders { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
+        public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<CustomerPayment> CustomerPayment { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<FreeChoiceProducts> FreeChoiceProducts { get; set; }
@@ -161,6 +162,29 @@ namespace SuFood.Models
                     .HasColumnName("Coupon_StartDate");
 
                 entity.Property(e => e.MinimumPurchasingAmount).HasColumnName("Minimum_PurchasingAmount");
+            });
+
+            modelBuilder.Entity<CouponUsedList>(entity =>
+            {
+                entity.HasKey(e => e.CouponUsedId);
+
+                entity.ToTable("CouponUsed_List");
+
+                entity.Property(e => e.CouponUsedId).HasColumnName("CouponUsed_Id");
+
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_CouponUsed_List_Account");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.CouponId)
+                    .HasConstraintName("FK_CouponUsed_List_Coupon");
             });
 
             modelBuilder.Entity<CustomerPayment>(entity =>

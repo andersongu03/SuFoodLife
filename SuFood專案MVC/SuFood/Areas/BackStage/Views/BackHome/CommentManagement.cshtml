@@ -37,10 +37,10 @@
 			<thead>
 				<tr class="table tr bgc">
 					<th scope="col">評論ID</th>
+					<th scope="col">帳號</th>
 					<th scope="col">星數</th>
 					<th scope="col">評論</th>
 					<th scope="col">訂單編號</th>
-					<th scope="col">編輯</th>
 					<th scope="col">刪除</th>
 				</tr>
 			</thead>
@@ -51,6 +51,9 @@
 						<span>{{ c.reviewId}}</span>
 					</td>
 					<td>
+						<span>{{c.accountId}}</span>
+					</td>
+					<td>
 						<span>{{ c.ratingStar}}</span>
 					</td>
 					<td>
@@ -59,9 +62,9 @@
 					<td>
 						<span>{{ c.ordersId }}</span>
 					</td>
-					<td>
+					@*<td>
 						<button class="btn btn-success" data-bs-target="#editModal" @@click="editComment(c)">修改</button>
-					</td>
+					</td>*@
 					<td>
 						<button class="btn btn-warning" @@click="deleteComment(c)">刪除</button>
 					</td>

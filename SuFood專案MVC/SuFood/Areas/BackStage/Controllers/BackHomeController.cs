@@ -91,6 +91,11 @@ namespace SuFood.Areas.BackStage.Controllers
             return "新增成功";
         }
 
+        public IActionResult HelpUChoose()
+        {
+            return View();
+        }
+
         // <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
         //public IActionResult Coupoun()
         //{

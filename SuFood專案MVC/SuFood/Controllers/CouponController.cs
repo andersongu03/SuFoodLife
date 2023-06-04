@@ -24,19 +24,41 @@ namespace SuFood.Controllers
 
 		//("/Coupon/GetCouponsForFront")
 		[HttpGet]
-		public async Task<IEnumerable<VmCouponForFront>> GetCouponsForFront()
+		public async Task<IActionResult> GetCouponsForFront()
 		{
-			return _context.Coupon.Select(x => new VmCouponForFront
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+			var CouponList = await _context.CouponUsedList
+				.Where(x => x.CouponId != null && x.AccountId == Convert.ToInt32(getAccountId) && x.CouponUsedOrNot == 1)
+				.Include(x => x.Coupon)
+				.Select(x => x.Coupon)
+				.ToListAsync();
+
+
+			return Json(CouponList);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> EnterCouponForFront([FromBody]GetCouponViewModel model)
+		{
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+			var canUseCouponId =
+				 _context.Coupon.Where(x => x.CouponStartDate <= DateTime.Now && x.CouponEndDate >= DateTime.Now && x.CouponName == model.CouponName)
+				.Select(x => x.CouponId).First();
+
+			var newCoupon =  new CouponUsedList
 			{
-				CouponId = x.CouponId,
-				CouponName = x.CouponName,
-				CouponDescription = x.CouponDescription,
-				Couponenddate2String = x.CouponEndDate.ToString(),
-			});
+				CouponId = canUseCouponId,
+				CouponUsedOrNot = 1,
+				AccountId = Convert.ToInt32(getAccountId),
+			};
+
+			_context.CouponUsedList.Add(newCoupon);
+			await _context.SaveChangesAsync();
+
+			return Json(canUseCouponId);
 		}
-		public async Task<JsonResult> GetCouponItem()
-		{
-			return Json(_context.Coupon);
-		}
+
 	}
 }

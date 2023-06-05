@@ -22,23 +22,29 @@
 					</div>
 				</div>
 				<div class="table_container">
-					<div class="couponValid_text" style="text-align: center; font-size: 1.5rem;">
-						<div class="couponValid">
-							<div class="coupon-card" v-for="c in couponList" :key="c.couponId">
-								<h3 style="padding-top: 20px;" class="fw-bolder">
-									{{c.couponDescription}}
-								</h3>
-								<div class="coupon-row">
-									<span id="cpnCode" class="fw-bolder">{{c.couponName}}</span>
-									<span id="cpnBtn" class="fw-bolder">複製優惠碼</span>
-								</div>
-								<p class="fw-bolder">有效期限: {{c.couponenddate2String}}</p>
-								<div class="circle1"></div>
-								<div class="circle2"></div>
+					<div class="couponValid">
+						<div class="coupon-card" v-for="c in couponList" :key="c.couponId">
+							<h3 style="padding-top: 20px;" class="fw-bolder">
+								{{c.couponDescription}}
+							</h3>
+							<div class="coupon-row">
+								<span id="cpnCode" class="fw-bolder">{{c.couponName}}</span>
 							</div>
+							<div>
+								<p class="fw-bolder" style="">滿{{ c.minimumPurchasingAmount }}折{{ c.couponMinusCost}}</p>
+							</div>
+							<p class="fw-bolder">有效期限: {{ c.couponenddate2String}}</p>
+							<div class="circle1"></div>
+							<div class="circle2"></div>
 						</div>
 					</div>
 				</div>
+				<!--========== Messge toast ==========-->
+				@*<div class="message-toast-wrapper" :class="toastHintStyle">
+					<i v-if="toast=='新增成功' || toast=='修改成功' || toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
+					<i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
+					<p class="message-toast-title">{{toast}}</p>
+				</div>*@
 			</div>
 		</div>
 	</div>
@@ -54,8 +60,22 @@
 				pageName: '我的優惠券',
 				couponList: [],
 				couponName:'',
+				//toast:'',
+				//toastHintStyle: {
+				//	fadeInUp: false
+				//},
 			},
 			methods: {
+				//toastHint() {
+				//	this.toastHintStyle.fadeInUp = true;
+				//	setTimeout(() => {
+				//		this.toastHintStyle.fadeInUp = false
+				//	}, 2100)
+				//},
+				closePopupShowHint() {
+					this.popupShowing.showPopup = false;
+					this.toastHint();
+				},
 				GetCouponFromDb() {
 					let _this = this;
 					couponFromDb = axios('/Coupon/GetCouponsForFront').then(response => {
@@ -71,6 +91,10 @@
 							'Content-Type': 'application/json'
 						}
 					}).then(response =>{ 
+						//this.toast = response.data;
+						//this.closePopupShowHint();
+						//_this.GetCouponFromDb();
+
 						if (response.data){
 							this.GetCouponFromDb();
 						}else {
@@ -78,8 +102,6 @@
 							this.GetCouponFromDb();
 						}
 						console.log(response.data);
-						
-
 					})
 				},
 			},

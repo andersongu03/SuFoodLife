@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
+using static SuFood.ViewModel.VmCouponForFront;
+using VmCoupon = SuFood.ViewModel.VmCoupon;
 
 namespace SuFood.Controllers
 {
@@ -31,9 +33,18 @@ namespace SuFood.Controllers
 			var CouponList = await _context.CouponUsedList
 				.Where(x => x.CouponId != null && x.AccountId == Convert.ToInt32(getAccountId) && x.CouponUsedOrNot == 1)
 				.Include(x => x.Coupon)
-				.Select(x => x.Coupon)
+				.Select(x => new VmCoupon
+				{
+					CouponId = x.Coupon.CouponId,
+					CouponName = x.Coupon.CouponName,
+					CouponDescription = x.Coupon.CouponDescription,
+					CouponMinusCost = x.Coupon.CouponMinusCost,
+					MinimumPurchasingAmount = x.Coupon.MinimumPurchasingAmount,
+					Couponstartdate2String = x.Coupon.CouponStartDate.ToString().Substring(0,10),
+					Couponenddate2String = x.Coupon.CouponEndDate.ToString().Substring(0,10)
+					
+				})
 				.ToListAsync();
-
 
 			return Json(CouponList);
 		}

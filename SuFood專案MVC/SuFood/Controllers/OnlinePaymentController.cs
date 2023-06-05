@@ -48,7 +48,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://026b-2407-4d00-1c01-7e46-c1f4-47f9-5c62-3d47.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://b3f6-114-32-252-175.ngrok-free.app/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 
@@ -119,12 +119,7 @@ namespace SuFood.Controllers
 				if (order != null)
 				{
 					order.OrderStatus = "已付款";
-					//order.SubTotal = int.Parse(orderTotal);
-
-					//if (paymentType == "CREDIT")
-					//{
-
-					//}
+					
 					//把使用過的優惠券刪掉
 					var removeUserCoupon = _context.CouponUsedList.Where(x => x.CouponId == order.CouponId && x.AccountId == order.AccountId).SingleOrDefault();
 					if(removeUserCoupon != null)
@@ -157,8 +152,8 @@ namespace SuFood.Controllers
 				Version = r_Version,
 			};
 
-			return RedirectToAction("CheckPayment", "Check", onlinePaymentReturn);
-			/*return RedirectToAction("Index")*/
+			return RedirectToAction("PaymentSucceed", "CheckOut");
+			
 		}
 
 		

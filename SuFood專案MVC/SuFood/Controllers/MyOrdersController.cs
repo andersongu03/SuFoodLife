@@ -43,10 +43,16 @@ namespace SuFood.Controllers
                     vmMymodels.Add(new VmMymodel()
                     {
                         AccountId = AccountId,
+                        OrdersId = o.OrdersId,
                         Comments = o.OrdersReview.Select(x => x.Comment),
                         OrderStatus = o.OrderStatus,
                         SetOrdersDateTime = o.SetOrdersDatetime,
                         SubTotal = o.SubTotal,
+                        SubCost = o.SubCost,
+                        SubDiscount = o.SubDiscount,
+                        Phone = o.Phone,
+                        Name = o.Name,
+                        ShipAddress = o.ShipAddress,
                     });
                 });
 
@@ -61,13 +67,14 @@ namespace SuFood.Controllers
             var Commented = _context.OrdersReview.Where(o => o.OrdersId == x.OrdersId).Count() == 0;
             if (exsist != 0 && Commented)
             {
-                _context.OrdersReview.Add(new Models.OrdersReview()
+                OrdersReview or = new OrdersReview()
                 {
-                    ReviewId = x.ReviewId,
-                    Comment = x.Comment,
-                    OrdersId = x.OrdersId,
+					OrdersId = x.OrdersId,
                     RatingStar = x.RatingStar,
-                });
+                    Comment = x.Comment,
+                };
+
+                _context.OrdersReview.Add(or);
                 await _context.SaveChangesAsync();
                 return "新增成功";
 

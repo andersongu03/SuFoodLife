@@ -5,6 +5,7 @@
         keyword:"",
         topic: '評論管理',
         toast: "",
+        selectedStar:"all",
         deleteId: undefined,
         reviewId: undefined,
         OrdersId: undefined,
@@ -50,13 +51,10 @@
             }, 2000)
         },
         createComment() {
-           /* console.log('123')*/
             this.CreateOrEditOrDelete = 'Create';
             this.popupShowing.showPopup= true;
-           
         },
         CloseComment() {
-           /* console.log('123')*/
             this.popupShowing.showPopup = false;
         },
         closepopupShowHint() {
@@ -64,16 +62,11 @@
             this.toastHint();
         },
         editComment(item) {
-            /*alert('213')*/
-            /*console.log(item);*/
             this.CreateOrEditOrDelete = 'Edit';
             this.popupShowing.showPopup = true; 
             this.editCommentList = item;
-            
-            //this.reviewId=item.reviewId
         },
         deleteComment(c) {
-            /*console.log(c);*/
             this.CreateOrEditOrDelete = 'Delete';
             this.popupShowing.showPopup = true;
             this.editCommentList = c;
@@ -90,7 +83,6 @@
             })
         },
         DeleteComment: function (id) {
-            /*console.log("觸發");*/
             var _this = this
             axios.delete(`/BackStage/CommentManagement/DeleteComment/${id}`).then(response => {
                 this.toast = response.data;
@@ -145,8 +137,22 @@
     },
     //computed: {
     //    filterComments() {
-    //        let _this = this; 
-    //        arr = _this.or.filter(o => { return o.reviewId.indexOf(_this.keyword) != -1 });
+    //        let _this = this;
+    //        arr = _this.or.filter(o => { return o.reviewId.indexOf(_this.keyword) != -1; });
+    //        switch (this.selectedStar) {
+    //            case "all":
+    //                break;
+    //            case "active":
+    //                arr = this.or.filter(o => {
+    //                    return o.ratingStar == 5
+    //                })
+    //                break;
+    //            case "frozen":
+    //                arr = this.or.filter(o => {
+    //                    return o.ratingStar < 5
+    //                })
+    //                break;
+    //        }
     //        return arr;
     //    }
     //},

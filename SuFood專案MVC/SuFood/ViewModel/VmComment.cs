@@ -11,6 +11,8 @@ namespace SuFood.ViewModel
 
 		public int? AccountId { get; set; }
 
+		public string Phone { get; set; }
+
 		public ICollection<OrdersReview> OrdersReviews { get; set; }
 	}
 }

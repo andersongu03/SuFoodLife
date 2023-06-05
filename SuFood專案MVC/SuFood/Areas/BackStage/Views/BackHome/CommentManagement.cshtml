@@ -1,7 +1,7 @@
 ﻿@section Styles{
 	<link href="~/css/main.css" rel="stylesheet" />
 	<link href="~/css/model.css" rel="stylesheet" />
-	<link href="~/css/couponmanagement.css" rel="stylesheet" />
+	<link href="~/css/commentmanagement.css" rel="stylesheet" />
 	<style>
 		.ordersreview h4{
 			font-weight: bold;
@@ -21,12 +21,29 @@
 			<h4>{{topic}}</h4>
 		</div>
 		<!--搜尋框-->
-		<div class="wrap">
-			<div class="searchBar">
-				@*想用V-model連結*@
-				@*<input class="search-bar form-control" id="searchbar" placeholder="輸入查詢" value="" v-model="keyword">*@
+		@*<div class="row mb-3">
+			<div class="col-3">
+				<div class="content">
+					<div class="searchBar">
+						<div class="inputWrapper">
+							<i class='bx bx-search-alt-2 searchIcon'></i>
+							<input type="text" class="inputSearch" placeholder="Search..." v-model="keyword">
+						</div>
+					</div>
+				</div>
 			</div>
-		</div>
+			<div class="col-3">
+				<div class="content">
+					<div class="StatusBar">
+						<select v-model="selectedStar">
+							<option value="all">1~5</option>
+							<option value="active">5星好評</option>
+							<option value="frozen">1~4星</option>
+						</select>
+					</div>
+				</div>
+			</div>
+		</div>*@
 	</div>
 
 
@@ -41,34 +58,39 @@
 					<th scope="col">星數</th>
 					<th scope="col">評論</th>
 					<th scope="col">訂單編號</th>
+					<th scope="col">客戶電話</th>
 					<th scope="col">刪除</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--評論資料 -->
-				<tr v-for="c in or" :key="c.reviewId">
-					<td>
-						<span>{{ c.reviewId}}</span>
-					</td>
-					<td>
-						<span>{{c.accountId}}</span>
-					</td>
-					<td>
-						<span>{{ c.ratingStar}}</span>
-					</td>
-					<td>
-						<span>{{ c.comment }}</span>
-					</td>
-					<td>
-						<span>{{ c.ordersId }}</span>
-					</td>
-					@*<td>
-						<button class="btn btn-success" data-bs-target="#editModal" @@click="editComment(c)">修改</button>
-					</td>*@
-					<td>
-						<button class="btn btn-warning" @@click="deleteComment(c)">刪除</button>
-					</td>
-				</tr>
+				<template v-if="or">
+					<tr v-for="c in or" :key="c.reviewId">
+						<td>
+							<span>{{ c.reviewId}}</span>
+						</td>
+						<td>
+							<span>{{c.accountId}}</span>
+						</td>
+						<td>
+							<span>{{ c.ratingStar}}</span>
+						</td>
+						<td>
+							<span>{{ c.comment}}</span>
+						</td>
+						<td>
+							<span>{{ c.ordersId }}</span>
+						</td>
+						<td>
+							<span>{{c.phone}}</span>
+						</td>
+						<td>
+							<button class="btn btn-warning" @@click="deleteComment(c)">刪除</button>
+						</td>
+					</tr>
+				</template>
+		
+				
 			</tbody>
 		</table>
 		

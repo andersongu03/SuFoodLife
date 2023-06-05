@@ -32,7 +32,8 @@ namespace SuFood.Areas.BackStage.Controllers
 				RatingStar = o.RatingStar,
 				Comment = o.Comment,
 				OrdersId = o.OrdersId,
-				AccountId =o.Orders.AccountId
+				AccountId =o.Orders.AccountId,
+				Phone=o.Orders.Phone,
 			}));
 			return vmComments;
 		}

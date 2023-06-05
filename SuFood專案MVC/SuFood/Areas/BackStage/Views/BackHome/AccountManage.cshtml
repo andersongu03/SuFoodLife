@@ -87,8 +87,7 @@
 								<th>訂單編號</th>
 								<th>日期</th>
 								<th>總金額</th>
-								<th>付款狀態</th> 
-								<th>訂單狀態</th>
+								<th>付款狀態</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -96,7 +95,6 @@
 								<td>{{item.ordersId}}</td>
 								<td>{{(item.setOrdersDatetime).slice(0,10)}}</td>
 								<td>{{item.subTotal-item.subDiscount}}</td>
-								<td>{{item.customerPaymentId}}</td>  @*要改成付款狀態*@
 								<td>{{item.orderStatus}}</td>
 							</tr>
 						</tbody>
@@ -181,7 +179,7 @@
 				searchText: "",
 				cPage: "1",
 				pageItems: "7",
-				toast: "",
+				//toast: "",
 
 				vmAccount: [],
 				vmOrders: [],
@@ -191,7 +189,6 @@
 					date: "",
 					total: "",
 					discount:"",
-					payment: "", //改成付款狀態
 					status: ""
 				},
 				delAcc: {
@@ -258,7 +255,6 @@
 					this.ordersAcc.date = a.setOrdersDatetime;
 					this.ordersAcc.total = a.subTotal;
 					this.ordersAcc.discount = a.subDiscount;
-					this.ordersAcc.payment = a.customerPaymentId; //改成付款狀態
 					this.ordersAcc.status = a.orderStatus;
 					this.getOrders();
 				},

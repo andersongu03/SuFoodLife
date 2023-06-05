@@ -107,7 +107,6 @@ namespace SuFood.Areas.BackStage.Controllers
                     SubTotal = o.SubTotal,
                     SubDiscount= o.SubDiscount,
                     SetOrdersDatetime = o.SetOrdersDatetime,
-                    CustomerPaymentId = o.CustomerPaymentId,
                     OrderStatus = o.OrderStatus,
                     AccountId = o.AccountId
                 })

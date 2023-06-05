@@ -108,7 +108,14 @@ namespace SuFood.Areas.BackStage.Controllers
                             data = br.ReadBytes((int)Request.Form.Files["Img"].Length);
                             products.Img = data; //把檔案放回
                         }
+
+                        
                     }
+                    if (products.Img.Length < 500)
+                    {
+                        products.Img = _context.Products.Where(p => p.ProductId == products.ProductId).Select(p => p.Img).FirstOrDefault();
+                    }
+
 
                     _context.Products.Update(products);
                     await _context.SaveChangesAsync();

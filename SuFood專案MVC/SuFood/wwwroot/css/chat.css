@@ -30,6 +30,10 @@ main{
     /*font-family: 'CustomFont', sans-serif;*/
 }
 
+ol, ul {
+     padding-left: 0; 
+}
+
 /* 調整滾動條的寬度 */
 ::-webkit-scrollbar {
     width: 10px;

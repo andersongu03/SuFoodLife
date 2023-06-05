@@ -1,44 +1,72 @@
 ﻿@section Styles{
+    <style>
+        main {
+            padding-top: 0 !important;
+            height: 0 !important;
+        }
+
+        .chat-history {
+            min-height: 570px !important;
+        }
+
+        @@media (min-width: 600px) {
+            .col-2 {
+                width: 25%
+            }
+
+            .col-10 {
+                width: 75%
+            }
+        }
+
+        @@media (min-width: 1024px) {
+            .col-2 {
+                width: 16%
+            }
+
+            .col-10 {
+                width: 84%
+            }
+        }
+    </style>
     <link href="~/css/chat.css" rel="stylesheet" />
 }
 
-<div id="body">
-    <div class="chat__container row" id="chat">
-        <div class="col-2 col-md-3 col-sm-6 user__container">
-            <div class="search__bar">
-                <input class="search-input" type="text" placeholder="輸入名字" v-model="keyword">
-                <i class='bx bx-search search-icon'></i>
-            </div>
-            <div class="users">
-                <ul class="users-list">
-                    <li class="user-item" v-for="u in filterPerson" v-on:click="choicePerson(u)" :class="{selectedPerson: currentUserName == u.name}" :key="u.id">
-                        <img class="user-item-avatar" src="~/img/chat/shopping-bag.png" alt="">
-                        <div class="user-item-info">
-                            <p class="user-item-name">{{u.name}}</p>
-                            @*<div class="status-wrapper">
-                                <div class="status-circle statusOnline"></div>
-                                <small class="user-item-status">上線</small>
-                            </div>*@
-                        </div>
-                    </li>
-                </ul>
-            </div>
+<div class="chat__container row" id="chat">
+    <div class="col-4 user__container">
+        <div class="search__bar">
+            <input class="search-input" type="text" placeholder="輸入名字" v-model="keyword">
+            <i class='bx bx-search search-icon'></i>
         </div>
-        <div class="col-10 col-md-9 col-sm-6 history__container">
-            <div class="chat-history" ref="chatHistory">
-                <template v-if="messages">
-                    <div v-for="m in messages" :class="senderId == m.sender? 'selfSide':'otherSide'">
-                        <p>{{m.text}}</p>
+        <div class="users">
+            <ul class="users-list">
+                <li class="user-item" v-for="u in filterPerson" v-on:click="choicePerson(u)" :class="{selectedPerson: currentUserName == u.name}" :key="u.id">
+                    <img class="user-item-avatar" src="~/img/chat/customer.png" alt="">
+                    <div class="user-item-info">
+                        <p class="user-item-name">{{u.name}}</p>
+                        @*<div class="status-wrapper">
+                            <div class="status-circle statusOnline"></div>
+                            <small class="user-item-status">上線</small>
+                        </div>*@
                     </div>
-                </template>
-                <template v-else>
-                    <h1>目前沒有訊息喔~</h1>
-                </template>
-            </div>
-            <div class="input__bar">
-                <input class="input-input" type="text" placeholder="..." v-model="inputMessage" @@keyup.enter="sendMessage">
-                <i class='bx bx-send send-icon' v-on:click="sendMessage"></i>
-            </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-8  history__container">
+        <div class="chat-history" ref="chatHistory">
+            <template v-if="messages">
+                <div v-for="m in messages" :class="senderId == m.sender? 'selfSide':'otherSide'">
+                    <p>{{m.text}}</p>
+                </div>
+            </template>
+            <template v-else>
+                <h1>目前沒有訊息喔~</h1>
+            </template>
+        </div>
+        <div class="input__bar">
+            <input class="input-input" type="text" placeholder="..." v-model="inputMessage" @@keyup.enter="sendMessage">
+            <i class='bx bx-send send-icon' v-on:click="sendMessage"></i>
         </div>
     </div>
 </div>
@@ -67,7 +95,7 @@
             },
             //獲取所有用戶資訊
             getAllUserInfo() {
-                axios.get("/Chat/GetAdminInfo").then(res => {
+                axios.get("/Chat/GetAllUsersInfo").then(res => {
                     this.users = res.data;
                     this.senderId = res.data[0].myId
                 })

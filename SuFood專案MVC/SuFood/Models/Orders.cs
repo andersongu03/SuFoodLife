@@ -12,6 +12,7 @@ namespace SuFood.Models
             CustomerPayment = new HashSet<CustomerPayment>();
             OrdersDetails = new HashSet<OrdersDetails>();
             OrdersReview = new HashSet<OrdersReview>();
+            RecyleSubscribeOrders = new HashSet<RecyleSubscribeOrders>();
             SingleShippingMethod = new HashSet<SingleShippingMethod>();
         }
 
@@ -27,12 +28,18 @@ namespace SuFood.Models
         public int? CouponId { get; set; }
         public int OrdersDetailsId { get; set; }
         public int CustomerPaymentId { get; set; }
+        public string Name { get; set; }
+        public string Phone { get; set; }
+        public string ReMark { get; set; }
+        public string Email { get; set; }
+        public string BuyMethod { get; set; }
 
         public virtual Account Account { get; set; }
         public virtual Coupon Coupon { get; set; }
         public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
         public virtual ICollection<OrdersDetails> OrdersDetails { get; set; }
         public virtual ICollection<OrdersReview> OrdersReview { get; set; }
+        public virtual ICollection<RecyleSubscribeOrders> RecyleSubscribeOrders { get; set; }
         public virtual ICollection<SingleShippingMethod> SingleShippingMethod { get; set; }
     }
 }

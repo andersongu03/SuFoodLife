@@ -24,6 +24,7 @@ namespace SuFood.Models
         public int Cost { get; set; }
         public string Category { get; set; }
         public byte[] Img { get; set; }
+        public bool? IsHelpUchioce { get; set; }
 
         public virtual ICollection<ProductsOfPlans> ProductsOfPlans { get; set; }
         public virtual ICollection<RetailsList> RetailsList { get; set; }

@@ -1,0 +1,162 @@
+﻿@section Styles{
+    <style>
+        main {
+            padding-top: 0 !important;
+            height: 0 !important;
+        }
+
+        .chat-history {
+            min-height: 570px !important;
+        }
+
+        @@media (min-width: 600px) {
+            .col-2 {
+                width: 25%
+            }
+
+            .col-10 {
+                width: 75%
+            }
+        }
+
+        @@media (min-width: 1024px) {
+            .col-2 {
+                width: 16%
+            }
+
+            .col-10 {
+                width: 84%
+            }
+        }
+    </style>
+    <link href="~/css/chat.css" rel="stylesheet" />
+}
+
+<div class="chat__container row" id="chat">
+    <div class="col-4 user__container">
+        <div class="search__bar">
+            <input class="search-input" type="text" placeholder="輸入名字" v-model="keyword">
+            <i class='bx bx-search search-icon'></i>
+        </div>
+        <div class="users">
+            <ul class="users-list">
+                <li class="user-item" v-for="u in filterPerson" v-on:click="choicePerson(u)" :class="{selectedPerson: currentUserName == u.name}" :key="u.id">
+                    <img class="user-item-avatar" src="~/img/chat/customer.png" alt="">
+                    <div class="user-item-info">
+                        <p class="user-item-name">{{u.name}}</p>
+                        @*<div class="status-wrapper">
+                            <div class="status-circle statusOnline"></div>
+                            <small class="user-item-status">上線</small>
+                        </div>*@
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-8  history__container">
+        <div class="chat-history" ref="chatHistory">
+            <template v-if="messages">
+                <div v-for="m in messages" :class="senderId == m.sender? 'selfSide':'otherSide'">
+                    <p>{{m.text}}</p>
+                </div>
+            </template>
+            <template v-else>
+                <h1>目前沒有訊息喔~</h1>
+            </template>
+        </div>
+        <div class="input__bar">
+            <input class="input-input" type="text" placeholder="..." v-model="inputMessage" @@keyup.enter="sendMessage">
+            <i class='bx bx-send send-icon' v-on:click="sendMessage"></i>
+        </div>
+    </div>
+</div>
+<script src="~/axios/axios.min.js"></script>
+<script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#chat",
+        data: {
+            users: [],
+            messages: [],
+            selectedPerson: false,//搜尋功能
+            currentUserName: null,//搜尋功能
+            keyword: "",//搜尋功能
+            inputMessage: "",//對話框的內容
+            ReceiverId: null,//選取選擇聊天對象的ID
+            senderId: 0,
+        },
+        methods: {
+            //選擇想聊天的對象，更改樣式
+            choicePerson(u) {
+                this.currentUserName = u.name
+                this.ReceiverId = u.id
+                this.GetChatHistory();
+            },
+            //獲取所有用戶資訊
+            getAllUserInfo() {
+                axios.get("/Chat/GetAllUsersInfo").then(res => {
+                    this.users = res.data;
+                    this.senderId = res.data[0].myId
+                })
+            },
+            // 傳送訊息至 SignalR Hub
+            sendMessage() {
+                this.connection.invoke("SendMessageToSpecifiedUser", this.ReceiverId, this.inputMessage);
+                this.inputMessage = "";
+                this.scrollToBottom()
+            },
+            //點擊左邊User框獲取該使用者與聊天對象的聊天紀錄
+            GetChatHistory() {
+                this.connection.invoke("GetChatHistory", this.ReceiverId);
+            },
+            //自動滑動到最下方
+            scrollToBottom() {
+                this.$nextTick(() => {
+                    const chatHistory = this.$refs.chatHistory;
+                    chatHistory.scrollTo({
+                        top: chatHistory.scrollHeight,
+                        behavior: "smooth" // 可选：平滑滚动
+                    });
+                });
+            },
+        },
+        computed: {
+            //搜尋功能
+            filterPerson() {
+                return this.users.filter((p) => {
+                    return p.name.indexOf(this.keyword) !== -1
+                })
+            }
+        },
+        mounted() {
+            //獲取所有用戶資訊
+            this.getAllUserInfo()
+
+            // 建立 SignalR 連線
+            this.connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .build();
+
+            // 設定接收訊息的處理程式(使用資料庫的訊息，歷史訊息)
+            this.connection.on("ReceiveMessage", chatHistory => {
+                // 將接收到的對話紀錄加入到 messages 陣列中
+                this.messages = chatHistory.map(item => ({
+                    sender: item.senderId,
+                    receiver: item.receiverId,
+                    user: item.userName,
+                    text: item.text,
+                    when: item.when
+                }));
+                this.scrollToBottom()
+            });
+
+            // 開始連線
+            this.connection.start()
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    })
+</script>
+

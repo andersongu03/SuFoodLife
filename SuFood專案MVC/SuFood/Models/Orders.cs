@@ -12,6 +12,7 @@ namespace SuFood.Models
             CustomerPayment = new HashSet<CustomerPayment>();
             OrdersDetails = new HashSet<OrdersDetails>();
             OrdersReview = new HashSet<OrdersReview>();
+            RecyleSubscribeOrders = new HashSet<RecyleSubscribeOrders>();
             SingleShippingMethod = new HashSet<SingleShippingMethod>();
         }
 
@@ -38,6 +39,7 @@ namespace SuFood.Models
         public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
         public virtual ICollection<OrdersDetails> OrdersDetails { get; set; }
         public virtual ICollection<OrdersReview> OrdersReview { get; set; }
+        public virtual ICollection<RecyleSubscribeOrders> RecyleSubscribeOrders { get; set; }
         public virtual ICollection<SingleShippingMethod> SingleShippingMethod { get; set; }
     }
 }

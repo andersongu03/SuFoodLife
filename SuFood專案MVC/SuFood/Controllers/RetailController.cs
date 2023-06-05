@@ -135,7 +135,13 @@ namespace SuFood.Controllers
 
             return Json(new { GetAccountId = getAccountId });
         }
+        [HttpGet]
+        public async Task<IActionResult> IsLogin()
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
+            return Json(new { GetAccountId = getAccountId });
+        }
         [HttpGet]
         public async Task<IEnumerable<ShoppingCartViewModel>> GetShoppingCarts()
         {
@@ -225,6 +231,38 @@ namespace SuFood.Controllers
             await GetShoppingCarts();
             return true;
         }
+        [HttpPost]
+        public async Task<IActionResult> AddSingle2Cart([FromBody] CartViewModels model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
+            if (getAccountId == null)
+            {
+                return Json(new { GetAccountId = "null" });
+            }
+
+            var existingCart = await _context.ShoppingCart
+        .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
+
+            if (existingCart != null)
+            {
+                existingCart.CartQuantity += model.CartQuantity;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ShoppingCart cart = new ShoppingCart
+                {
+                    CartId = model.CartId,
+                    AccountId = Convert.ToInt32(getAccountId),
+                    CartQuantity = model.CartQuantity,
+                    ProductId = model.ProductId,
+                };
+                _context.ShoppingCart.Add(cart);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { GetAccountId = getAccountId });
+        }
     }
 }

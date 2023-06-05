@@ -9,6 +9,7 @@ namespace SuFood.Models
     {
         public Account()
         {
+            CouponUsedList = new HashSet<CouponUsedList>();
             CustomerPayment = new HashSet<CustomerPayment>();
             MessagesReceiver = new HashSet<Messages>();
             MessagesSender = new HashSet<Messages>();
@@ -33,6 +34,7 @@ namespace SuFood.Models
         public bool? IsActive { get; set; }
         public string HashPassword { get; set; }
 
+        public virtual ICollection<CouponUsedList> CouponUsedList { get; set; }
         public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
         public virtual ICollection<Messages> MessagesReceiver { get; set; }
         public virtual ICollection<Messages> MessagesSender { get; set; }

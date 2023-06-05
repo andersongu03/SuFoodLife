@@ -26,6 +26,7 @@ namespace SuFood.Models
         public virtual DbSet<CustomerPayment> CustomerPayment { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<FreeChoiceProducts> FreeChoiceProducts { get; set; }
+        public virtual DbSet<Messages> Messages { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
@@ -261,6 +262,27 @@ namespace SuFood.Models
                     .HasConstraintName("FK_FreeChoiceProducts_FreeChoicePlans");
             });
 
+            modelBuilder.Entity<Messages>(entity =>
+            {
+                entity.Property(e => e.ReceiverId).HasColumnName("Receiver_Id");
+
+                entity.Property(e => e.SenderId).HasColumnName("Sender_Id");
+
+                entity.Property(e => e.Text).IsRequired();
+
+                entity.Property(e => e.UserName).IsRequired();
+
+                entity.HasOne(d => d.Receiver)
+                    .WithMany(p => p.MessagesReceiver)
+                    .HasForeignKey(d => d.ReceiverId)
+                    .HasConstraintName("FK_Messages_Account1");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.MessagesSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("FK_Messages_Account");
+            });
+
             modelBuilder.Entity<Orders>(entity =>
             {
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
@@ -338,15 +360,11 @@ namespace SuFood.Models
 
                 entity.ToTable("Orders_Review");
 
-                entity.Property(e => e.ReviewId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Review_Id");
+                entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
 
                 entity.Property(e => e.Comment).HasMaxLength(100);
 
-                entity.Property(e => e.OrdersId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("Orders_Id");
+                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
 
@@ -364,6 +382,8 @@ namespace SuFood.Models
                 entity.Property(e => e.ProductId).HasColumnName("Product_Id");
 
                 entity.Property(e => e.Category).HasMaxLength(50);
+
+                entity.Property(e => e.IsHelpUchioce).HasColumnName("isHelpUChioce");
 
                 entity.Property(e => e.ProductDescription)
                     .IsRequired()
@@ -429,6 +449,12 @@ namespace SuFood.Models
                 entity.Property(e => e.SingleShipCost).HasColumnName("singleShip_Cost");
 
                 entity.Property(e => e.SingleShipDate).HasColumnName("singleShip_date");
+
+                entity.HasOne(d => d.Orders)
+                    .WithMany(p => p.RecyleSubscribeOrders)
+                    .HasForeignKey(d => d.OrdersId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecyleSubscribe_Orders_Orders");
             });
 
             modelBuilder.Entity<RetailsList>(entity =>

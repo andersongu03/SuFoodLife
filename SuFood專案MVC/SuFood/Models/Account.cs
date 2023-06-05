@@ -11,6 +11,8 @@ namespace SuFood.Models
         {
             CouponUsedList = new HashSet<CouponUsedList>();
             CustomerPayment = new HashSet<CustomerPayment>();
+            MessagesReceiver = new HashSet<Messages>();
+            MessagesSender = new HashSet<Messages>();
             Orders = new HashSet<Orders>();
             ShoppingCart = new HashSet<ShoppingCart>();
         }
@@ -34,6 +36,8 @@ namespace SuFood.Models
 
         public virtual ICollection<CouponUsedList> CouponUsedList { get; set; }
         public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
+        public virtual ICollection<Messages> MessagesReceiver { get; set; }
+        public virtual ICollection<Messages> MessagesSender { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }

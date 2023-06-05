@@ -22,6 +22,29 @@
             top: -18px;
             background: #FFF;
         }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 15%;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
     </style>
 
     <script src="https://kit.fontawesome.com/6c09e4a88d.js" crossorigin="anonymous"> </script>
@@ -56,6 +79,9 @@
                         </li>
                         <li>
                             <a asp-area="" asp-controller="#" asp-action="#">幫你選</a>
+                        </li>
+                        <li>
+                            <a asp-area="" asp-controller="Chat" asp-action="Chat2">聊天</a>
                         </li>
                         @*首頁的頁簽*@
                         <li><a href="#testimonials">會員評價</a></li>
@@ -95,6 +121,9 @@
                     </div>
                     <div class="cartsBox iconBox" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                         <i class="bx bx-cart icon"></i>
+                        <div :class="[{'cartsBoxNum': true}, {'active': cartNum > 0}]" style="font-size: 10px">
+                            {{ cartNum }}
+                        </div>
                     </div>
                     <div>
                         <div class="offcanvas offcanvas-end"
@@ -149,12 +178,17 @@
                                 </table>
                                 <div class="bottomPurchase" style="display: flex; justify-content: space-around;position: sticky;    bottom: -16px;background: #fff;height: 54px;">
 
-                                    <div>商品總價：{{getTotal}}</div>
-                                    <button type="button" class="btn btn-danger">前往購買<i class="fa-solid fa-arrow-right"></i></button>
+                                    <div>購物車總計：{{getTotal}}</div>
+                                    <button type="button" class="btn btn-danger" @@click="goOrders()">前往購買<i class="fa-solid fa-arrow-right"></i></button>
 
 
                                 </div>
-
+                                <div class="modal" :style="{ display: modalVisible ? 'block' : 'none' }">
+                                    <div class="modal-content">
+                                        <p class="text-danger fw-bold">{{showAlert }}</p>
+                                        @*<p class="text-danger fw-bold">@ViewBag.Status</p>*@
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
@@ -253,13 +287,24 @@
 
     <script>
         const cartttt = new Vue({
-            el: '#vueStart',
+            el: '#header',
             data: {
                 cart: [],
-                showModal: ''
+                modalVisible: false,
+                showAlert: "",
             },
-
             methods: {
+                goOrders: function () {
+                    axios.get("/Retail/IsLogin").then(response => {
+                        if (response.data.getAccountId == null) {
+                            this.showAlert = "你要先登入哦";
+                        } else {
+                            window.location.href = "/CheckOut/Retail2Order";
+                        }
+
+                    })
+
+                },
                 GetCart: function () {
                     let _this = this;
                     axios.get("/Retail/GetShoppingCarts").then(response => {
@@ -277,6 +322,10 @@
                                 prod.cartQuantity++;
                             }
                             cartttt.GetCart();
+                            if (typeof vm !== 'undefined' && vm !== null) {
+                                vm.GetCart();
+                            }
+                            //vm.GetCart();
                         })
                         .catch(error => {
                             console.log(error);
@@ -295,7 +344,12 @@
                                     }
                                 } else {
                                     prod.cartQuantity--;
+
                                 }
+                                if (typeof vm !== 'undefined' && vm !== null) {
+                                    vm.GetCart();
+                                }
+                                //vm.GetCart();
                                 cartttt.GetCart();
                             }
 
@@ -303,10 +357,10 @@
                         .catch(error => {
                             console.log(error);
                         });
-                    
+
                 },
                 deleteItem: function (prod) {
-                    let _this = this;                    
+                    let _this = this;
                     axios.post("/Retail/DeleteCartItem", { ProductId: prod.productId })
                         .then(response => {
                             if (response.data) {
@@ -315,6 +369,10 @@
                                     _this.cart.splice(index, 1);
                                 }
                             }
+                            if (typeof vm !== 'undefined' && vm !== null) {
+                                vm.GetCart();
+                            }
+                            //vm.GetCart();
                             cartttt.GetCart();
                         })
                         .catch(error => {
@@ -322,8 +380,6 @@
                         });
                     _this.GetCart();
                 },
-
-
             },
             computed: {
                 getTotal: function () {
@@ -332,7 +388,26 @@
                         (sum, item) => sum + (item.cartQuantity * item.price), 0
                     );
                     //sum 為目前加總金額，從0開始加總。item為cart目前加總的元素
-                }
+                },
+                cartStyle:function() {
+                    return {
+                        content: this.cartttt.cart.length.toString(),
+                        fontSize: '10px',
+                        width: '20px',
+                        height: '20px',
+                        display: 'grid',
+                        placeItems: 'center',
+                        backgroundColor: 'red',
+                        borderRadius: '50%',
+                        color: '#fff',
+                        position: 'absolute',
+                        right: '-3px',
+                        top: '-7px',
+                    };
+                },
+                cartNum(){
+                    return this.cart.map(c => c.cartQuantity).reduce((a , c)=> a+c , 0)
+                },
             },
             mounted() {
                 this.GetCart();

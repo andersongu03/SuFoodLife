@@ -31,7 +31,7 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Customer_Payment]",
+         "Name": "[dbo].[CouponUsed_List]",
          "ObjectType": 0
       },
       {
@@ -40,6 +40,10 @@
       },
       {
          "Name": "[dbo].[FreeChoiceProducts]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Messages]",
          "ObjectType": 0
       },
       {

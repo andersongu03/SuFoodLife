@@ -1,0 +1,70 @@
+﻿@section Styles{
+    <style>
+        main {
+            height: 100vh !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+}
+
+<div id="chat">
+    <div v-for="message in messages" :key="message.id">
+        <strong>{{ message.user }}:</strong> {{ message.text }}
+    </div>
+    <input v-model="inputMessage" type="text" placeholder="輸入訊息" />
+    <button @@click="sendMessage">發送</button>
+</div>
+
+<script src="~/microsoft/signalr/dist/browser/signalr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#chat",
+        data() {
+            return {
+                messages: [],
+                inputMessage: ""
+            };
+        },
+        mounted() {
+            // 建立 SignalR 連線
+            this.connection = new signalR.HubConnectionBuilder()
+                .withUrl("/chatHub")
+                .build();
+
+            // 設定接收訊息的處理程式(對話後立即傳送訊息)
+            //this.connection.on("ReceiveMessage", (user, message) => {
+            //    this.messages.push({ user, text: message });
+            //});
+
+            // 設定接收訊息的處理程式(使用資料庫的訊息，歷史訊息)
+            this.connection.on("ReceiveMessage", chatHistory => {
+                // 將接收到的對話紀錄加入到 messages 陣列中
+                this.messages = chatHistory.map(item => ({
+                    user: item.userName,
+                    text: item.text,
+                    when: item.when
+                }));
+            });
+
+            // 開始連線
+            this.connection.start()
+            .then(()=> {
+                    this.connection.invoke("GetChatHistory");
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        },
+        methods: {
+            sendMessage() {
+                // 傳送訊息至 SignalR Hub
+                this.connection.invoke("SaveAndSendMessage", this.inputMessage);
+                this.inputMessage = "";
+            }
+        }
+    });
+</script>
+

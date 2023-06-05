@@ -1,4 +1,30 @@
-﻿<main id="main">
+﻿@section Styles{
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 15%;
+            text-align: center;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+}
+<main id="main">
     <!-- 商品明細起點 -->
     <div class="modal fade bg-white"
          id="templatemo_search"
@@ -62,9 +88,8 @@
                             <div class="row">
                                 <div class="col-auto">
                                     <ul class="list-inline pb-3">
-                                        <li class="list-inline-item text-right">
-                                                數量
-                                                <input type="hidden" name="product-quanity" id="product-quanity" value="1" />
+                                        <li class="list-inline-item text-right">數量
+                                            <input type="hidden" name="product-quanity" id="product-quanity" value="1" />
                                         </li>
                                         <li class="list-inline-item">
                                             <button class="btn btn-danger" id="btn-minus" @@click="minusItem()">-</button>
@@ -94,7 +119,7 @@
                                         <button type="submit"
                                                 class="btn btn-danger btn-lg"
                                                 name="submit"
-                                                value="addtocard">
+                                            value="addtocard" @@click="addCart(product.productId)">
                                             Add To Cart
                                         </button>
                                     </div>
@@ -105,6 +130,12 @@
                     </div>
                 </div>
                 <!-- 商品頁面結尾 -->
+                <div class="modal" :style="{ display: modalVisible ? 'block' : 'none' }">
+                    <div class="modal-content">
+                        <p class="text-danger fw-bold">{{showAlert }}</p>
+                        @*<p class="text-danger fw-bold">@ViewBag.Status</p>*@
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -123,5 +154,78 @@
     <script src="~/商品明細用到的/js/slick.min.js"></script>
 
     <script src="https://cdn.rawgit.com/matfish2/vue-pagination-2/controlled-component/dist/vue-pagination-2.min.js"></script>
-    <script src="~/js/singleproducts.js"></script>
+    @*<script src="~/js/singleproducts.js"></script>*@
+    <script>
+        var product = new Vue({
+            el: "#main",
+            data: {
+                product: [],
+                buyQuantity: 1,
+                modalVisible: false,
+                showAlert: "",
+                cart: {
+                    "cartId": 0,
+                    "accountId": null,
+                    "cartQuantity": null,
+                    "productId": "",
+                },
+
+            },
+            methods: {
+                GetSingleProduct: function () {
+                    productId = window.location.search.replace('?', '').split('&')[0].split('=')[1];
+                    axios.get(`/Retail/GetSingleProduct?productId=${productId}`).then(response => {
+                        this.product = response.data;
+                    }).catch(error => {
+                        console.log("抓不到產品資訊");
+                    });
+                },
+                minusItem: function () {
+                    if (this.buyQuantity > 1) {
+                        this.buyQuantity--;
+                    }
+                },
+                addItem: function () {
+                    if (this.buyQuantity < this.product.stockQuantity) {
+                        this.buyQuantity++;
+                    }
+                },
+                addCart(productId) {
+                    let _this = this;
+                    this.cart = {
+                        ProductId: productId,
+                        CartQuantity: this.buyQuantity+1,
+                    };
+                    axios.post("/Retail/AddSingle2Cart", this.cart, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        cartttt.GetCart();
+                        if (response.data.getAccountId != "null") {
+                            this.getAccountId = response.data.getAccountId;
+                            this.showAlert = "成功加入購物車";
+
+                            console.log(this.cart);
+                        } else {
+                            this.showAlert = "你要先登入哦";
+                        }
+                        this.modalVisible = true;
+                        setTimeout(() => {
+                            this.modalVisible = false;
+                        }, 1500);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                }
+
+            },
+
+
+            mounted() {
+                this.GetSingleProduct(5);
+            },
+        });
+    </script>
+    
 }

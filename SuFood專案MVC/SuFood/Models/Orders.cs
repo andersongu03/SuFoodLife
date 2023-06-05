@@ -9,7 +9,6 @@ namespace SuFood.Models
     {
         public Orders()
         {
-            CustomerPayment = new HashSet<CustomerPayment>();
             OrdersDetails = new HashSet<OrdersDetails>();
             OrdersReview = new HashSet<OrdersReview>();
             RecyleSubscribeOrders = new HashSet<RecyleSubscribeOrders>();
@@ -36,7 +35,6 @@ namespace SuFood.Models
 
         public virtual Account Account { get; set; }
         public virtual Coupon Coupon { get; set; }
-        public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
         public virtual ICollection<OrdersDetails> OrdersDetails { get; set; }
         public virtual ICollection<OrdersReview> OrdersReview { get; set; }
         public virtual ICollection<RecyleSubscribeOrders> RecyleSubscribeOrders { get; set; }

@@ -9,17 +9,19 @@ namespace SuFood.Models
     {
         public Coupon()
         {
+            CouponUsedList = new HashSet<CouponUsedList>();
             Orders = new HashSet<Orders>();
         }
 
         public int CouponId { get; set; }
         public string CouponDescription { get; set; }
         public string CouponName { get; set; }
-        public decimal? CouponMinusCost { get; set; }
+        public int? CouponMinusCost { get; set; }
         public int? MinimumPurchasingAmount { get; set; }
         public DateTime? CouponStartDate { get; set; }
         public DateTime? CouponEndDate { get; set; }
 
+        public virtual ICollection<CouponUsedList> CouponUsedList { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
     }
 }

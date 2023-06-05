@@ -10,8 +10,8 @@ namespace SuFood.ViewModel
 		public decimal? CouponMinusCost { get; set; }
 		public int? MinimumPurchasingAmount { get; set; }
 		public DateTime? CouponStartDate { get; set; }
-		public string Couponstartdate2String { get; set; }
+		public string? Couponstartdate2String { get; set; }
 		public DateTime? CouponEndDate { get; set; }
-		public string Couponenddate2String { get; set; }
+		public string? Couponenddate2String { get; set; }
 	}
 }

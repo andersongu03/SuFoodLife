@@ -8,6 +8,7 @@ using SuFood.Models.DTO;
 using SuFood.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Web;
@@ -24,7 +25,7 @@ namespace SuFood.Controllers
 			_context = context;
 			_configuration = configuration;
 		}
-
+		
 		//傳送訂單付款
 		//測試用，傳入值要修改
 		[HttpPost]
@@ -47,7 +48,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://e401-125-227-38-129.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://026b-2407-4d00-1c01-7e46-c1f4-47f9-5c62-3d47.ngrok-free.app/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 
@@ -69,7 +70,7 @@ namespace SuFood.Controllers
 
 		//付款後接受回傳資料
 		[HttpPost]
-		public IActionResult GetPaymentReturn([FromForm]OnlinePaymentReturn returnData)
+		public async Task<IActionResult> GetPaymentReturn([FromForm]OnlinePaymentReturn returnData)
 		{
 			string hashKey = _configuration["OnlinePayment:HashKey"];
 			string hashIV = _configuration["OnlinePayment:HashIV"];
@@ -113,20 +114,36 @@ namespace SuFood.Controllers
 			if(r_Status == "SUCCESS")
 			{
 				var order = _context.Orders.Where(o => o.OrdersId == orderId).FirstOrDefault();
-				var customerPayment = _context.Orders.Include(CustomerPayment => CustomerPayment.OrdersId).Where(c => c.OrdersId == order.OrdersId);
-				var credit = _context.CustomerPayment.Where(cp => cp.OrdersId == order.OrdersId).FirstOrDefault();
+				
 
-				if(order != null)
+				if (order != null)
 				{
-					order.OrderStatus = "處理中";
+					order.OrderStatus = "已付款";
 					//order.SubTotal = int.Parse(orderTotal);
 
 					//if (paymentType == "CREDIT")
 					//{
-					//	credit.CreditCardHolder = result.Result.PaymentMethod;
-					//	credit.CreditCardNumber = result.Result.Card4No;
+
 					//}
-					
+					//把使用過的優惠券刪掉
+					var removeUserCoupon = _context.CouponUsedList.Where(x => x.CouponId == order.CouponId && x.AccountId == order.AccountId).SingleOrDefault();
+					if(removeUserCoupon != null)
+					{
+						_context.CouponUsedList.Remove(removeUserCoupon);
+						await _context.SaveChangesAsync();
+					}
+					//付款成功把產品數量減掉
+					var saleProductsList = _context.OrdersDetails.Where(o => o.OrderId == orderId).Select(x => new { ProductName = x.ProductName, Quantity = x.Quantity }).ToList();
+					foreach (var saleSingleProduct in saleProductsList)
+					{
+						var productToUpdate = _context.Products.FirstOrDefault(x => x.ProductName == saleSingleProduct.ProductName);
+						if (productToUpdate != null)
+						{
+							productToUpdate.StockQuantity -= saleSingleProduct.Quantity.Value;
+							_context.SaveChanges();
+						}
+					}
+
 				}
 				_context.SaveChanges();
 			}
@@ -140,25 +157,10 @@ namespace SuFood.Controllers
 				Version = r_Version,
 			};
 
-			return RedirectToAction("CheckPayment", "OnlinePayment", onlinePaymentReturn);
+			return RedirectToAction("CheckPayment", "Check", onlinePaymentReturn);
 			/*return RedirectToAction("Index")*/
 		}
 
-		public IActionResult CheckPayment(OnlinePaymentReturn onlinePaymentReturn)
-		{
-			if (onlinePaymentReturn.Status == "SUCCESS")
-			{
-				//string hashKey = _configuration["OnlinePayment:HashKey"];
-				//string hashIV = _configuration["OnlinePayment:HashIV"];
-				//string decryptTradeInfo = _aes.DecryptAESHex(onlinePaymentReturn.TradeInfo, hashKey, hashIV);
-				//PaymentResult result = JsonConvert.DeserializeObject<PaymentResult>(decryptTradeInfo);
-
-				return View("CheckOut");
-			}
-			else
-			{
-				return View("Index");
-			}
-		}
+		
 	}
 }

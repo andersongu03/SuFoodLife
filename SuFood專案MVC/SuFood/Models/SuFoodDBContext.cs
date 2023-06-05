@@ -22,10 +22,10 @@ namespace SuFood.Models
         public virtual DbSet<Announcement> Announcement { get; set; }
         public virtual DbSet<ComeStore2TakeSingleOrders> ComeStore2TakeSingleOrders { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
+        public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<CustomerPayment> CustomerPayment { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<FreeChoiceProducts> FreeChoiceProducts { get; set; }
-        public virtual DbSet<Messages> Messages { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
@@ -64,32 +64,26 @@ namespace SuFood.Models
                     .HasColumnName("Default_CreditCard_Number");
 
                 entity.Property(e => e.DefaultShipAddress)
-                    .IsRequired()
                     .HasMaxLength(50)
                     .HasColumnName("Default_ShipAddress");
 
                 entity.Property(e => e.FirstName)
-                    .IsRequired()
                     .HasMaxLength(15)
                     .HasColumnName("First_Name");
 
                 entity.Property(e => e.Gender).HasMaxLength(5);
 
                 entity.Property(e => e.LastName)
-                    .IsRequired()
                     .HasMaxLength(15)
                     .HasColumnName("Last_Name");
 
                 entity.Property(e => e.LasttImeLogin)
-                    .IsRowVersion()
-                    .IsConcurrencyToken()
+                    .HasColumnType("datetime")
                     .HasColumnName("LasttIme_Login");
 
                 entity.Property(e => e.Password).IsRequired();
 
-                entity.Property(e => e.Phone)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                entity.Property(e => e.Phone).HasMaxLength(10);
             });
 
             modelBuilder.Entity<Announcement>(entity =>
@@ -170,6 +164,29 @@ namespace SuFood.Models
                 entity.Property(e => e.MinimumPurchasingAmount).HasColumnName("Minimum_PurchasingAmount");
             });
 
+            modelBuilder.Entity<CouponUsedList>(entity =>
+            {
+                entity.HasKey(e => e.CouponUsedId);
+
+                entity.ToTable("CouponUsed_List");
+
+                entity.Property(e => e.CouponUsedId).HasColumnName("CouponUsed_Id");
+
+                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
+
+                entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
+
+                entity.HasOne(d => d.Account)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.AccountId)
+                    .HasConstraintName("FK_CouponUsed_List_Account");
+
+                entity.HasOne(d => d.Coupon)
+                    .WithMany(p => p.CouponUsedList)
+                    .HasForeignKey(d => d.CouponId)
+                    .HasConstraintName("FK_CouponUsed_List_Coupon");
+            });
+
             modelBuilder.Entity<CustomerPayment>(entity =>
             {
                 entity.ToTable("Customer_Payment");
@@ -244,29 +261,23 @@ namespace SuFood.Models
                     .HasConstraintName("FK_FreeChoiceProducts_FreeChoicePlans");
             });
 
-            modelBuilder.Entity<Messages>(entity =>
-            {
-                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
-
-                entity.Property(e => e.Text).IsRequired();
-
-                entity.Property(e => e.UserName).IsRequired();
-
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.Messages)
-                    .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK_Messages_Account");
-            });
-
             modelBuilder.Entity<Orders>(entity =>
             {
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.AccountId).HasColumnName("Account_Id");
 
+                entity.Property(e => e.BuyMethod)
+                    .HasMaxLength(50)
+                    .HasColumnName("Buy_Method");
+
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
                 entity.Property(e => e.CustomerPaymentId).HasColumnName("CustomerPayment_Id");
+
+                entity.Property(e => e.Email).HasMaxLength(50);
+
+                entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.OrderStatus)
                     .IsRequired()
@@ -274,6 +285,10 @@ namespace SuFood.Models
                     .HasColumnName("Order_Status");
 
                 entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
+
+                entity.Property(e => e.Phone).HasMaxLength(50);
+
+                entity.Property(e => e.ReMark).HasMaxLength(50);
 
                 entity.Property(e => e.SetOrdersDatetime)
                     .HasColumnType("datetime")

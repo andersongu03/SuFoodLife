@@ -38,8 +38,6 @@ namespace SuFood.Areas.BackStage.Controllers
                 Gender = x.Gender,
                 Phone = x.Phone,
                 DefaultShipAddress = x.DefaultShipAddress,
-                DefaultCreditCardNumber = x.DefaultCreditCardNumber,
-                DefaultCreditCardHolder = x.DefaultCreditCardHolder,
                 CreateDatetime = x.CreateDatetime,
                 LasttImeLogin = x.LasttImeLogin,
                 Role = x.Role,

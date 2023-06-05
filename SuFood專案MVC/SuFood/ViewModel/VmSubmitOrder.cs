@@ -24,7 +24,6 @@ namespace SuFood.ViewModel
 
 		public virtual Account Account { get; set; }
 		public virtual Coupon Coupon { get; set; }
-		public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
 		public virtual ICollection<OrdersDetails> OrdersDetails { get; set; }
 	}
 }

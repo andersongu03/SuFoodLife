@@ -48,8 +48,12 @@
                 this.toastHintStyle.fadeInUp = false
             },2000)
         },
+        watchComment(id) {
+            this.comments = id;
+            this.CreateOrEditOrDelete = 'Response';
+            this.popupShowing.showPopup = true;
+        },
         createComment(id) {
-            alert(id);
             this.ordersId = id;
             this.CreateOrEditOrDelete = 'Create';
             this.popupShowing.showPopup = true;
@@ -78,7 +82,6 @@
         CreateComment(od) {
             let _this = this;
             var request = null;
-            alert(this.ordersId)
             createCommentList = {
                 reviewId: _this.createCommentList.reviewId,
                 ratingStar: _this.createCommentList.ratingStar,
@@ -91,12 +94,6 @@
                 this.closepopupShowHint();
                 this.GetDetail();
             })
-
-            // Professional solution
-            // 剛才的寫法是打到 web server
-            // 你應該要打 API Server
-            // async/await 處理非同步行為
-            // 使用 await 的 function 必須使用 async
         },
     },
     //篩選

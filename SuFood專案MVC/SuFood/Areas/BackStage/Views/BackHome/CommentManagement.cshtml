@@ -20,30 +20,30 @@
 		<div class="ordersreview">
 			<h4>{{topic}}</h4>
 		</div>
-		<!--搜尋框-->
-		@*<div class="row mb-3">
-			<div class="col-3">
+		<div class="row mb-3">
+			<div class="col-4">
 				<div class="content">
 					<div class="searchBar">
 						<div class="inputWrapper">
 							<i class='bx bx-search-alt-2 searchIcon'></i>
-							<input type="text" class="inputSearch" placeholder="Search..." v-model="keyword">
+							<input type="text" class="inputSearch" placeholder="輸入訂單編號" v-model="keyword">
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-3">
+			<div class="col-4"></div>
+			<div class="col-4">
 				<div class="content">
-					<div class="StatusBar">
-						<select v-model="selectedStar">
-							<option value="all">1~5</option>
-							<option value="active">5星好評</option>
-							<option value="frozen">1~4星</option>
+					<div class="StatusBar" >
+						<select v-model="selectedStars">
+							<option value="all">全部</option>
+							<option value="good">好評</option>
+							<option value="bad">差評</option>
 						</select>
 					</div>
 				</div>
 			</div>
-		</div>*@
+		</div>
 	</div>
 
 
@@ -59,13 +59,14 @@
 					<th scope="col">評論</th>
 					<th scope="col">訂單編號</th>
 					<th scope="col">客戶電話</th>
+					<th scope="col">回覆</th>
 					<th scope="col">刪除</th>
 				</tr>
 			</thead>
 			<tbody>
 				<!--評論資料 -->
 				<template v-if="or">
-					<tr v-for="c in or" :key="c.reviewId">
+					<tr v-for="c in filterproducts" :key="c.reviewId">
 						<td>
 							<span>{{ c.reviewId}}</span>
 						</td>
@@ -85,6 +86,9 @@
 							<span>{{c.phone}}</span>
 						</td>
 						<td>
+							<i class='bx bx-message-rounded reply-icon' @@click="createComment(c.ordersId)"></i>
+						</td>
+						<td>
 							<button class="btn btn-warning" @@click="deleteComment(c)">刪除</button>
 						</td>
 					</tr>
@@ -97,9 +101,9 @@
 		@*---------------edit---------------*@
 		<template v-if="CreateOrEditOrDelete === 'Edit'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
-				<div class="cardPopup-body" style="width: 600px; height:500px">
+				<div class="cardPopup-body">
 					<div class="cardPopup">
-						<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+						<form id="form">
 							<div class="topic">
 								<h3>修改評論</h3>
 							</div>
@@ -127,9 +131,9 @@
 		@*----------------delete------------*@
 		<template v-if="CreateOrEditOrDelete === 'Delete'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
-				<div class="cardPopup-body" style="width: 600px; height:500px">
+				<div class="cardPopup-body">
 					<div class="cardPopup">
-						<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+						<form id="form">
 							<div class="topic">
 								<h3>你真的要刪除此評論嗎?</h3>
 							</div>
@@ -154,28 +158,15 @@
 		@*-----------------create測試--------------*@
 		<template v-if="CreateOrEditOrDelete === 'Create'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
-				<div class="cardPopup-body" style="width: 600px; height:500px">
+				<div class="cardPopup-body">
 					<div class="cardPopup">
-						<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+						<form id="form">
 							<div class="topic">
 								<h3>留下你的意見吧</h3>
 								<label>你的回覆是我們的最大動力</label>
 							</div>
-
 							<div class="form-group">
-								<label class="form-label">評論ID:<span>{{createCommentList.reviewId}}</span></label>
-							</div>
-							<div class="form-group">
-								<label class="form-label">星星評價</label>
-								<input class="form-control" placeholder="5" v-model="createCommentList.ratingStar" />
-							</div>
-							<div class="form-group">
-								<label class="form-label">評論</label>
-								<input class="form-control" type="text" v-model="createCommentList.comment" />
-							</div>
-							<div class="form-group">
-								<label class="form-label">客戶ID</label>
-								<input class="form-control" type="text" v-model="createCommentList.ordersId" />
+								<textarea v-model="createCommentList.comment" class="textarea"></textarea>
 							</div>
 							<div>
 								<button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>

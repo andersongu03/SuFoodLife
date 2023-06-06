@@ -26,6 +26,7 @@
                                 <th scope="col">訂單總金額</th>
                                 <th scope="col">評論</th>
                                 <th scope="col">新增評論</th>
+                                <th scope="col">查看回覆</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -51,15 +52,18 @@
                                 <td>
                                     <button class="btn" @@click="createComment(o.ordersId)">新增</button>
                                 </td>
+                                <td>
+                                    <button class="btn btn-primary" @@click="watchComment(o.ordersId)">查看</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                     @*---------------------Create的視窗--------------*@
                     <template v-if="CreateOrEditOrDelete === 'Create'">
                         <div class="cardContent" id="" :class="popupShowing">
-                            <div class="cardPopup-body" style="width: 600px; height:500px">
+                            <div class="cardPopup-body">
                                 <div class="cardPopup">
-                                    <form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+                                    <form  id="form">
                                         <div class="topic">
                                             <h1>留下你的意見吧</h1>
                                             <label>你的回覆是我們的最大動力</label>
@@ -80,6 +84,25 @@
                                             <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
                                             <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(od)"> 新增 </button>
                                         </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="CreateOrEditOrDelete === 'Response'">
+                        <div class="cardContent" id="" :class="popupShowing">
+                            <div class="cardPopup-body">
+                                <div class="cardPopup">
+                                    <form  id="form">
+                                       <div class="mycomment">
+                                           我們的評論
+                                       </div>
+                                       <div>
+                                           <textarea class="textarea"></textarea>
+                                       </div>
+                                       <div>
+                                            <button type="button" class="btn-close" @@click="CloseComment"> 關閉 </button>
+                                       </div>
                                     </form>
                                 </div>
                             </div>

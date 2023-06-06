@@ -5,10 +5,9 @@
         keyword:"",
         topic: '評論管理',
         toast: "",
-        selectedStar:"all",
         deleteId: undefined,
         reviewId: undefined,
-        OrdersId: undefined,
+        ordersId: 0,
         popupShowing: {
             showPopup: false
         },
@@ -36,6 +35,7 @@
             showModal: false,
         },
         isActive: false,
+        selectedStars: 'all',
     },
     request: {
         reviewId: "",
@@ -50,9 +50,10 @@
             this.toastHintStyle.fadeInUp = false
             }, 2000)
         },
-        createComment() {
+        createComment(id) {
+            this.OrdersId = id;
             this.CreateOrEditOrDelete = 'Create';
-            this.popupShowing.showPopup= true;
+            this.popupShowing.showPopup = true;
         },
         CloseComment() {
             this.popupShowing.showPopup = false;
@@ -90,32 +91,23 @@
                 _this.GetComments();
             })
         },
-        CreateComment(createCommentList) {
+        CreateComment(or) {
             let _this = this;
-
             var request = null;
-
-            request = {
-                    "reviewId": _this.createCommentList.reviewId,
-                    "ratingStar": _this.createCommentList.ratingStar,
-                    "comment": _this.createCommentList.comment,
-                    "ordersId": _this.createCommentList.ordersId
-             }
-
-
-            if (this.createCommentList.ordersId == 0 || this.createCommentList.ratingStar > 6 || this.createCommentList.ratingStar < 0) {
-                alert('客戶ID為必填欄位,星數不得大於5或是小於0')
+            createCommentList = {
+                reviewId: _this.createCommentList.reviewId,
+                ratingStar: _this.createCommentList.ratingStar,
+                comment: _this.createCommentList.comment,
+                ordersId: _this.ordersId
             }
-            else {
-                axios.post('/BackStage/CommentManagement/CreateComment', request 
-                ).then(response => {
-                    _this.toast = response.data
-                    /*console.log('123')*/
-                    this.closepopupShowHint()
-                    _this.GetComments()
-                })
-            }
+
+            axios.post('https://localhost:7086/MyOrders/CreateComment/', createCommentList).then(response => {
+                this.toast = response.data;
+                this.closepopupShowHint();
+                this.GetDetail();
+            })
         },
+        //沒用到
         EditComment: function (editCommentList) {
             var _this = this;
             var Cdata = {
@@ -135,27 +127,34 @@
             })
         }
     },
-    //computed: {
-    //    filterComments() {
-    //        let _this = this;
-    //        arr = _this.or.filter(o => { return o.reviewId.indexOf(_this.keyword) != -1; });
-    //        switch (this.selectedStar) {
-    //            case "all":
-    //                break;
-    //            case "active":
-    //                arr = this.or.filter(o => {
-    //                    return o.ratingStar == 5
-    //                })
-    //                break;
-    //            case "frozen":
-    //                arr = this.or.filter(o => {
-    //                    return o.ratingStar < 5
-    //                })
-    //                break;
-    //        }
-    //        return arr;
-    //    }
-    //},
+    computed: {
+        filterproducts() {
+            let arr = this.or
+            if (this.keyword != '') {
+                arr = arr.filter(o => { return o.ordersId == this.keyword })
+            }
+
+            //下拉式選單篩選結果
+
+            
+            switch (this.selectedStars) {
+                case "all":
+                    break;
+                case "good":
+                    arr = arr.filter(o => {
+                        return o.ratingStar == 5
+                    })
+                    break;
+                case "bad":
+                    arr = arr.filter(o => {
+                        return o.ratingStar >= 1 && o.ratingStar < 5
+                    })
+                    break;
+            }
+
+            return arr
+        }
+    },
     mounted() {
         this.GetComments();
     }

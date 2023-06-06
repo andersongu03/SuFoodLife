@@ -23,20 +23,17 @@ namespace SuFood.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmAccount>> GetAccount()
         {
-
-            var acc = _context.Account.Where(user => user.AccountId == 1).Select(acc => new VmAccount
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+            var acc = _context.Account.Where(user => user.AccountId == Convert.ToInt32(getAccountId)).Select(acc => new VmAccount
             {
                 AccountId = acc.AccountId,
                 Account1 = acc.Account1,
-                Password = acc.Password,
                 FirstName = acc.FirstName,
                 LastName = acc.LastName,
                 BirthDate = acc.BirthDate,
                 Gender = acc.Gender,
                 Phone = acc.Phone,
                 DefaultShipAddress = acc.DefaultShipAddress,
-                DefaultCreditCardNumber = acc.DefaultCreditCardNumber,
-                DefaultCreditCardHolder = acc.DefaultCreditCardHolder
             });
             return acc;
         }
@@ -61,8 +58,6 @@ namespace SuFood.Controllers
             alertacc.Gender = account.Gender;
             alertacc.Phone = account.Phone;
             alertacc.DefaultShipAddress = account.DefaultShipAddress;
-            alertacc.DefaultCreditCardNumber = account.DefaultCreditCardNumber;
-            alertacc.DefaultCreditCardHolder = account.DefaultCreditCardHolder;
 
             try
             {

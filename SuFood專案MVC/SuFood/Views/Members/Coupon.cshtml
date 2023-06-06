@@ -16,33 +16,15 @@
 				<div class="tableFunction col-12">
 					<div class="col-md-4">
 						<div class="form">
-							<input type="text" class="form-control form-input" id="name" placeholder="輸入優惠券名稱...">
+							<input type="text" class="form-control form-input" id="name" placeholder="輸入優惠券名稱..." v-model="couponName">
 							<span class="left-pan"><button class="addCoupon" @@click="insertExistCoupon">新增</button></span>
 						</div>
 					</div>
 				</div>
 				<div class="table_container">
-					<div class="couponValid_text" style="text-align: center; font-size: 1.5rem;" v-if="isValid">
-						<span>可使用</span>
+					<div class="couponValid_text" style="text-align: center; font-size: 1.5rem;">
 						<div class="couponValid">
-							<div class="coupon-card" v-for="c in validCoupons" :key="c.couponId">
-								<h3 style="padding-top: 20px;" class="fw-bolder">
-									{{c.couponDescription}}
-								</h3>
-								<div class="coupon-row">
-									<span id="cpnCode" class="fw-bolder">{{c.couponName}}</span>
-									<span id="cpnBtn" class="fw-bolder">複製優惠碼</span>
-								</div>
-								<p class="fw-bolder">有效期限: {{c.couponenddate2String}}</p>
-								<div class="circle1"></div>
-								<div class="circle2"></div>
-							</div>
-						</div>
-					</div>
-					<div class="couponInvalid_text" style="text-align: center; font-size: 1.5rem;">
-						<span>已過期</span>
-						<div class="couponInvalid">
-							<div class="coupon-card" v-for="c in invalidCoupons" :key="c.couponId">
+							<div class="coupon-card" v-for="c in couponList" :key="c.couponId">
 								<h3 style="padding-top: 20px;" class="fw-bolder">
 									{{c.couponDescription}}
 								</h3>
@@ -65,5 +47,45 @@
 @section Scripts{
 	<script src="~/axios/axios.min.js"></script>
 	<script src="~/js/vue.js"></script>
-	<script src="~/js/coupon.js"></script>
+	<script>
+		const vm = new Vue({
+			el: '.couponDetails',
+			data: {
+				pageName: '我的優惠券',
+				couponList: [],
+				couponName:'',
+			},
+			methods: {
+				GetCouponFromDb() {
+					let _this = this;
+					couponFromDb = axios('/Coupon/GetCouponsForFront').then(response => {
+						_this.couponList = response.data;
+					});
+				},
+				insertExistCoupon() {
+					let tempData = {
+						couponName: this.couponName
+					}
+						axios.post("/Coupon/EnterCouponForFront", tempData, {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(response =>{ 
+						if (response.data){
+							this.GetCouponFromDb();
+						}else {
+							alert('你已經有此優惠券');
+							this.GetCouponFromDb();
+						}
+						console.log(response.data);
+						
+
+					})
+				},
+			},
+			mounted() {
+				this.GetCouponFromDb();
+			}
+		});
+	</script>
 }

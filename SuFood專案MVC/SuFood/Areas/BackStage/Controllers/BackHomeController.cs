@@ -8,7 +8,6 @@ using System.Net;
 
 namespace SuFood.Areas.BackStage.Controllers
 {
-    [AllowAnonymous]
     [Area("BackStage")] //所有寫在Area裡面的Controller記得都要加這一行
     public class BackHomeController : Controller
     {
@@ -53,22 +52,13 @@ namespace SuFood.Areas.BackStage.Controllers
         }
 
         public IActionResult CommentManagement()
-
         {
             return View();
         }
 
-        public object GetOrdersDetails2()
+        public IActionResult BackStageChat()
         {
-            return _context.Orders.Select(o => new
-            {
-                OrdersId = o.OrdersId,
-                SubTotal = o.SubTotal,
-                SubCost = o.SubCost,
-                ShipAddress = o.ShipAddress,
-                CouponId = o.CouponId,
-                OrdersDetails = o.OrdersDetails
-            });
+            return View();
         }
 
         [HttpPost]
@@ -91,10 +81,19 @@ namespace SuFood.Areas.BackStage.Controllers
             return "新增成功";
         }
 
-        public IActionResult HelpUChoose()
+        [HttpGet]
+        public object GetOrdersDetails()
         {
-            return View();
+            return _context.OrdersDetails.Where(od=> od.OrderId == 1).Select(od => new
+            {
+                ProductName = od.ProductName,
+                UnitPrice = od.UnitPrice,
+                Quantity = od.Quantity,
+                CouponName = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponName,
+                CouponDicount = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponMinusCost
+            });
         }
+
 
         // <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
         //public IActionResult Coupoun()

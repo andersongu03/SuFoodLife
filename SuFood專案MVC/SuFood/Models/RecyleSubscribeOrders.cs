@@ -15,5 +15,7 @@ namespace SuFood.Models
         public DateTime ShipStartDate { get; set; }
         public DateTime ShipEndDate { get; set; }
         public int OrdersId { get; set; }
+
+        public virtual Orders Orders { get; set; }
     }
 }

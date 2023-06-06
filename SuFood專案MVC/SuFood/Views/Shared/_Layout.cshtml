@@ -80,6 +80,9 @@
                         <li>
                             <a asp-area="" asp-controller="#" asp-action="#">幫你選</a>
                         </li>
+                        <li>
+                            <a asp-area="" asp-controller="Chat" asp-action="Chat2">聊天</a>
+                        </li>
                         @*首頁的頁簽*@
                         <li><a href="#testimonials">會員評價</a></li>
                         <li><a href="#gallery">熱門商品</a></li>
@@ -117,7 +120,10 @@
                         }
                     </div>
                     <div class="cartsBox iconBox" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
-                        <i class="bx bx-cart icon"></i>                        
+                        <i class="bx bx-cart icon"></i>
+                        <div :class="[{'cartsBoxNum': true}, {'active': cartNum > 0}]" style="font-size: 10px">
+                            {{ cartNum }}
+                        </div>
                     </div>
                     <div>
                         <div class="offcanvas offcanvas-end"
@@ -281,13 +287,12 @@
 
     <script>
         const cartttt = new Vue({
-            el: '#vueStart',
+            el: '#header',
             data: {
                 cart: [],
                 modalVisible: false,
                 showAlert: "",
             },
-
             methods: {
                 goOrders: function () {
                     axios.get("/Retail/IsLogin").then(response => {
@@ -375,9 +380,6 @@
                         });
                     _this.GetCart();
                 },
-
-
-
             },
             computed: {
                 getTotal: function () {
@@ -402,6 +404,9 @@
                         right: '-3px',
                         top: '-7px',
                     };
+                },
+                cartNum(){
+                    return this.cart.map(c => c.cartQuantity).reduce((a , c)=> a+c , 0)
                 },
             },
             mounted() {

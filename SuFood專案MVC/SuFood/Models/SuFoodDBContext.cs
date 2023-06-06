@@ -23,9 +23,9 @@ namespace SuFood.Models
         public virtual DbSet<ComeStore2TakeSingleOrders> ComeStore2TakeSingleOrders { get; set; }
         public virtual DbSet<Coupon> Coupon { get; set; }
         public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
-        public virtual DbSet<CustomerPayment> CustomerPayment { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<FreeChoiceProducts> FreeChoiceProducts { get; set; }
+        public virtual DbSet<Messages> Messages { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
@@ -54,14 +54,6 @@ namespace SuFood.Models
                 entity.Property(e => e.CreateDatetime)
                     .HasColumnType("datetime")
                     .HasColumnName("Create_Datetime");
-
-                entity.Property(e => e.DefaultCreditCardHolder)
-                    .HasMaxLength(10)
-                    .HasColumnName("Default_CreditCard_Holder");
-
-                entity.Property(e => e.DefaultCreditCardNumber)
-                    .HasMaxLength(16)
-                    .HasColumnName("Default_CreditCard_Number");
 
                 entity.Property(e => e.DefaultShipAddress)
                     .HasMaxLength(50)
@@ -149,9 +141,7 @@ namespace SuFood.Models
                     .HasColumnType("date")
                     .HasColumnName("Coupon_EndDate");
 
-                entity.Property(e => e.CouponMinusCost)
-                    .HasColumnType("decimal(5, 0)")
-                    .HasColumnName("Coupon_MinusCost");
+                entity.Property(e => e.CouponMinusCost).HasColumnName("Coupon_MinusCost");
 
                 entity.Property(e => e.CouponName)
                     .HasMaxLength(50)
@@ -176,8 +166,6 @@ namespace SuFood.Models
 
                 entity.Property(e => e.CouponId).HasColumnName("Coupon_Id");
 
-                entity.Property(e => e.CouponUsedOrNot).HasColumnType("date");
-
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.CouponUsedList)
                     .HasForeignKey(d => d.AccountId)
@@ -187,36 +175,6 @@ namespace SuFood.Models
                     .WithMany(p => p.CouponUsedList)
                     .HasForeignKey(d => d.CouponId)
                     .HasConstraintName("FK_CouponUsed_List_Coupon");
-            });
-
-            modelBuilder.Entity<CustomerPayment>(entity =>
-            {
-                entity.ToTable("Customer_Payment");
-
-                entity.Property(e => e.CustomerPaymentId).HasColumnName("Customer_PaymentId");
-
-                entity.Property(e => e.AccountId).HasColumnName("Account_Id");
-
-                entity.Property(e => e.CreditCardExpiryDate)
-                    .HasMaxLength(10)
-                    .HasColumnName("CreditCard_ExpiryDate")
-                    .IsFixedLength();
-
-                entity.Property(e => e.CreditCardHolder).HasColumnName("CreditCard_Holder");
-
-                entity.Property(e => e.CreditCardNumber).HasColumnName("CreditCard_Number");
-
-                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
-
-                entity.HasOne(d => d.Account)
-                    .WithMany(p => p.CustomerPayment)
-                    .HasForeignKey(d => d.AccountId)
-                    .HasConstraintName("FK_Customer_Payment_Account");
-
-                entity.HasOne(d => d.Orders)
-                    .WithMany(p => p.CustomerPayment)
-                    .HasForeignKey(d => d.OrdersId)
-                    .HasConstraintName("FK_Customer_Payment_Orders");
             });
 
             modelBuilder.Entity<FreeChoicePlans>(entity =>
@@ -261,6 +219,27 @@ namespace SuFood.Models
                     .HasForeignKey(d => d.PlanId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_FreeChoiceProducts_FreeChoicePlans");
+            });
+
+            modelBuilder.Entity<Messages>(entity =>
+            {
+                entity.Property(e => e.ReceiverId).HasColumnName("Receiver_Id");
+
+                entity.Property(e => e.SenderId).HasColumnName("Sender_Id");
+
+                entity.Property(e => e.Text).IsRequired();
+
+                entity.Property(e => e.UserName).IsRequired();
+
+                entity.HasOne(d => d.Receiver)
+                    .WithMany(p => p.MessagesReceiver)
+                    .HasForeignKey(d => d.ReceiverId)
+                    .HasConstraintName("FK_Messages_Account1");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.MessagesSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("FK_Messages_Account");
             });
 
             modelBuilder.Entity<Orders>(entity =>
@@ -340,15 +319,11 @@ namespace SuFood.Models
 
                 entity.ToTable("Orders_Review");
 
-                entity.Property(e => e.ReviewId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("Review_Id");
+                entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
 
                 entity.Property(e => e.Comment).HasMaxLength(100);
 
-                entity.Property(e => e.OrdersId)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("Orders_Id");
+                entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
 
@@ -366,6 +341,8 @@ namespace SuFood.Models
                 entity.Property(e => e.ProductId).HasColumnName("Product_Id");
 
                 entity.Property(e => e.Category).HasMaxLength(50);
+
+                entity.Property(e => e.IsHelpUchioce).HasColumnName("isHelpUChioce");
 
                 entity.Property(e => e.ProductDescription)
                     .IsRequired()
@@ -431,6 +408,12 @@ namespace SuFood.Models
                 entity.Property(e => e.SingleShipCost).HasColumnName("singleShip_Cost");
 
                 entity.Property(e => e.SingleShipDate).HasColumnName("singleShip_date");
+
+                entity.HasOne(d => d.Orders)
+                    .WithMany(p => p.RecyleSubscribeOrders)
+                    .HasForeignKey(d => d.OrdersId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecyleSubscribe_Orders_Orders");
             });
 
             modelBuilder.Entity<RetailsList>(entity =>

@@ -9,102 +9,145 @@
 <section class="check-out__section" id="app">
 	<div class="check-out__container">
 		<div class="check-out-status-container">
-			<div v-for="tab in tabs" class="check-out-status flexItem" :class="{currentStatus: currentTab === tab}"
-				 @@click="currentTab = tab">
+			<div v-for="tab in tabs" class="check-out-status flexItem" :class="{currentStatus: currentTab === tab}">
+				@*@@click="currentTab = tab"*@
 				<p class="flexItem">{{tab}}</p>
 			</div>
 		</div>
 		<div class="check-out-content row">
 			<!-- 確認購物車 -->
-			<template v-if="currentTab == '1.確認購物車'">
-				<div class="col-8 carts__container">
-					<h2>購物車</h2>
-					<div class="scroll">
-						<table>
-							<thead>
-							<th>商品</th>
-							<th></th>
-							<th>小計</th>
-							<th>刪除</th>
-							</thead>
-							@*零售明細*@
-							<tbody>
-								<tr v-for="c in carts" :key="c.id">
-									<td>
-										<div class="productItem">
-											<div>
-												<img :src="c.img" alt="">
-											</div>
-											<div class="product-body">
-												<p>{{c.productName}}</p>
-											</div>
-										</div>
-									</td>
-									<td>
-										<div class="plusAndMinus">
-											<div>
-												<i class='bx bx-minus cartsIcon plus' @@click.passive="decrementQuantity(c)"></i>
-											</div>
-											<input type="number" v-model="c.quantity">
-											<div>
-												<i class='bx bx-plus cartsIcon minus' @@click.passive="incrementQuantity(c)"></i>
-											</div>
-										</div>
-									</td>
-									<td>${{c.price * c.quantity}}</td>
-									<td>
-										<i @@click="DeleteProducts(c.id)" class="bx bxs-trash tableIcon"></i>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<div class="total">總計: </div>
-					<div><button class="buy" @@click="currentTab = '2.填寫訂單資訊'">購買</button></div>
-				</div>
-			</template>
+			@*<template v-if="currentTab == '1.確認購物車'">
+			<div class="col-8 carts__container">
+			<h2>購物車</h2>
+			<div class="scroll">
+			<table>
+			<thead>
+			<th>商品</th>
+			<th></th>
+			<th>小計</th>
+			<th>刪除</th>
+			</thead>
+			<tbody>
+			<tr v-for="c in carts" :key="c.id">
+			<td>
+			<div class="productItem">
+			<div>
+			<img :src="c.img" alt="">
+			</div>
+			<div class="product-body">
+			<p>{{c.productName}}</p>
+			</div>
+			</div>
+			</td>
+			<td>
+			<div class="plusAndMinus">
+			<div>
+			<i class='bx bx-minus cartsIcon plus' @@click.passive="decrementQuantity(c)"></i>
+			</div>
+			<input type="number" v-model="c.quantity">
+			<div>
+			<i class='bx bx-plus cartsIcon minus' @@click.passive="incrementQuantity(c)"></i>
+			</div>
+			</div>
+			</td>
+			<td>${{c.price * c.quantity}}</td>
+			<td>
+			<i @@click="DeleteProducts(c.id)" class="bx bxs-trash tableIcon"></i>
+			</td>
+			</tr>
+			</tbody>
+			</table>
+			</div>
+			<div class="total">總計: </div>
+			<div><button class="buy" @@click="currentTab = '2.填寫訂單資訊'">購買</button></div>
+			</div>
+			</template>*@
 			<!-- 填寫訂單資訊 -->
-			<template v-else-if="currentTab == '2.填寫訂單資訊'">
-				<div class="cardContent" id="" :class="popupShowing">
-					<div class="cardPopup-body" style="width: 375px; height:260px">
-						<div class="cardPopup">
-							<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
-								<div class="closeMark" @@click="closeOrder()">
-									<i class="fa-solid fa-circle-xmark fa-lg"></i>
-								</div>
-								<div class="col-12">
-									<h3 style="font-weight: bold">請選擇您的付款方式</h3>
-								</div>
-								<div class="col-12">
-									<!-- 用表單送給藍新  action="https://ccore.newebpay.com/MPG/mpg_gateway"-->
-									<form name='Newebpay' method='post' action="https://ccore.newebpay.com/MPG/mpg_gateway">
-										<!-- 設定 hidden 可以隱藏不用給使用者看的資訊 -->
-										<!-- 藍新金流商店代號 -->
-										<input type='hidden' id='MerchantID' name='MerchantID' v-model="paymentData.MerchantID">
-										<!-- 交易資料透過 Key 及 IV 進行 AES 加密 -->
-										<input type='hidden' id='TradeInfo' name='TradeInfo' v-model="paymentData.TradeInfo">
-										<!-- 經過上述 AES 加密過的字串，透過商店 Key 及 IV 進行 SHA256 加密 -->
-										<input type='hidden' id='TradeSha' name='TradeSha' v-model="paymentData.TradeSha">
-										<!-- 串接程式版本 -->
-										<input type='hidden' id='Version' name='Version' v-model="paymentData.Version">
-										<!-- 直接執行送出 -->
-										<input type='submit' value='前往付款'>
-										@*<button value='前往付款'>123</button>*@
-										<button value='準備' v-on:click.prevent="pay(1)">123</button>
-									</form>
-									<a v-on:click.prevent="pay('credit')" class="btn btnpaymentinstrument paybycreditcard">
-										<i class="fa-solid fa-credit-card fa-2xl"></i>
-										<span style="font-size: 1.3rem">&nbsp信用卡支付</span>
-									</a>
-								</div>
-								<div class="col-12">
-									<a v-on:click.prevent="pay('bank')" class="btn btnpaymentinstrument">
-										<i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
-										<span style="font-size: 1.3rem">&nbsp銀行轉帳</span>
-									</a>
-								</div>
-							</form>
+			<template v-if="currentTab == '2.填寫訂單資訊'">
+				<template v-if="SubmitOrPay =='Submit'">
+					<div class="cardContent" id="" :class="popupShowing">
+						<div class="cardPopup-body" style="width: 375px; height:260px">
+							<div class="cardPopup">
+								<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+									<div class="col-12" style="display:flex; flex-direction:column;">
+										<div class="col-12" style="display:flex; justify-content: center;">
+											<h3 style="font-weight: bold; padding-bottom:30px;">確定送出訂單嗎?</h3>
+										</div>
+										<div class="col-12" style="display:flex; justify-content:space-around">
+											<div>
+												<button type="button" class="btn btn-success saveBtn" v-on:click.prevent="prepareInfo"> 走一個!!! </button>
+											</div>
+											<div>
+												<button type="button" class="btn btn-danger" @@click="closePopup"> 下次一定 </button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
 						</div>
+					</div>
+				</template>
+				<template v-else>
+					<div class="cardContent" id="" :class="popupShowing">
+						<div class="cardPopup-body" style="width: 375px; height:260px">
+							<div class="cardPopup">
+								<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+									<div class="closeMark" @@click="closePopup">
+										<i class="fa-solid fa-circle-xmark fa-lg"></i>
+									</div>
+									<div class="col-12">
+										<h3 style="font-weight: bold">請選擇您的付款方式</h3>
+									</div>
+									<div class="col-12">
+										<!-- 用表單送給藍新 -->
+										<form name='Newebpay' method='post' action="https://ccore.newebpay.com/MPG/mpg_gateway">
+											<!-- 設定 hidden 可以隱藏不用給使用者看的資訊 -->
+											<!-- 藍新金流商店代號 -->
+											<input type='hidden' id='MerchantID' name='MerchantID' v-model="paymentData.MerchantID">
+											<!-- 交易資料透過 Key 及 IV 進行 AES 加密 -->
+											<input type='hidden' id='TradeInfo' name='TradeInfo' v-model="paymentData.TradeInfo">
+											<!-- 經過上述 AES 加密過的字串，透過商店 Key 及 IV 進行 SHA256 加密 -->
+											<input type='hidden' id='TradeSha' name='TradeSha' v-model="paymentData.TradeSha">
+											<!-- 串接程式版本 -->
+											<input type='hidden' id='Version' name='Version' v-model="paymentData.Version">
+											<!-- 直接執行送出 -->
+											<i class="fa-solid fa-credit-card fa-2xl" style="padding-left:14px"></i>
+											<input type='submit' value='信用卡支付' style="border:none; font-size: 1.3rem; background-color: white;">
+											@*<button value='前往付款'>123</button>*@
+											@*<button value='準備' v-on:click.prevent="pay(2)">123</button>*@
+										</form>
+										<div class="col-12">
+											<a v-on:click.prevent="pay('bank')" class="btn btnpaymentinstrument">
+												<i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
+												<input type='submit' value='銀行轉帳' style="border:none; font-size: 1.3rem; background-color: white;">
+												@*<span style="font-size: 1.3rem">&nbsp銀行轉帳</span>*@
+											</a>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</template>
+				<div class="couponCart" :class="modalShowing">
+					<div class="couponTable">
+						<h3 style="color: white;">可使用的優惠券</h3>
+					</div>
+					<div class="couponContent">
+						<div class="eachCoupon" v-for="coupon in coupons" :key="coupon.couponId">
+							<input type="radio" name="check" v-model="selectedOption" :value="coupon.couponId" @@click="toggleSelection(coupon)">
+							<div class="coupon-card" :class="{'selected': isSelected(coupon)}">
+								<div class="coupon-row">
+									<span id="cpnCode" class="fw-bolder">{{ coupon.couponName }}</span>
+								</div>
+								<p class="fw-bolder">有效期限: {{ coupon.couponenddate2String }}</p>
+								<div class="circle1"></div>
+								<div class="circle2"></div>
+							</div>
+						</div>
+					</div>
+					<div style="padding: 3%">
+						<button class="btn btn-danger" @@click="closeUsingCoupon()">關閉</button>
 					</div>
 				</div>
 				<div class="col-md-8 row flex-column-reverse flex-md-row">
@@ -114,7 +157,7 @@
 							<form action="" class="card-body">
 								<div class="from-group">
 									<label for="name" class="title">收件人姓名</label>
-									<input type="text" id="name" name="name" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.RecipientName">
+									<input type="text" id="name" name="name" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Name">
 									@*<small class="invalidFeedback">請填寫姓名</small>*@
 								</div>
 								<div class="from-group">
@@ -129,7 +172,7 @@
 								</div>
 								<div class="from-group">
 									<label for="tel" class="title">聯絡地址</label>
-									<input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.Address">
+									<input type="text" id="tel" name="tel" class="form-control" aria-required="true" aria-invalid="false" v-model="submit.ShipAddress">
 									@*<small class="invalidFeedback">請填寫聯絡地址</small>*@
 								</div>
 								<div class="from-group">
@@ -148,23 +191,54 @@
 					<div class="col-md-5">
 						<div class="sticky-top commoditiesDetail">
 							<h2 class="section-title">商品明細</h2>
-							<ul class="list-unstyled list-group mb-3" v-for="pl in plan">
-								<li class="list-group-item d-flex justify-content-between align-items-center">
-									<div class="flex-shrink-1">
-										<h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{ pl.plan.planName }}</h4>
-										<small>{{ pl.plan.planDescription}}{{ pl.plan.planCanChoiceCount }}</small>
-									</div>
-									<div>
-									</div>
-									<div class="text-nowrap"><strong class="mr-3">${{ pl.plan.planPrice }}</strong></div>
-								</li>
+							@*<ul class="list-unstyled list-group mb-3" v-for="pl in plan">
+							<li class="list-group-item d-flex justify-content-between align-items-center">
+							<div class="flex-shrink-1">
+							<h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{ pl.plan.planName }}</h4>
+							<small>{{ pl.plan.planDescription}}{{ pl.plan.planCanChoiceCount }}</small>
+							<div>
+							</div>
+							<div class="text-nowrap"><strong class="mr-3">${{ pl.plan.planPrice }}</strong></div>
+							</li>
+							<li class="list-group-item">
+							<div class="input-group">
+							<input type="text" placeholder="SuFood" class="form-control">
+							<div class="input-group-append"><button type="button" class="btn btn-secondary">使用招待券</button></div>
+							</div>
+							</li>
+							<li class="list-group-item text-right"><strong>總計：${{ pl.plan.planPrice }}</strong></li>
+							</ul>*@
+							<ul class="list-unstyled list-group mb-3">
+								<template v-if="status == 'free'">
+									<li class="list-group-item d-flex justify-content-between align-items-center">
+										<div class="flex-shrink-1">
+											<h4 class="font-weight-bolder mb-0" style="font-weight: bold">{{freeChoiceProducts.PlanName}}</h4>
+											<ul class="freeChoice-products-details">
+												<li v-for="sp in freeChoiceProducts.selectedProducts">
+													<small>{{sp.productName}}</small>
+													<small>X{{sp.quantity}}</small>
+												</li>
+											</ul>
+										</div>
+									</li>
+								</template>
 								<li class="list-group-item">
 									<div class="input-group">
-										<input type="text" placeholder="SuFood" class="form-control">
-										<div class="input-group-append"><button type="button" class="btn btn-secondary">使用招待券</button></div>
+										<input type="text" placeholder="" class="form-control" v-model="chooseCoupon">
+										<div class="input-group-append"><button type="button" class="btn btn-secondary" @@click="usingCoupon()">使用優惠券</button></div>
 									</div>
 								</li>
-								<li class="list-group-item text-right"><strong>總計：${{ pl.plan.planPrice }}</strong></li>
+								<li class="list-group-item">
+									<div class="text-right">
+										<div>
+											<strong>小計：${{ freeChoiceProducts.planPrice }}</strong>
+										</div>
+										<div style="color:red">
+											<strong>優惠：<span>{{ getDiscount }}</span></strong>
+										</div>
+									</div>
+								</li>
+								<li class="list-group-item text-right"><strong>總計：${{ totalPrice }}</strong></li>
 							</ul>
 						</div>
 					</div>
@@ -189,24 +263,34 @@
 	<script src="~/axios/axios.min.js"></script>
 	<script src="~/js/vue.js"></script>
 	<script>
+		var list = JSON.parse(localStorage.getItem("purchaseList"))
+
 		const vm = new Vue({
 			el: "#app",
 			data: {
 				tabs: ['1.確認購物車', '2.填寫訂單資訊', '3.完成購買'],
-				currentTab: '1.確認購物車',
-				carts: [
-					{ 'id': 1, 'productName': '建達繽紛樂', 'quantity': 1, 'price': 1200, 'img': '' },
-					{ 'id': 2, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
-					{ 'id': 3, 'productName': '金莎巧克力', 'quantity': 1, 'price': 1200, 'img': '' },
-				],
+				currentTab: '2.填寫訂單資訊',
+				coupons: [],
+				selectedOption: null,
+				chooseCoupon: null,
+				modalShowing: {
+					showModal: false,
+				},
 				popupShowing: {
 					showPopup: false,
 				},
+				SubmitOrPay: '',
 				submit: {
-					RecipientName: '',
+					OrderId: 0,
+					Name: '',
 					Email: '',
-					Address: '',
 					Phone: '',
+					ShipAddress: '',
+					SubTotal: 0,
+					SubDiscount: 0,
+					ReMark: '',
+					CouponId: 0,
+					OrdersDetails: []
 				},
 				onlinePayment: {
 					"orderId": null,
@@ -223,29 +307,135 @@
 					TradeSha: '',
 					Version: '2.0'
 				},
+				status: null,
+				myOrderId: 0,
 				/*RetailOrFreeChoice:'',*/
 				/*isInvalid: true,*/
 			},
-			methods: {
-				SubmitOrder() {
-					this.popupShowing.showPopup = true;
+			computed: {
+				//總計
+				totalPrice() {
+					let local = JSON.parse(localStorage.getItem("purchaseList"));
+					let price = this.freeChoiceProducts.planPrice - this.getDiscount;
+					local.planPrice = price;
+					console.log(local);
+					return local.planPrice;
+
+
+					//return this.freeChoiceProducts.planPrice - this.getDiscount
+
+
+					//if(this.getDiscount >= 100){
+					//	return this.freeChoiceProducts.planPrice - this.getDiscount
+					//}else if(this.getDiscount < 100){
+					//	return this.freeChoiceProducts.planPrice * (this.getDiscount / 100);
+					//}else{
+					//	let discount = this.getDiscount.slice(0, 2);
+					//	return this.freeChoiceProducts.planPrice * (discount / 100)
+					//}
 				},
-				closeOrder() {
+				//自由選商品明細清單，會從localStorage取得資料
+				freeChoiceProducts() {
+					if (localStorage.getItem("purchaseList") !== null) {
+						this.currentTab = "2.填寫訂單資訊"
+						this.status = 'free'
+						return JSON.parse(localStorage.getItem("purchaseList"))
+					}
+				},
+				//一次只能check一個radio
+				isSelected() {
+					return (coupon) => {
+						return coupon.couponId === this.selectedOption;
+					}
+				},
+				//優惠
+				getDiscount() {
+					//如果沒有coupon則為0
+					if (this.coupons.length === 0) {
+						return 0;
+					}
+					if (this.selectedOption) {
+						const selectedCoupon = this.coupons.find(coupon => coupon.couponId == this.selectedOption);
+						if (selectedCoupon) {
+							return selectedCoupon.couponMinusCost || 0;
+						}
+					}
+					return 0;
+					//判斷優惠幅度是否大於100? 直接減:打折
+					//if (selectedCoupon){
+					//	if (selectedCoupon.couponMinusCost > 99){
+					//		return selectedCoupon.couponMinusCost || 0;
+					//	}else{
+					//		return selectedCoupon.couponMinusCost + "%OFF";
+					//	};
+					//}
+				},
+			},
+			methods: {
+				usingCoupon() {
+					this.modalShowing.showModal = true;
+				},
+				closeUsingCoupon() {
+					this.modalShowing.showModal = false;
+				},
+				closePopup() {
+					this.chooseCoupon = this.coupons.couponName;
 					this.popupShowing.showPopup = false;
 				},
-				pay(orderId) {
+				toggleSelection(coupon) {
+					if (this.selectedOption === coupon.couponId) {
+						this.selectedOption = null;
+						this.chooseCoupon = null;
+					} else {
+						this.selectedOption = coupon.couponId;
+						this.chooseCoupon = coupon.couponName;
+
+					}
+				},
+				SubmitOrder() {
+					let _this = this;
+
+					//獲得localStorage的資料,包裝成物件送出去
+					var list = JSON.parse(localStorage.getItem("purchaseList"))
+
+					this.submit = {
+						OrderId: 0,
+						Name: this.submit.Name,
+						Email: this.submit.Email,
+						Phone: this.submit.Phone,
+						ShipAddress: this.submit.ShipAddress,
+						SubTotal: list.planPrice,
+						SubDiscount: 0,
+						ReMark: '',
+						CouponId: this.selectedOption,
+						OrdersDetails: list.selectedProducts
+					}
+
+					////this.popupShowing.showPopup = true;
+					axios.post('/CheckOut/CreateFreeChoiceOrder', this.submit, {
+						headers: {
+							'Content-Type': 'application/json'
+
+						}
+					}).then(response => {
+						console.log(response.data);
+						this.SubmitOrPay = "Submit";
+						this.popupShowing.showPopup = true;
+						this.myOrderId = response.data.orderId;
+					})
+				},
+				//資料加密送到藍星
+				prepareInfo() {
 					//this.onlinePayment.OrderId = orderId
-					console.log(orderId)
 					let _this = this;
 
 					let onlinePayment = {
-						"orderId": orderId,
+						"orderId": this.myOrderId,
 						"merchantID": null,
 						"tradeInfo": "",
 						"tradeSha": "",
 						"version": ""
 					};
-					
 
 					axios.post("/OnlinePayment/Payment", onlinePayment, {
 						headers: {
@@ -255,8 +445,10 @@
 						this.paymentData.MerchantID = response.data.merchantID;
 						this.paymentData.TradeInfo = response.data.tradeInfo;
 						this.paymentData.TradeSha = response.data.tradeSha;
+						this.SubmitOrPay = "Pay";
 					})
 				},
+				//支付
 				pay2(id) {
 					this.pay(id)
 
@@ -270,31 +462,30 @@
 						.then(response => {
 							console.log(response.data)
 						})
+				},
+				//GET優惠券
+				GetCouponsToCart() {
+					let _this = this;
+					axios("/CheckOut/GetCouponsToCart").then(response => {
+						_this.coupons = response.data;
+					});
+				},
+				//executeMultipleMethods(){
+				//	this.GetCouponsToCart();
+				//	this.freeChoiceProducts();
+				//},
+			},
+			beforeMount() {
+				if (localStorage.getItem("purchaseList") !== null) {
+					this.currentTab = "2.填寫訂單資訊"
+					this.status = 'free'
+					return JSON.parse(localStorage.getItem("purchaseList"))
 				}
 			},
-
+			mounted() {
+				this.GetCouponsToCart();
+			},
 		});
 
 	</script>
 }
-@*
-	//computed: {
-			//	//totalPrice() {
-			//	//    let subTotal = this.carts.map(product => product.quantity * product.price);
-			//	//    if (this.carts.length > 0) {
-			//	//        return subTotal.reduce((a, b) => a + b);
-			//	//    }
-			//	//},
-			//	//choicePrice() {
-			//	//	let total = this.cartsForFreeChoice.m
-			//	//}
-			//	//		validationForm() {
-			//	//	if (this.submit.RecipientName === '123') {
-			//	//		console.log('123');
-			//	//		return false;
-			//	//	}
-			//	//},
-			//},
-			//mounted() {
-			//	this.GetPlanInfo();
-			//}*@

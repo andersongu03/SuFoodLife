@@ -135,7 +135,134 @@ namespace SuFood.Controllers
 
             return Json(new { GetAccountId = getAccountId });
         }
-        
+        [HttpGet]
+        public async Task<IActionResult> IsLogin()
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
+            return Json(new { GetAccountId = getAccountId });
+        }
+        [HttpGet]
+        public async Task<IEnumerable<ShoppingCartViewModel>> GetShoppingCarts()
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            var shoppingCarts = await _context.ShoppingCart
+                .Include(sc => sc.Product)
+                .ToListAsync();
+
+            var viewModelList = shoppingCarts
+                .Where(sc => sc.AccountId == Convert.ToInt32(getAccountId))
+                .Select(sc => new ShoppingCartViewModel
+                {
+                    CartId = sc.CartId,
+                    AccountId = sc.AccountId,
+                    CartQuantity = sc.CartQuantity,
+                    ProductId = sc.ProductId,
+                    ProductName = sc.Product.ProductName,
+                    Price = sc.Product.Price,
+                    Img = sc.Product.Img
+                }).ToList();
+
+            return viewModelList;
+        }
+        [HttpPost]
+        public async Task<bool> AddCartItem([FromBody] ShoppingCartViewModel model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            var cartItem = await _context.ShoppingCart
+              .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
+
+            if (cartItem == null)
+            {
+                return false;
+            }
+
+            cartItem.CartQuantity++;
+            _context.ShoppingCart.Update(cartItem);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+
+        [HttpPost]
+        public async Task<bool> MinusCartItem([FromBody] ShoppingCartViewModel model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            var cartItem = await _context.ShoppingCart
+                .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
+
+            if (cartItem == null)
+            {
+                return false;
+            }
+            cartItem.CartQuantity--;
+
+            if (cartItem.CartQuantity == 0)
+            {
+                _context.ShoppingCart.Remove(cartItem);
+            }
+            else
+            {
+                _context.ShoppingCart.Update(cartItem);
+            }
+
+            await _context.SaveChangesAsync();
+            await GetShoppingCarts();
+            return true;
+        }
+        [HttpPost]
+        public async Task<bool> DeleteCartItem([FromBody] ShoppingCartViewModel model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            var cartItem = await _context.ShoppingCart
+                .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
+            if (cartItem == null)
+            {
+                return false;
+            }
+
+            _context.ShoppingCart.Remove(cartItem);
+
+            await _context.SaveChangesAsync();
+            await GetShoppingCarts();
+            return true;
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddSingle2Cart([FromBody] CartViewModels model)
+        {
+            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+            if (getAccountId == null)
+            {
+                return Json(new { GetAccountId = "null" });
+            }
+
+            var existingCart = await _context.ShoppingCart
+        .FirstOrDefaultAsync(c => c.ProductId == model.ProductId && c.AccountId == Convert.ToInt32(getAccountId));
+
+            if (existingCart != null)
+            {
+                existingCart.CartQuantity += model.CartQuantity;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                ShoppingCart cart = new ShoppingCart
+                {
+                    CartId = model.CartId,
+                    AccountId = Convert.ToInt32(getAccountId),
+                    CartQuantity = model.CartQuantity,
+                    ProductId = model.ProductId,
+                };
+                _context.ShoppingCart.Add(cart);
+                await _context.SaveChangesAsync();
+            }
+
+            return Json(new { GetAccountId = getAccountId });
+        }
     }
 }

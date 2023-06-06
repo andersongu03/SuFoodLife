@@ -8,7 +8,7 @@ namespace SuFood.Models
     public partial class CouponUsedList
     {
         public int CouponUsedId { get; set; }
-        public DateTime? CouponUsedOrNot { get; set; }
+        public int? CouponUsedOrNot { get; set; }
         public int? AccountId { get; set; }
         public int? CouponId { get; set; }
 

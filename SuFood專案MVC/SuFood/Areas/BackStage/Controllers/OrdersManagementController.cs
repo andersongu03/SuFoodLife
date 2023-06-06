@@ -20,13 +20,6 @@ namespace SuFood.Areas.BackStage.Controllers
             _context = context;
         }
 
-        // GET: BackStage/OrdersManagement
-        public async Task<IActionResult> Index()
-        {
-            var suFoodDBContext = _context.Orders.Include(o => o.Account).Include(o => o.Coupon);
-            return View(await suFoodDBContext.ToListAsync());
-        }
-
 
 		//取得所有訂單 ("/BackStage/OrdersManagement/GetAllOrders")
 		[HttpGet]
@@ -40,50 +33,85 @@ namespace SuFood.Areas.BackStage.Controllers
                 OrderStatus = x.OrderStatus,
                 SubTotal = x.SubTotal,
                 SubDiscount = x.SubDiscount,
-				SetOrdersDatetime = x.SetOrdersDatetime
+				SetOrdersDatetime = x.SetOrdersDatetime,
+				Name = x.Name,
+				Phone = x.Phone,
+				ShipAddress = x.ShipAddress
 
             });
         }
 
 
-		//取得訂單明細 ("/BackStage/OrdersManagement/GetOrdersDetails")
-		//[HttpGet]
-		//public object GetOrdersDetails()
-		//{
-		//    //return _context.OrdersDetails.Include(x => x.Order).Include(x => x.Order.Coupon).Select(x => new VmOrdersDetails
-		//    //{
+		//取得訂單明細("/BackStage/OrdersManagement/GetOrdersDetails")
 
-		//    //});
-
-		//}
-
-
-		//取得收件資訊 ("/BackStage/OrdersManagement/GetRecipientInfo")
 		[HttpGet]
-		public async Task<IEnumerable<VmOrders>> GetRecipientInfo(int ordersId)
+		public object GetOrdersDetails()
 		{
-			var info = await _context.Orders.Where(o => o.OrdersId == ordersId).Select(o => new VmOrders
+			return _context.OrdersDetails.Include(x => x.Order).Select(x => new
 			{
-				Name = o.Name,
-				Phone = o.Phone,
-				ShipAddress = o.ShipAddress,
-				OrdersId = o.OrdersId
-			})
-			.ToListAsync();
+				orderdetail = new
+				{
+					orderId = x.OrderId,
+					ordersDetailsId = x.OrdersDetailsId,
+					productName = x.ProductName,
+					unitPrice = x.UnitPrice,
+					quantity = x.Quantity
+				},
+				order = x.Order,
+				//coupon = x.Order.Coupon
 
-			return info;
+			}).ToList();
 		}
 
+		//[HttpPost]
+  //      public object GetSingelCouponId(GetSingleOrderDetailbk model)
+  //      {
+  //          var coupon = _context.Coupon.Where(x=>x.CouponId == model.CouponId).Select(x=>x.CouponName ).FirstOrDefault();
 
-		//編輯收件資訊 ("/BackStage/OrdersManagement/EditRecipientInfo")
-		[HttpPost]
+		//	var orderd = _context.
+
+            
+  //      }
+
+
+
+
+
+
+
+        //      [HttpGet]
+        //      public object GetOrdersDetails(int orderId)
+        //      {
+        //	try
+        //	{
+        //		return _context.OrdersDetails.Where(od => od.OrderId == orderId).Select(od => new
+        //              {
+        //                  ProductName = od.ProductName,
+        //                  UnitPrice = od.UnitPrice,
+        //                  Quantity = od.Quantity,
+        //                  CouponName = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponName,
+        //                  CouponDicount = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponMinusCost
+        //              });
+
+        //	}
+        //	catch (Exception ex)
+        //	{
+        //		return "查不到相對應的CouponID";
+        //	}
+
+        //}
+
+
+
+        //編輯收件資訊 ("/BackStage/OrdersManagement/EditRecipientInfo")
+        [HttpPost]
 		public async Task<string> EditRecipientInfo([FromBody] VmOrders model)
 		{
 			var editinfo = await _context.Orders.FirstOrDefaultAsync(x => x.OrdersId == model.OrdersId);
 
 			try
 			{
-				editinfo.Name = model.Name;
+                editinfo.Name = model.Name;
 				editinfo.Phone = model.Phone;
 				editinfo.ShipAddress = model.ShipAddress;
 				_context.Update(editinfo);
@@ -105,13 +133,13 @@ namespace SuFood.Areas.BackStage.Controllers
 
 		//刪除訂單 ("/BackStage/OrdersManagement/DeleteOrders")
 		[HttpDelete]
-		public async Task<string> DeleteOrders(int OrdersId)
+		public async Task<string> DeleteOrders(int OrderId)
 		{
-			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == OrdersId).Select(x => x);
+			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == OrderId).Select(x => x);
 			_context.OrdersDetails.RemoveRange(ordersdetails);
 			await _context.SaveChangesAsync();
 
-			var orders = _context.Orders.Where(o => o.OrdersId == OrdersId).Select(o => o).SingleOrDefault();
+			var orders = _context.Orders.Where(o => o.OrdersId == OrderId).Select(o => o).SingleOrDefault();
 			
 			if (orders == null)
 			{

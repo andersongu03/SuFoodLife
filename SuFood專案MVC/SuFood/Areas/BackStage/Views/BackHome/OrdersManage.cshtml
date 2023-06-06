@@ -8,13 +8,15 @@
         <h4>訂單列表</h4>
     </div>
 
+
+
     <!-- 1.搜尋列 -->
     <div class="row mb-3">
-        <div class="col-2">
+        <div class="col-3">
             <div class="searchBar">
                 <div class="inputWrapper">
                     <i class='bx bx-search-alt-2 searchIcon'></i>
-                    <input type="text" class="inputSearch" placeholder="訂單編號、ID">
+                    <input type="text" class="inputSearch" v-model="searchText" placeholder="訂單編號、ID">
                 </div>
             </div>
         </div>
@@ -22,11 +24,11 @@
         <div class="col-2">
             <div class="content">
                 <div class="StatusBar">
-                    <select>
-                        <option value="all">訂購方案</option>
-                        <option value="all">零售</option>
-                        <option value="active">自由選</option>
-                        <option value="frozen">幫你選</option>
+                    <select v-model="selectedMethod">
+                        <option value="method">訂購方案</option>
+                        <option value="retail">零售</option>
+                        <option value="freechoice">自由選</option>
+                        <option value="recyle">幫你選</option>
                     </select>
                 </div>
             </div>
@@ -35,33 +37,22 @@
         <div class="col-2">
             <div class="content">
                 <div class="StatusBar">
-                    <select>
-                        <option value="all">付款狀態</option>
-                        <option value="all">未付款</option>
-                        <option value="active">已付款</option>
+                    <select v-model="selectedStatus">
+                        <option value="status">付款狀態</option>
+                        <option value="unpaid">未付款</option>
+                        <option value="paid">已付款</option>
+                        <option value="canceled">已取消</option>
                     </select>
                 </div>
             </div>
         </div>
 
-        <div class="col-2">
-            <div class="content">
-                <div class="StatusBar">
-                    <select>
-                        <option value="all">訂單狀態</option>
-                        <option value="all">配送中</option>
-                        <option value="active">已完成</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-4">
+        <div class="col-5">
             <div class="content">
                 <div class="date-picker">
-                    <input type="date">
-                    <input type="date">
-                    <button>搜尋</button>
+                    <input id="start-date" type="date">
+                    <input id="end-date" type="date">
+                    <button type="button" @@click="search">搜尋</button>
                 </div>
             </div>
         </div>
@@ -76,10 +67,10 @@
                     <th scope="col">會員ID</th>
                     <th scope="col">訂購方案</th>
                     <th scope="col">付款狀態</th>
-                    <th scope="col">訂單狀態</th>
                     <th scope="col">訂單明細</th>
                     <th scope="col">總金額</th>
                     <th scope="col">成立時間</th>
+                    <th scope="col">評論</th>
                     <th scope="col">收件資訊</th>
                     <th scope="col">刪除</th>
                 </tr>
@@ -89,11 +80,11 @@
                     <td>{{o.ordersId}}</td>
                     <td>{{o.accountId}}</td>
                     <td>{{o.buyMethod}}</td>
-                    <td></td>
                     <td>{{o.orderStatus}}</td>
-					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" ></i></td>
+                    <td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" ></i></td>
                     <td>{{(o.subTotal)-(o.subDiscount)}}</td>					
                     <td>{{o.setOrdersDatetime}}</td>
+                    <td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
                     <td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
                     <td><i class='bx bx-trash sortIcon delete-item' data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteConfirm(o)"></i></td>
                 </tr>
@@ -102,7 +93,7 @@
     </div>
 
     <!-- 3.分頁 -->
-    <div>
+@*    <div>
         <paginate :page-count="pageCount"
                   :click-handler="changePage"
                   :prev-text="'&laquo;'"
@@ -115,36 +106,40 @@
                   :next-link-class="'page-link'"
                   :container-class="'pagination justify-content-center'">
         </paginate>
-    </div>
+    </div>*@
 
     <!-- 4.所有Modal -->
     <!-- OrdersDetailModal -->
-  @* <div class="modal fade" id="ordersModal" tabindex="-1" aria-hidden="true">
+   <div class="modal fade" id="ordersModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ordersDetailModal">訂單明細</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">檢視</button>
+                    <h5 class="modal-title" id="ordersDetailModal">訂單明細編號</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="myorders_table">
                     <!--內容-->
                     <table>
                         <thead>
-                            <tr>
-                                <th>訂單編號</th>
-                                <th>日期</th>
-                                <th>總金額</th>
-                                <th>付款狀態</th>
-                                <th>訂單狀態</th>
+                            <tr >
+                                <th>產品名稱</th>
+                                <th>單價</th>
+                                <th>數量</th>
+                                <th>小計</th>
+                                <th>優惠券名稱</th>
+                                <th>優惠券折扣</th>
+                                <th>總計</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="item in vmOrders">
-                                <td>{{item.ordersId}}</td>
-                                <td>{{(item.setOrdersDatetime).slice(0,10)}}</td>
-                                <td>{{item.subTotal-item.subDiscount}}</td>
-                                <td>{{item.customerPaymentId}}</td>  要改成付款狀態
-                                <td>{{item.orderStatus}}</td>
+                            <tr v-for="item in vmDetails">
+                                @*<td>{{item.productName}</td>
+                                <td>{{item.unitPrice}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.subTotal}}</td>
+                                <td>{{item.coupon.couponName}}</td>
+                                <td>{{item.coupon.couponMinuCost}}</td>
+                                <td>{{(item.subTotal)-(item.subDiscount)}}</td>*@
                             </tr>
                         </tbody>
                     </table>
@@ -154,7 +149,7 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>
 
     <!-- EditModal -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
@@ -168,7 +163,7 @@
                     <div class="mb-3 row">
                         <label for="type" class="col-sm-2 col-form-label">姓名</label>
                         <div class="col-sm-10">
-                            <input type="text" name="name" id="name" v-model="editProfile.name" required size="4">
+                            <input type="text" name="name" id="name" v-model="editProfile.name" required size="10">
                         </div>
                     </div>
                     <div class="mb-3 row">
@@ -186,7 +181,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" >儲存</button>
+                    <button type="button" class="btn btn-primary" @@click="editInfo">儲存</button>
                 </div>
             </div>
         </div>
@@ -200,11 +195,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <h5 id="exampleModalLabel">確定要刪除編號{{delOrders.ordersId}}的訂單嗎？</h5>
+                    <h5 id="exampleModalLabel">確定要刪除「編號{{delOrders.ordersId}}」的訂單嗎？</h5>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">確定</button>
+                    <button type="button" class="btn btn-primary" @@click="deleteOrder">確定</button>
                 </div>
             </div>
         </div>
@@ -234,7 +229,6 @@
 
                 vmOrders:[],
                 vmDetails:[],
-                vmInfo:[],
 
                 ordersDetail:{
                     productName:"",
@@ -253,9 +247,9 @@
                 },
                 delOrders:{
                     ordersId: "",
-
-                }
-
+                },                
+                selectedMethod: "method",
+                selectedStatus: "status",
 
 
                
@@ -264,7 +258,7 @@
             mounted(){
                 let _this = this;
 				_this.getOrders();
-                _this.getInfo();
+                //_this.getOrdersDetails();
             },
             methods: {
                 getOrders: function(){
@@ -277,17 +271,10 @@
                 //getOrdersDetails: function(){
                 //    let _this = this;
                 //    axios.get(`/BackStage/OrdersManagement/GetOrdersDetails`).then(res => {
-                //        //alert(JSON.stringify(res.data))
+                //        alert(JSON.stringify(res.data))
                 //        _this.vmDetails = res.data;
+                //    })
                 //},
-                getInfo: function(id){
-                    let _this = this;
-                    axios.get(`/BackStage/OrdersManagement/GetRecipientInfo?ordersId=${id}`).then(res => {
-                        //alert(JSON.stringify(res.data))
-                        _this.vmInfo = res.data;
-                    })
-                },
-
 
                 editInfo: function(){
                     let _this = this;
@@ -295,61 +282,127 @@
                         OrdersId: this.editProfile.ordersId,
                         Name: this.editProfile.name,
                         Phone: this.editProfile.phone,
-                        Address: this.editProfile.address
+                        ShipAddress: this.editProfile.address
                     };
-					axios.post(`/BackStage/OrdersManagement/EditRecipientInfo`, request).then(res => {
-						$("#editModal").modal('hide'); 
-						_this.getInfo();
+                    axios.post(`/BackStage/OrdersManagement/EditRecipientInfo`, request).then(res => {
+						$("#editModal").modal('hide');
+                        _this.getOrders();
 					});               
                 },
-                //deleteOrder: function(){
-                
-                //},
-    //            ordersConfirm: function (o) {
-    //                 this.ordersAcc.accountId = a.accountId;
-    //                 this.ordersAcc.ordersId = a.ordersId;
-    //                 this.ordersAcc.date = a.setOrdersDatetime;
-    //                 this.ordersAcc.total = a.subTotal;
-    //                 this.ordersAcc.discount = a.subDiscount;
-    //                 this.ordersAcc.payment = a.customerPaymentId; //改成付款狀態
-    //                 this.ordersAcc.status = a.orderStatus;
-    //                 this.getOrders();
-				//},
+                deleteOrder: function(){
+                    let _this = this;
+                    axios.delete(`/backstage/OrdersManagement/DeleteOrders?Id=${this.delOrders.ordersId}`).then(res => {
+                        $("#deleteModal").modal("hide");
+                        //_this.toast = "刪除成功";
+                        //_this.toastHint();
+                        _this.getOrders();
+                    });
+                },
+                ordersConfirm: function (o) {
+                     
+                     
+				},
                 editConfirm: function (o) {
-                    //alert(o.ordersId)
-                    this.getInfo(o.ordersId)
                     this.editProfile.ordersId = o.ordersId;
-                    this.editProfile.name = this.vmInfo.name;
-                    this.editProfile.phone = this.vmInfo.phone;
-                    this.editProfile.address = this.vmInfo.shipAddress;
+                    this.editProfile.name = o.name;
+                    this.editProfile.phone = o.phone;
+                    this.editProfile.address = o.shipAddress;
+                    this.getOrders(o.ordersId);                   
 				},
 				deleteConfirm: function (o) {
                     this.delOrders.ordersId = o.ordersId;
 				},
-
                 changePage: function (currentpage) {
                     console.log(currentpage);
                     this.cPage = currentpage;
                 },
+                goComment: function (ordersId) {
+                    window.location.href = "/BackStage/BackHome/CommentManagement?ordersId=" + ordersId;
+                },
+                search: function () {
+                    var startDate = document.getElementById("start-date").value;
+                    var endDate = document.getElementById("end-date").value;
+
+                    if (endDate < startDate) {
+                        alert("結束日期不得小於開始日期");
+                        return; // 結束函數執行
+                    }
+
+                            //var filteredOrders = vmOrders.filter(function(order) {
+                    //return order.orderDate >= startDate && order.orderDate <= endDate;
+                    //});
+
+                    //// 在這裡處理篩選後的訂單資料
+                    //console.log(filteredOrders);
+
+                    
+
+                    console.log("Start Date: " + startDate);
+                    console.log("End Date: " + endDate);
+                }
 
             },
-            computed: {
-                pageCount:function () {
-				  //return Math.ceil(this.filterSearchText.length / this.pageItems);
-			      return Math.ceil(this.vmOrders.length / this.pageItems);
-				},
-				ordersInPage:function () {
-					var max = this.cPage * this.pageItems;
-					var min = this.pageItems * (this.cPage - 1) + 1;
-					//return this.filterSearchText.slice(min - 1, max)
-					return this.vmOrders.slice(min - 1, max)
-				},
-				//篩選帳號、姓名
-				//filterSearchText:function(){
-				//	return this.vmAccount.filter((x)=>{
-				//		return x.account1.indexOf(this.searchText) !== -1 || x.firstName.indexOf(this.searchText) !== -1 || x.lastName.indexOf(this.searchText) !== -1;
-				//	})
+    //        computed: {
+    //            pageCount:function () {
+				//  return Math.ceil(this.filterSearchText.length / this.pageItems);
+			 //     return Math.ceil(this.vmOrders.length / this.pageItems);
+				//},
+				//ordersInPage:function () {
+				//	var max = this.cPage * this.pageItems;
+				//	var min = this.pageItems * (this.cPage - 1) + 1;
+				//	return this.filterSearchText.slice(min - 1, max)
+				//	return this.vmOrders.slice(min - 1, max)
+				//},
+				//篩選訂單編號、會員ID
+				filterSearchText:function(){
+					//return this.vmOrders.filter((x)=>{
+                    arr = this.vmOrders.filter((o)=>{
+						return o.ordersId.indexOf(this.searchText) !== -1 || o.accountId.indexOf(this.searchText) !== -1 ;
+					})
+                    //用購買方案篩選
+                    switch (this.selectedMethod) {
+                        case "訂購方案":
+                            break;
+                        case "retail":
+                            arr = this.vmOrders.filter(o => {
+                            return o.buyMethod == "零售"
+                            })
+                            break;
+                        case "freechoice":
+                            arr = this.vmOrders.filter(o => {
+                                return o.buyMethod == "自由選"
+                            })
+                            break;
+                        case "recyle":
+                            arr = this.vmOrders.filter(o => {
+                                return o.buyMethod == "幫你選"
+                            })
+                    }
+                    //用付款狀態篩選
+                    switch (this.selectedStatus) {
+                        case "status":
+                            break;
+                        case "unpaid":
+                            arr = this.vmOrders.filter(o => {
+                                return o.orderStatus == "未付款"
+                            })
+                            break;
+                        case "paid":
+                            arr = this.vmOrders.filter(o => {
+                                return o.orderStatus == "已付款"
+                            })
+                            break;
+                        case "canceled":
+                            arr = this.vmOrders.filter(o => {
+                                return o.orderStatus == "已取消"
+                            })
+                            break;
+                        
+                    }
+                //},
+                
             }
+
         })
     </script>
 }

@@ -87,7 +87,7 @@ select {
     }
 
 .general-order i {
-    font-size: 1.2rem;
+    font-size: 1.5rem;
 }
 
 .delete-item {
@@ -99,23 +99,8 @@ select {
         color: #cc2a2a;
     }
 
-/*--------paging---------*/
-.pagination {
-    display: flex;
-    justify-content: end;
-}
 
-.page-link {
-    color: #759188;
-    background-color: rgb(255, 255, 255);
-}
-
-    .page-link:hover {
-        color: #546861;
-        font-weight: bold;
-    }
-
-/*----- �j�M�P�U�Ԧ����˦� -----*/
+/*-----filter conditions-----*/
 .inputWrapper {
     background: #fff;
     width: 100%;
@@ -169,6 +154,14 @@ select {
         padding: 10px 20px;
     }
 
+/*----- review button -----*/
+.orderreview-btn {
+    background-color: darkgray;
+    color: white;
+    border:2px; 
+    border-radius: 5px;
+}
+
 /*----- Modal -----*/
 .model {
     margin-top: 1rem;
@@ -201,7 +194,7 @@ select {
     background-color: #4f8180;
 }
 
-/* ----------�q�檬�A���s�˦���---------- */
+/* -------------------- */
 .pending {
     font-size: 3px;
     font-weight: bold;

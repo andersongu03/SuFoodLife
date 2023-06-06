@@ -53,6 +53,7 @@ namespace SuFood.Controllers
                         Phone = o.Phone,
                         Name = o.Name,
                         ShipAddress = o.ShipAddress,
+                        Recomment = o.OrdersReview.Select(r=>r.Recomment)
                     });
                 });
 

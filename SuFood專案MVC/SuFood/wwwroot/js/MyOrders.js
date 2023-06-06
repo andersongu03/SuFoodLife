@@ -1,7 +1,8 @@
-﻿var app = new Vue({
+﻿    var app = new Vue({
     el:".MyOrders",
     data:
     {
+        recomment: "",
         ordersId:0,
         title: "我的訂單",
         od: {

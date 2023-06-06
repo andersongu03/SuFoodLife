@@ -6,8 +6,6 @@
         topic: '評論管理',
         toast: "",
         deleteId: undefined,
-        reviewId: undefined,
-        ordersId: 0,
         popupShowing: {
             showPopup: false
         },
@@ -17,10 +15,13 @@
         CreateOrEditOrDelete: "",
         or: [],
         createCommentList: {
-            reviewId: 0,
-            ratingStar:0,
-            comment:"",
-            ordersId:0
+            ReviewId: 0,
+            RatingStar: 0,
+            Comment: "",
+            OrdersId: 0,
+            AccountId: 0,
+            Phone:"",
+            Recomment:"",
         },
         editCommentList: {
             ReviewId: "",
@@ -37,12 +38,6 @@
         isActive: false,
         selectedStars: 'all',
     },
-    request: {
-        reviewId: "",
-        ratingStar:"",
-        ordersId: "",
-        comment: "",
-    },
     methods: {
         toastHint() {
             this.toastHintStyle.fadeInUp = true;
@@ -50,10 +45,17 @@
             this.toastHintStyle.fadeInUp = false
             }, 2000)
         },
-        createComment(id) {
-            this.OrdersId = id;
-            this.CreateOrEditOrDelete = 'Create';
-            this.popupShowing.showPopup = true;
+        createComment(c) {
+            let _this = this;
+            _this.createCommentList.ReviewId = c.reviewId;
+            _this.createCommentList.RatingStar = c.ratingStar;
+            _this.createCommentList.Comment = c.comment;
+            _this.createCommentList.OrdersId = c.ordersId;
+            _this.createCommentList.AccountId = c.accountId;
+            _this.createCommentList.Phone = c.phone;
+            _this.createCommentList.recomment = "";
+            _this.CreateOrEditOrDelete = 'Create';
+            _this.popupShowing.showPopup = true;
         },
         CloseComment() {
             this.popupShowing.showPopup = false;
@@ -91,20 +93,13 @@
                 _this.GetComments();
             })
         },
-        CreateComment(or) {
+        CreateComment(createCommentList) {
+            alert(createCommentList)
             let _this = this;
-            var request = null;
-            createCommentList = {
-                reviewId: _this.createCommentList.reviewId,
-                ratingStar: _this.createCommentList.ratingStar,
-                comment: _this.createCommentList.comment,
-                ordersId: _this.ordersId
-            }
-
-            axios.post('https://localhost:7086/MyOrders/CreateComment/', createCommentList).then(response => {
+            axios.post('/BackStage/BackHome/CommentManagement/CreateComment', createCommentList).then(response => {
                 this.toast = response.data;
                 this.closepopupShowHint();
-                this.GetDetail();
+                this.GetComments();
             })
         },
         //沒用到

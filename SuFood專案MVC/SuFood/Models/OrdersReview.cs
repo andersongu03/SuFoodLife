@@ -11,6 +11,7 @@ namespace SuFood.Models
         public int? RatingStar { get; set; }
         public string Comment { get; set; }
         public int OrdersId { get; set; }
+        public string Recomment { get; set; }
 
         public virtual Orders Orders { get; set; }
     }

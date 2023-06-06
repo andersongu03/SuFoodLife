@@ -21,6 +21,7 @@ namespace SuFood.ViewModel
 		public string Name { get; set; }
 
 		public string ShipAddress { get; set; }
+		public IEnumerable<string> Recomment { get; set; }
 
 		public IEnumerable<string>? Comments { get; set; }
 

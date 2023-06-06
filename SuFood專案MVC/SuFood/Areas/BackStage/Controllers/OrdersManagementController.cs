@@ -57,7 +57,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     orderTime = x.SetOrdersDatetime,
                     status = x.OrderStatus,
                     shipMode = x.SingleShippingMethod,
-                    ordersDetail = x.OrdersDetailsId,
+                    //ordersDetail = x.OrdersDetailsId,
                     subTotal = x.SubTotal
 				}
 

@@ -86,15 +86,13 @@
 							<span>{{c.phone}}</span>
 						</td>
 						<td>
-							<i class='bx bx-message-rounded reply-icon' @@click="createComment(c.ordersId)"></i>
+							<i class='bx bx-message-rounded reply-icon' @@click="createComment(c)"></i>
 						</td>
 						<td>
 							<button class="btn btn-warning" @@click="deleteComment(c)">刪除</button>
 						</td>
 					</tr>
 				</template>
-		
-				
 			</tbody>
 		</table>
 		
@@ -155,18 +153,17 @@
 				</div>
 			</div>
 		</template>
-		@*-----------------create測試--------------*@
+		@*-----------------create--------------*@
 		<template v-if="CreateOrEditOrDelete === 'Create'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
 				<div class="cardPopup-body">
 					<div class="cardPopup">
 						<form id="form">
 							<div class="topic">
-								<h3>留下你的意見吧</h3>
-								<label>你的回覆是我們的最大動力</label>
+								<h3>回覆客戶的評論囉</h3>
 							</div>
 							<div class="form-group">
-								<textarea v-model="createCommentList.comment" class="textarea"></textarea>
+								<textarea v-model="createCommentList.recomment" class="textarea"></textarea>
 							</div>
 							<div>
 								<button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>

@@ -108,24 +108,6 @@
 				</div>
 				<div class="form row">
 						<div class="col-3 info-label">
-						<label for="">信用卡號：</label>
-					</div>
-					<div class="col-9">
-							<input class="" type="text" name="cardnum" id="cardnum" v-model="info.defaultCreditCardNumber">
-					</div>
-				</div>
-				<div class="form row">
-					<div class="col-3 info-label">
-						<label for="cardholder">持有人：</label>
-					</div>
-					<div class="col-9 info-label4">
-							<input class="" type="text" name="cardholder" id="cardholder" v-model="info.defaultCreditCardHolder">
-					</div>
-				</div>
-				<div class="form row">
-				</div>
-				<div class="form row">
-						<div class="col-3 info-label">
 						<label for="">聯絡地址：</label>
 					</div>
 					<div class="col-9">
@@ -170,22 +152,6 @@
 						</div>
 						<div class="col-9">
 							<div>{{info.phone}}</div>
-						</div>
-					</div>
-					<div class="form row">
-						<div class="col-3 info-label">
-							<div>信用卡號：</div>
-						</div>
-						<div class="col-9">
-							<div>{{info.defaultCreditCardNumber}}</div>
-						</div>
-					</div>
-					<div class="form row">
-						<div class="col-3 info-label">
-							<div class="info-label4">持有人：</div>
-						</div>
-						<div class="col-9">
-							<div>{{info.defaultCreditCardHolder}}</div>
 						</div>
 					</div>
 					<div class="form row">
@@ -241,8 +207,6 @@
 					_this.oldgender = this.info.gender;
 					_this.oldphone = this.info.phone;
 					_this.olddefaultshipaddress = this.info.defaultShipAddress;
-					_this.olddefaultcreditcardnumber = this.info.defaultCreditCardNumber;
-					_this.olddefaultcreditcardholder = this.info.defaultCreditCardHolder;
 				},
 				cancel: function () {
 					let _this = this;
@@ -253,8 +217,6 @@
 					this.info.gender = _this.oldgender;
 					this.info.phone = _this.oldphone;
 					this.info.defaultShipAddress = _this.olddefaultshipaddress;
-					this.info.defaultCreditCardNumber = _this.olddefaultcreditcardnumber;
-					this.info.defaultCreditCardHolder = _this.olddefaultcreditcardholder;
 				},
 				update: function () {
 					let _this = this;
@@ -266,8 +228,6 @@
 						Gender: this.info.gender,
 						Phone: this.info.phone,
 						Defaultshipaddress: this.info.defaultShipAddress,
-						Defaultcreditcardnumber: this.info.defaultCreditCardNumber,
-						Defaultcreditcardholder: this.info.defaultCreditCardHolder
 					};
 					axios.post(`/PersonalInfo/EditAccount/${_this.info.accountId}`, request)
 						.then(res => {

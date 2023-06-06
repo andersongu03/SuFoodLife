@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
+using SuFood.ViewModel;
 
 namespace SuFood.Areas.BackStage.Controllers
 {
@@ -19,152 +20,145 @@ namespace SuFood.Areas.BackStage.Controllers
             _context = context;
         }
 
-        // GET: BackStage/OrdersManagement
-        public async Task<IActionResult> Index()
-        {
-            var suFoodDBContext = _context.Orders.Include(o => o.Account).Include(o => o.Coupon);
-            return View(await suFoodDBContext.ToListAsync());
+
+		//取得所有訂單 ("/BackStage/OrdersManagement/GetAllOrders")
+		[HttpGet]
+		public async Task<IEnumerable<VmOrders>> GetAllOrders()
+		{
+            return _context.Orders.Select(x => new VmOrders
+            {
+                OrdersId = x.OrdersId,
+                AccountId = x.AccountId,
+                BuyMethod = x.BuyMethod,
+                OrderStatus = x.OrderStatus,
+                SubTotal = x.SubTotal,
+                SubDiscount = x.SubDiscount,
+				SetOrdersDatetime = x.SetOrdersDatetime,
+				Name = x.Name,
+				Phone = x.Phone,
+				ShipAddress = x.ShipAddress
+
+            });
         }
 
-        // GET: BackStage/OrdersManagement/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null || _context.Orders == null)
-        //    {
-        //        return NotFound();
-        //    }
 
-        //    var orders = await _context.Orders
-        //        .Include(o => o.Account)
-        //        .Include(o => o.Coupon)
-        //        .FirstOrDefaultAsync(m => m.OrdersId == id);
-        //    if (orders == null)
-        //    {
-        //        return NotFound();
-        //    }
+		//取得訂單明細("/BackStage/OrdersManagement/GetOrdersDetails")
 
-        //    return View(orders);
+		[HttpGet]
+		public object GetOrdersDetails()
+		{
+			return _context.OrdersDetails.Include(x => x.Order).Select(x => new
+			{
+				orderdetail = new
+				{
+					orderId = x.OrderId,
+					ordersDetailsId = x.OrdersDetailsId,
+					productName = x.ProductName,
+					unitPrice = x.UnitPrice,
+					quantity = x.Quantity
+				},
+				order = x.Order,
+				//coupon = x.Order.Coupon
+
+			}).ToList();
+		}
+
+		//[HttpPost]
+  //      public object GetSingelCouponId(GetSingleOrderDetailbk model)
+  //      {
+  //          var coupon = _context.Coupon.Where(x=>x.CouponId == model.CouponId).Select(x=>x.CouponName ).FirstOrDefault();
+
+		//	var orderd = _context.
+
+            
+  //      }
+
+
+
+
+
+
+
+        //      [HttpGet]
+        //      public object GetOrdersDetails(int orderId)
+        //      {
+        //	try
+        //	{
+        //		return _context.OrdersDetails.Where(od => od.OrderId == orderId).Select(od => new
+        //              {
+        //                  ProductName = od.ProductName,
+        //                  UnitPrice = od.UnitPrice,
+        //                  Quantity = od.Quantity,
+        //                  CouponName = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponName,
+        //                  CouponDicount = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponMinusCost
+        //              });
+
+        //	}
+        //	catch (Exception ex)
+        //	{
+        //		return "查不到相對應的CouponID";
+        //	}
+
         //}
 
-        public object getAllOrders() 
-        {
-            return _context.Orders.Include(x => x.Account).Include(x => x.OrdersDetails).Select(x => new
-            {
-                or = new
-                { 
-                    accountId = x.AccountId,
-					account = x.Account.Account1, 
-                    orderTime = x.SetOrdersDatetime,
-                    status = x.OrderStatus,
-                    shipMode = x.SingleShippingMethod,
-                    ordersDetail = x.OrdersDetailsId,
-                    subTotal = x.SubTotal
-				}
-
-            }).ToList();
-        }
 
 
-
-     
-
-        // GET: BackStage/OrdersManagement/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.Orders == null)
-            {
-                return NotFound();
-            }
-
-            var orders = await _context.Orders.FindAsync(id);
-            if (orders == null)
-            {
-                return NotFound();
-            }
-            ViewData["AccountId"] = new SelectList(_context.Account, "AccountId", "AccountId", orders.AccountId);
-            ViewData["CouponId"] = new SelectList(_context.Coupon, "CouponId", "CouponId", orders.CouponId);
-            return View(orders);
-        }
-
-        // POST: BackStage/OrdersManagement/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //編輯收件資訊 ("/BackStage/OrdersManagement/EditRecipientInfo")
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrdersId,SubTotal,SubCost,SubDiscount,SetOrdersDatetime,ShipAddress,OrderStatus,ShippingMethodId,AccountId,CouponId,OrdersDetailsId,CustomerPaymentId")] Orders orders)
-        {
-            if (id != orders.OrdersId)
-            {
-                return NotFound();
-            }
+		public async Task<string> EditRecipientInfo([FromBody] VmOrders model)
+		{
+			var editinfo = await _context.Orders.FirstOrDefaultAsync(x => x.OrdersId == model.OrdersId);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(orders);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrdersExists(orders.OrdersId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AccountId"] = new SelectList(_context.Account, "AccountId", "AccountId", orders.AccountId);
-            ViewData["CouponId"] = new SelectList(_context.Coupon, "CouponId", "CouponId", orders.CouponId);
-            return View(orders);
-        }
+			try
+			{
+                editinfo.Name = model.Name;
+				editinfo.Phone = model.Phone;
+				editinfo.ShipAddress = model.ShipAddress;
+				_context.Update(editinfo);
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!OrdersExists(model.OrdersId))
+				{
+					return "修改失敗";
+				}
+				else
+				{
+					throw;
+				}
+			}
+			return "修改成功";
+		}
 
-        // GET: BackStage/OrdersManagement/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.Orders == null)
-            {
-                return NotFound();
-            }
+		//刪除訂單 ("/BackStage/OrdersManagement/DeleteOrders")
+		[HttpDelete]
+		public async Task<string> DeleteOrders(int OrderId)
+		{
+			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == OrderId).Select(x => x);
+			_context.OrdersDetails.RemoveRange(ordersdetails);
+			await _context.SaveChangesAsync();
 
-            var orders = await _context.Orders
-                .Include(o => o.Account)
-                .Include(o => o.Coupon)
-                .FirstOrDefaultAsync(m => m.OrdersId == id);
-            if (orders == null)
-            {
-                return NotFound();
-            }
+			var orders = _context.Orders.Where(o => o.OrdersId == OrderId).Select(o => o).SingleOrDefault();
+			
+			if (orders == null)
+			{
+				return "找不到此帳戶，刪除失敗";
+			}
+			_context.Orders.Remove(orders);
+			await _context.SaveChangesAsync();
+			return "刪除成功";
+		}
 
-            return View(orders);
-        }
 
-        // POST: BackStage/OrdersManagement/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.Orders == null)
-            {
-                return Problem("Entity set 'SuFoodDBContext.Orders'  is null.");
-            }
-            var orders = await _context.Orders.FindAsync(id);
-            if (orders != null)
-            {
-                _context.Orders.Remove(orders);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool OrdersExists(int id)
-        {
-          return (_context.Orders?.Any(e => e.OrdersId == id)).GetValueOrDefault();
-        }
-    }
+
+
+		private bool OrdersExists(int id)
+		{
+			return (_context.Orders?.Any(e => e.OrdersId == id)).GetValueOrDefault();
+		}
+
+
+	}
 }

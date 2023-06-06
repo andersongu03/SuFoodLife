@@ -147,7 +147,13 @@ namespace SuFood.Controllers
 			if (existingOrderId != 0)
 			{
 				int OldOrderId = (int)existingOrderId;
-				return await EditRetailOrder(OldOrderId, model);
+
+				var oldOrderDetails = _context.OrdersDetails.Where(x=>x.OrderId == OldOrderId).ToList();
+				_context.OrdersDetails.RemoveRange(oldOrderDetails);
+				var oldOrder = _context.Orders.Where(x=>x.OrdersId == OldOrderId).FirstOrDefault();
+				_context.Orders.Remove(oldOrder);
+				_context.SaveChanges();
+				//return await EditRetailOrder(OldOrderId, model);
 			}
 
 
@@ -198,52 +204,54 @@ namespace SuFood.Controllers
 
 			return Json(new { GetOrderId = getNewOrderId });
 		}
-		[HttpPost]
-		public async Task<IActionResult> EditRetailOrder(int orderId, RetailOrdersViewModel model)
-		{
-			var order = await _context.Orders.FindAsync(orderId);
 
-			var getSubCost = 0;
-			foreach (var details in model.Details)
-			{
-				var getSingleCost = _context.Products.Where(p => p.ProductName == details.ProductName).Select(p => p.Cost).First();
-				var getCartQuantity = details.Quantity;
-				getSubCost += getSingleCost * getCartQuantity;
 
-			}
+		//[HttpPost]
+		//public async Task<IActionResult> EditRetailOrder(int orderId, RetailOrdersViewModel model)
+		//{
+		//	var order = await _context.Orders.FindAsync(orderId);
 
-			if (order == null) { return Ok("我是誰我在哪"); }
+		//	var getSubCost = 0;
+		//	foreach (var details in model.Details)
+		//	{
+		//		var getSingleCost = _context.Products.Where(p => p.ProductName == details.ProductName).Select(p => p.Cost).First();
+		//		var getCartQuantity = details.Quantity;
+		//		getSubCost += getSingleCost * getCartQuantity;
 
-			order.Name = model.Order.Name;
-			order.Phone = model.Order.Phone;
-			order.ShipAddress = model.Order.ShipAddress;
-			order.SubCost = getSubCost;
-			order.SubTotal = model.Order.SubTotal;
-			order.SubDiscount = model.Order.SubDiscount;
-			order.SetOrdersDatetime = DateTime.Now;
-			order.ReMark = model.Order.ReMark;
-			order.Email = model.Order.Email;
+		//	}
 
-			await _context.SaveChangesAsync();
+		//	if (order == null) { return Ok("我是誰我在哪"); }
 
-			var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
-			_context.OrdersDetails.RemoveRange(orderDetails);
+		//	order.Name = model.Order.Name;
+		//	order.Phone = model.Order.Phone;
+		//	order.ShipAddress = model.Order.ShipAddress;
+		//	order.SubCost = getSubCost;
+		//	order.SubTotal = model.Order.SubTotal;
+		//	order.SubDiscount = model.Order.SubDiscount;
+		//	order.SetOrdersDatetime = DateTime.Now;
+		//	order.ReMark = model.Order.ReMark;
+		//	order.Email = model.Order.Email;
 
-			foreach (var detail in model.Details)
-			{
-				var NewOrderDetails = new OrdersDetails
-				{
-					OrderId = orderId,
-					ProductName = detail.ProductName,
-					UnitPrice = detail.UnitPrice,
-					Quantity = detail.Quantity,
-				};
-				_context.OrdersDetails.Add(NewOrderDetails);
-				await _context.SaveChangesAsync();
-			}
+		//	await _context.SaveChangesAsync();
 
-			return Json(new { GetOrderId = orderId });
-		}
+		//	var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
+		//	_context.OrdersDetails.RemoveRange(orderDetails);
+
+		//	foreach (var detail in model.Details)
+		//	{
+		//		var NewOrderDetails = new OrdersDetails
+		//		{
+		//			OrderId = orderId,
+		//			ProductName = detail.ProductName,
+		//			UnitPrice = detail.UnitPrice,
+		//			Quantity = detail.Quantity,
+		//		};
+		//		_context.OrdersDetails.Add(NewOrderDetails);
+		//		await _context.SaveChangesAsync();
+		//	}
+
+		//	return Json(new { GetOrderId = orderId });
+		//}
 
 	}
 

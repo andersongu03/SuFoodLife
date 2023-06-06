@@ -33,17 +33,7 @@ namespace SuFood.Controllers
 			var CouponList = await _context.CouponUsedList
 				.Where(x => x.CouponId != null && x.AccountId == Convert.ToInt32(getAccountId) && x.CouponUsedOrNot == 1)
 				.Include(x => x.Coupon)
-				.Select(x => new VmCoupon
-				{
-					CouponId = x.Coupon.CouponId,
-					CouponName = x.Coupon.CouponName,
-					CouponDescription = x.Coupon.CouponDescription,
-					CouponMinusCost = x.Coupon.CouponMinusCost,
-					MinimumPurchasingAmount = x.Coupon.MinimumPurchasingAmount,
-					Couponstartdate2String = x.Coupon.CouponStartDate.ToString().Substring(0,10),
-					Couponenddate2String = x.Coupon.CouponEndDate.ToString().Substring(0,10)
-					
-				})
+				.Select(x => x.Coupon)
 				.ToListAsync();
 
 			return Json(CouponList);
@@ -55,7 +45,7 @@ namespace SuFood.Controllers
 			var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
 			var existingCoupon = _context.CouponUsedList
-				.FirstOrDefault(x => x.Coupon.CouponName == model.CouponName && x.AccountId == Convert.ToInt32(getAccountId));
+				.FirstOrDefault(x => x.Coupon.CouponName == model.CouponName);
 
 			if (existingCoupon != null)
 			{
@@ -63,7 +53,7 @@ namespace SuFood.Controllers
 			}
 
 			var canUseCouponId =
-				 _context.Coupon.Where(x => x.CouponStartDate <= DateTime.Now && x.CouponEndDate >= DateTime.Now && x.CouponName == model.CouponName)
+				 _context.Coupon.Where(x => x.CouponName == model.CouponName)
 				.Select(x => x.CouponId).First();
 
 			var newCoupon = new CouponUsedList

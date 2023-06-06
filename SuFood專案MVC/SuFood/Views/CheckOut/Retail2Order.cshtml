@@ -41,19 +41,21 @@
 										</div>
 									</td>
 									<td>
-										<div class="plusAndMinus">
-											<button @@click="minusItem(c)">
-												<i class="bx bx-minus cartsIcon plus"></i>
-											</button>
-											<p>{{ c.cartQuantity }}</p>
-											<button @@click="addItem(c)">
-												<i class="bx bx-plus cartsIcon minus"></i>
-											</button>
+										<div class="plusAndMinus" style="background-color: white">
+											<div>
+												<i class="bx bx-plus cartsIcon plus" @@click="addItem(c)"></i>
+											</div>
+											<div>
+												<p>{{ c.cartQuantity }}</p>
+											</div>
+											<div>
+												<i class="bx bx-minus cartsIcon plus" @@click="minusItem(c)"></i>
+											</div>
 										</div>
 									</td>
 									<td>${{c.price * c.cartQuantity}}</td>
 									<td>
-										<button @@click="deleteItem(c)">
+										<button @@click="deleteItem(c)" style="border:0px; background-color:white">
 											<i class="bx bxs-trash tableIcon"></i>
 										</button>
 
@@ -174,7 +176,7 @@
 										   class="form-control isInvalid"
 										   aria-required="true"
 										   aria-invalid="false"
-										   v-model="retailOrder.Order.Name" />
+										   v-model="retailOrder.Order.Name" required/>
 									@*<small class="invalidFeedback" v-if="showErrorMessage">請填寫姓名</small>*@
 								</div>
 								<div class="from-group">
@@ -279,7 +281,7 @@
 			el: "#app",
 			data: {
 				tabs: ["1.確認購物車", "2.填寫訂單資訊", '3.完成購買'],
-				currentTab: "2.填寫訂單資訊",
+				currentTab: "1.確認購物車",
 				carts: [],
 				getId:'',
 				coupons: [],

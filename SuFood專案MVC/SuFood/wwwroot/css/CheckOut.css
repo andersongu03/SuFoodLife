@@ -176,8 +176,8 @@
     }
 
 .cartsIcon {
-    background-color: gainsboro;
-    color: #000;
+    background-color: white;
+    color: red;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -194,9 +194,7 @@
 }
 
     .plusAndMinus > div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+       
         width: 30px;
         height: 30px;
     }

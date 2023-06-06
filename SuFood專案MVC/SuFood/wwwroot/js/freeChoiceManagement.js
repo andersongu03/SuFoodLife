@@ -1,6 +1,8 @@
 const vm = new Vue({
     el: ".Recent-order",
     data: {
+        isNowEditHelp: false,
+        tobeEditedHelpList:[],
         deleteId: undefined,
         editId: undefined,
         toast: "",
@@ -313,6 +315,21 @@ const vm = new Vue({
             StockQuantity: "",
             Img: null
             }
+        },
+        EditHelp() {
+            this.isNowEditHelp = true;
+        },
+        calcelHelp() {
+            this.isNowEditHelp = false;
+        },
+        submitHelp() {
+            this.isNowEditHelp = false;
+            let result = this.products.filter(a => a.isHelpUchioce == true)
+
+            axios.post("/BackStage/FreeChoiceProductManagement/EditHelpChoiceList", result)
+                .then(response => {
+                    console.log(response)
+            })
         }
     },
 

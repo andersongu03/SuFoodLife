@@ -84,7 +84,7 @@ namespace SuFood.Controllers
 			{
 				From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
 				Subject = "啟用帳號驗證", //主旨
-				Body = (@$"請點<a href='https://localhost:50720/User/enable?code={code}'>這裡</a>來啟用你的帳號"),
+				Body = (@$"請點<a href='https://localhost:53376/User/enable?code={code}'>這裡</a>來啟用你的帳號"),
 				IsBodyHtml = true,
 				BodyEncoding = Encoding.UTF8,
 			};
@@ -229,7 +229,7 @@ namespace SuFood.Controllers
 			{
 				From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
 				Subject = "啟用帳號驗證", //主旨
-				Body = (@$"請點<a href='https://localhost:50720/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
+				Body = (@$"請點<a href='https://localhost:53376/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
 				IsBodyHtml = true,
 				BodyEncoding = Encoding.UTF8,
 			};

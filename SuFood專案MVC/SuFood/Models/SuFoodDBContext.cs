@@ -31,6 +31,7 @@ namespace SuFood.Models
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<ProductsOfPlans> ProductsOfPlans { get; set; }
+        public virtual DbSet<RecyleOrderDetails> RecyleOrderDetails { get; set; }
         public virtual DbSet<RecyleSubscribeOrders> RecyleSubscribeOrders { get; set; }
         public virtual DbSet<RetailsList> RetailsList { get; set; }
         public virtual DbSet<ShippingSingleOrders> ShippingSingleOrders { get; set; }
@@ -265,8 +266,6 @@ namespace SuFood.Models
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
-                entity.Property(e => e.OrdersDetailsId).HasColumnName("Orders_Details_Id");
-
                 entity.Property(e => e.Phone).HasMaxLength(50);
 
                 entity.Property(e => e.ReMark).HasMaxLength(50);
@@ -383,6 +382,23 @@ namespace SuFood.Models
                     .HasConstraintName("FK_ProductsOfPlans_Products");
             });
 
+            modelBuilder.Entity<RecyleOrderDetails>(entity =>
+            {
+                entity.ToTable("RecyleOrder_Details");
+
+                entity.Property(e => e.RecyleOrderDetailsId).HasColumnName("RecyleOrder_DetailsId");
+
+                entity.Property(e => e.ProductName).HasColumnName("Product_Name");
+
+                entity.Property(e => e.ReSubOrdersId).HasColumnName("ReSubOrders_Id");
+
+                entity.HasOne(d => d.ReSubOrders)
+                    .WithMany(p => p.RecyleOrderDetails)
+                    .HasForeignKey(d => d.ReSubOrdersId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_RecyleOrder_Details_RecyleSubscribe_Orders");
+            });
+
             modelBuilder.Entity<RecyleSubscribeOrders>(entity =>
             {
                 entity.HasKey(e => e.ReSubOrdersId);
@@ -393,21 +409,14 @@ namespace SuFood.Models
 
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
-                entity.Property(e => e.ShipCumulativeFrequency).HasColumnName("Ship_CumulativeFrequency");
-
-                entity.Property(e => e.ShipEndDate)
+                entity.Property(e => e.ShipDate)
                     .HasColumnType("date")
-                    .HasColumnName("Ship_EndDate");
+                    .HasColumnName("Ship_date");
 
-                entity.Property(e => e.ShipStartDate)
-                    .HasColumnType("date")
-                    .HasColumnName("Ship_StartDate");
-
-                entity.Property(e => e.ShipTotalFrequency).HasColumnName("Ship_TotalFrequency");
-
-                entity.Property(e => e.SingleShipCost).HasColumnName("singleShip_Cost");
-
-                entity.Property(e => e.SingleShipDate).HasColumnName("singleShip_date");
+                entity.Property(e => e.ShipStatus)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .HasColumnName("ship_status");
 
                 entity.HasOne(d => d.Orders)
                     .WithMany(p => p.RecyleSubscribeOrders)

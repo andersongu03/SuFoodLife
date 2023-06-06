@@ -13,9 +13,6 @@
 			margin-top: 5%;
 		}
 
-		input[type=text]:focus {
-			background-color: #e9fffc;
-		}
 
 		.info-label{
 			padding-right: 0px;
@@ -77,8 +74,7 @@
 						<label for="">會員姓名：</label>
 					</div>
 					<div class="col-9">
-						<input class="Error" type="text" name="firstname" id="firstname" v-model="info.firstName" required size="4" >
-						<input class="Error" type="text" name="lastname" id="lastname" v-model="info.lastName" required size="4"  >
+						<input class="Error" type="text" name="firstname" id="firstname" v-model="info.firstName" required size="10" >
 					</div>
 				</div>
 				<div class="form row">
@@ -127,7 +123,7 @@
 							<div>會員姓名：</div>
 						</div>
 						<div class="col-9">
-							<div>{{info.firstName}}{{info.lastName}}</div>
+							<div>{{info.firstName}}</div>
 						</div>
 					</div>
 					<div class="form row">
@@ -202,7 +198,6 @@
 					let _this = this;
 					this.infoEdit = true;
 					_this.oldfirstName = this.info.firstName;
-					_this.oldlastName = this.info.lastName;
 					_this.oldbirthdate = this.info.birthDate;
 					_this.oldgender = this.info.gender;
 					_this.oldphone = this.info.phone;
@@ -212,7 +207,6 @@
 					let _this = this;
 					this.infoEdit = false;
 					this.info.firstName = _this.oldfirstName;
-					this.info.lastName = _this.oldlastName;
 					this.info.birthDate = _this.oldbirthdate;
 					this.info.gender = _this.oldgender;
 					this.info.phone = _this.oldphone;
@@ -223,7 +217,6 @@
 					var request = {
 						AccountId: this.info.accountId,
 						FirstName: this.info.firstName,
-						LastName: this.info.lastName,
 						BirthDate: this.info.birthDate,
 						Gender: this.info.gender,
 						Phone: this.info.phone,

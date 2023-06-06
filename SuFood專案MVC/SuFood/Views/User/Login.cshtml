@@ -77,20 +77,35 @@
 
                         <hr class="my-4" />
 
-                        <form method="post" action="/User/VerifyGoogleToken">
+                        @*<form method="post" action="/User/ValidGoogleLogin">
 
                             <button class="btn btn-lg btn-block btn-primary"
                                     style="background-color: rgba(221, 75, 57, 0.97)"
                                     type="submit" name="googleButton">
                                 <i class="fab fa-google me-2"
                                 id="g_id_onload"
-                                data-client_id="966342829466-ci3oeauv24s9qgimp1vc2uaavfsaraag.apps.googleusercontent.com"
-                                data-login_uri="https://localhost:50720/User/ValidGoogleLogin"
+                                data-client_id="966342829466-qflfu0narcfavgern94ej8hqtru9hqru.apps.googleusercontent.com"
+                                data-login_uri="https://localhost:7086/User/ValidGoogleLogin"
                                 data-auto_prompt="false"></i>
                                 Sign in with Google
                             </button>
 
-                        </form>
+                        </form>*@
+
+                        <script src="https://accounts.google.com/gsi/client" async defer></script>
+                        <div id="g_id_onload"
+                             data-client_id="966342829466-qflfu0narcfavgern94ej8hqtru9hqru.apps.googleusercontent.com"
+                             data-login_uri="https://localhost:7086/User/ValidGoogleLogin"
+                             data-auto_prompt="false">
+                        </div>
+                        <div class="g_id_signin"
+                             data-type="standard"
+                             data-size="large"
+                             data-theme="outline"
+                             data-text="sign_in_with"
+                             data-shape="rectangular"
+                             data-logo_alignment="left">
+                        </div>
 
 
                     </div>

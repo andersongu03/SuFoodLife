@@ -126,6 +126,7 @@
                     axios.get("/HelpUChioce/GetHelpProduct").then(response => {
                         this.helpList = response.data;
                         console.log(this.helpList);
+                        this.helpOrder2Back.UserChioce = this.helpList.map(x => ({ ProductName: x.productName }));
                     }).catch(error => {
                         console.log(error);
                     });
@@ -133,9 +134,9 @@
                 createHelpOrder: function () {
 
                     axios.post("/HelpUChioce/CreateHelpOrder", this.helpOrder2Back).then(response => {
-                        if(response.data){
+                        if (response.data) {
                             window.location.href = "/CheckOut/HelpUChioce2Order"
-                        }else{
+                        } else {
                             alert('你還沒登入哦')
                         }
 
@@ -143,10 +144,10 @@
                 },
                 SeeUProductName: function (name) {
                     let existingItem = this.helpOrder2Back.UserChioce.find(item => item.ProductName === name);
-                    if (existingItem) {                        
+                    if (existingItem) {
                         let index = this.helpOrder2Back.UserChioce.indexOf(existingItem);
                         this.helpOrder2Back.UserChioce.splice(index, 1);
-                    } else {                        
+                    } else {
                         this.helpOrder2Back.UserChioce.push({ ProductName: name });
                     }
                 },
@@ -164,10 +165,9 @@
 
                     return `${year}-${month}-${day}`;
                 },
-                start: function () {
-                    return this.helpOrder2Back.UserChioce = this.helpList.map(x => ({ ProductName: x.productName }));
-                },
-
+                //start: function () {
+                //    return this.helpOrder2Back.UserChioce = this.helpList.map(x => ({ ProductName: x.productName }));
+                //},
             },
             mounted() {
                 this.GetHelpList();

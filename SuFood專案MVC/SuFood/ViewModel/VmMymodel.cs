@@ -25,5 +25,15 @@ namespace SuFood.ViewModel
 
 		public IEnumerable<string>? Comments { get; set; }
 
-	}
+        public IEnumerable<VmRecyleSubscribeOrders> RecyleSubscribeOrders { get; set; }
+
+        public  IEnumerable<RecyleOrderDetails>? RecyleOrderDetails { get; set; }
+
+    }
+	public class RecyleSubscribeOrders
+	{
+		public int ReSubOrdersId { get; set; }
+		public DateTime ShipDate { get; set; }
+        public string ShipStatus { get; set; }
+    }
 }

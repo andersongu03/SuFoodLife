@@ -262,7 +262,6 @@ namespace SuFood.Models
                 entity.Property(e => e.Name).HasMaxLength(50);
 
                 entity.Property(e => e.OrderStatus)
-                    .IsRequired()
                     .HasMaxLength(10)
                     .HasColumnName("Order_Status");
 
@@ -274,16 +273,13 @@ namespace SuFood.Models
                     .HasColumnType("datetime")
                     .HasColumnName("SetOrders_Datetime");
 
-                entity.Property(e => e.ShipAddress)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.ShipAddress).HasMaxLength(50);
 
                 entity.Property(e => e.ShippingMethodId).HasColumnName("Shipping_method_Id");
 
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.AccountId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Account_TO_Orders");
 
                 entity.HasOne(d => d.Coupon)
@@ -320,13 +316,9 @@ namespace SuFood.Models
 
                 entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
 
-                entity.Property(e => e.Comment).HasMaxLength(100);
-
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
-
-                entity.Property(e => e.Recomment).HasMaxLength(100);
 
                 entity.HasOne(d => d.Orders)
                     .WithMany(p => p.OrdersReview)

@@ -94,7 +94,6 @@
             })
         },
         CreateComment(createCommentList) {
-            alert(createCommentList)
             let _this = this;
             axios.post('/BackStage/BackHome/CommentManagement/CreateComment', createCommentList).then(response => {
                 this.toast = response.data;

@@ -37,7 +37,7 @@ namespace SuFood.Controllers
 
             List<VmMymodel> vmMymodels = new List<VmMymodel>();
 
-            await _context.Orders.Include(x => x.OrdersReview).Where(o => o.AccountId == AccountId)
+            await _context.Orders.Include(x => x.OrdersReview).Include(rc => rc.RecyleSubscribeOrders).ThenInclude(d=>d.RecyleOrderDetails).Where(o => o.AccountId == AccountId)
                 .ForEachAsync(o =>
                 {
                     vmMymodels.Add(new VmMymodel()
@@ -53,7 +53,19 @@ namespace SuFood.Controllers
                         Phone = o.Phone,
                         Name = o.Name,
                         ShipAddress = o.ShipAddress,
-                        Recomment = o.OrdersReview.Select(r=>r.Recomment)
+                        Recomment = o.OrdersReview.Select(r => r.Recomment),
+                        RecyleSubscribeOrders = o.RecyleSubscribeOrders.Select(rs => new VmRecyleSubscribeOrders()
+                        {
+                            ReSubOrdersId = rs.ReSubOrdersId,
+                            ShipDate = rs.ShipDate,
+                            ShipStatus = rs.ShipStatus,
+                            RecyleOrderDetails = rs.RecyleOrderDetails.Select(rod => new VmRecyleOrderDetails()
+                            {
+                                RecyleOrderDetailsId = rod.RecyleOrderDetailsId,
+                                ProductName = rod.ProductName,
+                                Quantity = rod.Quantity
+                            }),                            
+                        }),
                     });
                 });
 
@@ -70,7 +82,7 @@ namespace SuFood.Controllers
             {
                 OrdersReview or = new OrdersReview()
                 {
-					OrdersId = x.OrdersId,
+                    OrdersId = x.OrdersId,
                     RatingStar = x.RatingStar,
                     Comment = x.Comment,
                 };

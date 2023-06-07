@@ -2,7 +2,7 @@
     el:".MyOrders",
     data:
     {
-        recomment: "",
+        recomment: [],
         ordersId:0,
         title: "我的訂單",
         od: {
@@ -52,6 +52,10 @@
         watchComment(id) {
             this.comments = id;
             this.CreateOrEditOrDelete = 'Response';
+            this.popupShowing.showPopup = true;
+        },
+        openmydetails() {
+            this.CreateOrEditOrDelete = 'Details';
             this.popupShowing.showPopup = true;
         },
         createComment(id) {

@@ -24,9 +24,10 @@
                                 <th scope="col">訂單狀態</th>
                                 <th scope="col">折扣</th>
                                 <th scope="col">訂單總金額</th>
-                                <th scope="col">評論</th>
+                                <th scope="col">我的評論</th>
                                 <th scope="col">新增評論</th>
                                 <th scope="col">查看回覆</th>
+                                <th scope="col">訂閱明細</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -53,7 +54,10 @@
                                     <button class="btn" @@click="createComment(o.ordersId)">新增</button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary" @@click="watchComment(o.ordersId)">查看</button>
+                                    <button class="btn btn-primary" @@click="watchComment()">查看</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" @@click="openmydetails">查看</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -98,11 +102,34 @@
                                            我們的評論
                                        </div>
                                        <div>
-                                            <textarea class="textarea" readonly v-bind="od.recomment"></textarea>
+                                            <textarea class="textarea" readonly></textarea>
                                        </div>
                                        <div>
                                             <button type="button" class="btn-close" @@click="CloseComment"> 關閉 </button>
                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="CreateOrEditOrDelete === 'Details'">
+                        <div class="cardContent" id="" :class="popupShowing">
+                            <div class="cardPopup-body">
+                                <div class="cardPopup">
+                                    <form id="form">
+                                        <div class="topic">
+                                            切拜
+                                        </div>
+                                        <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
+                                        </div>
+                                        <div class="form-group">
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
+                                            <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(od)"> 新增 </button>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SuFood.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace SuFood.ViewModel
 {
@@ -13,5 +14,6 @@ namespace SuFood.ViewModel
 		public string? Couponstartdate2String { get; set; }
 		public DateTime? CouponEndDate { get; set; }
 		public string? Couponenddate2String { get; set; }
-	}
+
+    }
 }

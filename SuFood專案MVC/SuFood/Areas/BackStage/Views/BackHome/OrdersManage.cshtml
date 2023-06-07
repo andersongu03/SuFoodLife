@@ -1,5 +1,18 @@
 ﻿@section Styles{
     <link href="~/css/ordersmanage.css" rel="stylesheet" />
+    <style>
+        .general_order_table {
+            border-bottom: 1px solid;
+            background: gray;
+            color: #fff;
+            font-weight:bold;
+        }
+
+        #ordersDetailModal{
+            color: rgb(242 191 15);
+            font-weight: bold;
+        }
+    </style>
 }
 
 
@@ -81,7 +94,7 @@
                     <td>{{o.accountId}}</td>
                     <td>{{o.buyMethod}}</td>
                     <td>{{o.orderStatus}}</td>
-                    <td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" ></i></td>
+                    <td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
                     <td>{{(o.subTotal)-(o.subDiscount)}}</td>					
                     <td>{{o.setOrdersDatetime}}</td>
                     <td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
@@ -114,35 +127,41 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ordersDetailModal">訂單明細編號</h5>
+                    <h5 class="modal-title" id="ordersDetailModal">訂單明細編號{{orderDetailsId}}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="myorders_table">
                     <!--內容-->
                     <table>
                         <thead>
-                            <tr >
-                                <th>產品名稱</th>
-                                <th>單價</th>
-                                <th>數量</th>
-                                <th>小計</th>
-                                <th>優惠券名稱</th>
-                                <th>優惠券折扣</th>
-                                <th>總計</th>
-                            </tr>
+                            <tr class="general_order_table">
+                                <th>商品名稱&nbsp;</th>
+                                <th>&nbsp;單價&nbsp;</th>
+                                <th>&nbsp;數量&nbsp;</th>
+                                <th>&nbsp;小計&nbsp;</th>
+                            </tr>                            
                         </thead>
                         <tbody>
                             <tr v-for="item in vmDetails">
-                                @*<td>{{item.productName}</td>
-                                <td>{{item.unitPrice}}</td>
-                                <td>{{item.quantity}}</td>
-                                <td>{{item.subTotal}}</td>
-                                <td>{{item.coupon.couponName}}</td>
-                                <td>{{item.coupon.couponMinuCost}}</td>
-                                <td>{{(item.subTotal)-(item.subDiscount)}}</td>*@
+                                <td>{{item.productName}}&nbsp;</td>
+                                <td>&nbsp;{{item.unitPrice}}&nbsp;</td>
+                                <td>&nbsp;{{item.quantity}}&nbsp;</td>
+                                <td>&nbsp;{{(item.unitPrice)*(item.quantity)}}&nbsp;</td>
+                            </tr>
+                            <tr class="general_order_table">
+                                <th>優惠券ID&nbsp;</th>
+                                <th>&nbsp;折扣&nbsp;</th>
+                                <th>&nbsp;總計&nbsp;</th>
+                            </tr>
+                            <tr>
+                                <td>{{couponId}}&nbsp;</td>
+                                <td>&nbsp;{{subDiscount}}&nbsp;</td>
+                                <td>&nbsp;{{(subTotal)-(subDiscount)}}&nbsp;</td>
                             </tr>
                         </tbody>
                     </table>
+                    <label class="general_order_table">備註：</label><br>
+                    <textarea>{{reMark}}</textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -211,12 +230,14 @@
 </div>
 
 @section Scripts{
-    
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
-    <script src="~/js/vue.js"></script>
-    <script src="~/axios/axios.min.js"></script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
     <script>
         Vue.component('paginate', VuejsPaginate)
 
@@ -231,11 +252,12 @@
                 vmDetails:[],
 
                 ordersDetail:{
+                    ordersId:0,
                     productName:"",
                     unitPrice:0,
                     quantity:0,
                     subTotal:0,
-                    couponName:"",
+                    couponId:0,
                     subDiscount:0,
                     total:0
                 },
@@ -250,15 +272,18 @@
                 },                
                 selectedMethod: "method",
                 selectedStatus: "status",
+                orderDetailsId:0,
+                subTotal:0,
+                subDiscount:0,
+                couponId:0,
+                reMark: ""
 
-
-               
-               
+                             
             },
             mounted(){
                 let _this = this;
 				_this.getOrders();
-                //_this.getOrdersDetails();
+                _this.getOrdersDetails();
             },
             methods: {
                 getOrders: function(){
@@ -268,13 +293,14 @@
                         _this.vmOrders = res.data;
                     })
                 },
-                //getOrdersDetails: function(){
-                //    let _this = this;
-                //    axios.get(`/BackStage/OrdersManagement/GetOrdersDetails`).then(res => {
-                //        alert(JSON.stringify(res.data))
-                //        _this.vmDetails = res.data;
-                //    })
-                //},
+                getOrdersDetails: function(){
+                    let _this = this;
+                    axios.get(`/BackStage/OrdersManagement/GetOrdersDetails?OrderId=${this.ordersDetail.ordersId}`).then(res => {
+                        //alert(JSON.stringify(res.data))
+                        _this.vmDetails = res.data;
+                        _this.orderDetailsId = _this.vmDetails[0].ordersDetailsId;
+                    })
+                },
 
                 editInfo: function(){
                     let _this = this;
@@ -291,7 +317,7 @@
                 },
                 deleteOrder: function(){
                     let _this = this;
-                    axios.delete(`/backstage/OrdersManagement/DeleteOrders?Id=${this.delOrders.ordersId}`).then(res => {
+                    axios.delete(`/backstage/OrdersManagement/DeleteOrders?orderId=${this.delOrders.ordersId}`).then(res => {
                         $("#deleteModal").modal("hide");
                         //_this.toast = "刪除成功";
                         //_this.toastHint();
@@ -299,7 +325,13 @@
                     });
                 },
                 ordersConfirm: function (o) {
-                     
+                    this.ordersDetail.ordersId = o.ordersId;                    
+                    this.subTotal = o.subTotal;
+                    this.subDiscount = o.subDiscount;
+                    this.couponId = o.couponId;
+                    this.reMark = o.reMark;
+                    this.getOrdersDetails();
+                    
                      
 				},
                 editConfirm: function (o) {

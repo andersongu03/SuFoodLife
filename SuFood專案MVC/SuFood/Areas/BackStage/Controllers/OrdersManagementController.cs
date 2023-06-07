@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,96 +11,85 @@ using SuFood.ViewModel;
 
 namespace SuFood.Areas.BackStage.Controllers
 {
-    [Area("BackStage")]
-    public class OrdersManagementController : Controller
-    {
-        private readonly SuFoodDBContext _context;
+	[Area("BackStage")]
+	public class OrdersManagementController : Controller
+	{
+		private readonly SuFoodDBContext _context;
 
-        public OrdersManagementController(SuFoodDBContext context)
-        {
-            _context = context;
-        }
+		public OrdersManagementController(SuFoodDBContext context)
+		{
+			_context = context;
+		}
 
 
 		//取得所有訂單 ("/BackStage/OrdersManagement/GetAllOrders")
 		[HttpGet]
 		public async Task<IEnumerable<VmOrders>> GetAllOrders()
 		{
-            return _context.Orders.Select(x => new VmOrders
-            {
-                OrdersId = x.OrdersId,
-                AccountId = x.AccountId,
-                BuyMethod = x.BuyMethod,
-                OrderStatus = x.OrderStatus,
-                SubTotal = x.SubTotal,
-                SubDiscount = x.SubDiscount,
+			return _context.Orders.Select(x => new VmOrders
+			{
+				OrdersId = x.OrdersId,
+				AccountId = x.AccountId,
+				BuyMethod = x.BuyMethod,
+				OrderStatus = x.OrderStatus,
+				SubTotal = x.SubTotal,
+				SubDiscount = x.SubDiscount,
+				CouponId = x.CouponId,
 				SetOrdersDatetime = x.SetOrdersDatetime,
 				Name = x.Name,
 				Phone = x.Phone,
+				ReMark = x.ReMark,
 				ShipAddress = x.ShipAddress
 
-            });
-        }
-
-
-		//取得訂單明細("/BackStage/OrdersManagement/GetOrdersDetails")
-
-		[HttpGet]
-		public object GetOrdersDetails()
-		{
-			return _context.OrdersDetails.Include(x => x.Order).Select(x => new
-			{
-				orderdetail = new
-				{
-					orderId = x.OrderId,
-					ordersDetailsId = x.OrdersDetailsId,
-					productName = x.ProductName,
-					unitPrice = x.UnitPrice,
-					quantity = x.Quantity
-				},
-				order = x.Order,
-				//coupon = x.Order.Coupon
-
-			}).ToList();
+			});
 		}
 
-		//[HttpPost]
-  //      public object GetSingelCouponId(GetSingleOrderDetailbk model)
-  //      {
-  //          var coupon = _context.Coupon.Where(x=>x.CouponId == model.CouponId).Select(x=>x.CouponName ).FirstOrDefault();
 
-		//	var orderd = _context.
+		//取得零售及自由選訂單明細("/BackStage/OrdersManagement/GetOrdersDetails")
+		[HttpGet]
+		public IQueryable<VmOrdersDetails> GetOrdersDetails(int orderId)
+		{
+			return _context.OrdersDetails
+				.Where(od => od.OrderId == orderId)
+				.Select(od => new VmOrdersDetails
+				{
 
-            
-  //      }
+					OrderId = od.OrderId,
+					ProductName = od.ProductName,
+					UnitPrice = od.UnitPrice,
+					Quantity = od.Quantity,
+					OrdersDetailsId = od.OrdersDetailsId,
+
+				});			 
+		}
 
 
 
 
 
+		//取得幫你選訂單("/BackStage/OrdersManagement/GetRecyleOrders")
+		[HttpGet]
+        public async Task<VmRecyleSubscribeOrders> GetRecyleOrders(int orderId)
+        {
+            var recyledetail = await _context.RecyleSubscribeOrders
+                .Where(x => x.OrdersId == orderId)
+                .Select(d => new VmRecyleSubscribeOrders
+                {
+                   OrdersId = d.OrdersId,
+                   ReSubOrdersId = d.ReSubOrdersId,
+                   ShipDate = d.ShipDate,
+                   ShipStatus = d.ShipStatus
+                }).SingleOrDefaultAsync();
+
+            return recyledetail;
+        }
+
+		//取得幫你選的訂單明細
 
 
-        //      [HttpGet]
-        //      public object GetOrdersDetails(int orderId)
-        //      {
-        //	try
-        //	{
-        //		return _context.OrdersDetails.Where(od => od.OrderId == orderId).Select(od => new
-        //              {
-        //                  ProductName = od.ProductName,
-        //                  UnitPrice = od.UnitPrice,
-        //                  Quantity = od.Quantity,
-        //                  CouponName = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponName,
-        //                  CouponDicount = _context.Coupon.Where(c => c.CouponId == od.CouponId).FirstOrDefault().CouponMinusCost
-        //              });
 
-        //	}
-        //	catch (Exception ex)
-        //	{
-        //		return "查不到相對應的CouponID";
-        //	}
 
-        //}
+
 
 
 
@@ -133,13 +123,13 @@ namespace SuFood.Areas.BackStage.Controllers
 
 		//刪除訂單 ("/BackStage/OrdersManagement/DeleteOrders")
 		[HttpDelete]
-		public async Task<string> DeleteOrders(int OrderId)
+		public async Task<string> DeleteOrders(int orderId)
 		{
-			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == OrderId).Select(x => x);
+			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == orderId).Select(x => x);
 			_context.OrdersDetails.RemoveRange(ordersdetails);
 			await _context.SaveChangesAsync();
 
-			var orders = _context.Orders.Where(o => o.OrdersId == OrderId).Select(o => o).SingleOrDefault();
+			var orders = _context.Orders.Where(o => o.OrdersId == orderId).Select(o => o).SingleOrDefault();
 			
 			if (orders == null)
 			{

@@ -25,6 +25,7 @@ namespace SuFood.Models
         public virtual DbSet<CouponUsedList> CouponUsedList { get; set; }
         public virtual DbSet<FreeChoicePlans> FreeChoicePlans { get; set; }
         public virtual DbSet<FreeChoiceProducts> FreeChoiceProducts { get; set; }
+        public virtual DbSet<Messages> Messages { get; set; }
         public virtual DbSet<Orders> Orders { get; set; }
         public virtual DbSet<OrdersDetails> OrdersDetails { get; set; }
         public virtual DbSet<OrdersReview> OrdersReview { get; set; }
@@ -221,6 +222,27 @@ namespace SuFood.Models
                     .HasConstraintName("FK_FreeChoiceProducts_FreeChoicePlans");
             });
 
+            modelBuilder.Entity<Messages>(entity =>
+            {
+                entity.Property(e => e.ReceiverId).HasColumnName("Receiver_Id");
+
+                entity.Property(e => e.SenderId).HasColumnName("Sender_Id");
+
+                entity.Property(e => e.Text).IsRequired();
+
+                entity.Property(e => e.UserName).IsRequired();
+
+                entity.HasOne(d => d.Receiver)
+                    .WithMany(p => p.MessagesReceiver)
+                    .HasForeignKey(d => d.ReceiverId)
+                    .HasConstraintName("FK_Messages_Account1");
+
+                entity.HasOne(d => d.Sender)
+                    .WithMany(p => p.MessagesSender)
+                    .HasForeignKey(d => d.SenderId)
+                    .HasConstraintName("FK_Messages_Account");
+            });
+
             modelBuilder.Entity<Orders>(entity =>
             {
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
@@ -294,9 +316,16 @@ namespace SuFood.Models
 
                 entity.Property(e => e.ReviewId).HasColumnName("Review_Id");
 
+<<<<<<< HEAD
+=======
+                entity.Property(e => e.Comment).HasMaxLength(100);
+
+>>>>>>> main
                 entity.Property(e => e.OrdersId).HasColumnName("Orders_Id");
 
                 entity.Property(e => e.RatingStar).HasColumnName("rating_star");
+
+                entity.Property(e => e.Recomment).HasMaxLength(100);
 
                 entity.HasOne(d => d.Orders)
                     .WithMany(p => p.OrdersReview)

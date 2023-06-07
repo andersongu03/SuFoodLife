@@ -23,7 +23,11 @@ namespace SuFood.ViewModel
 		public string BuyMethod { get; set; }
 
 		public virtual Account Account { get; set; }
+<<<<<<< HEAD
 		public virtual Coupon Coupon { get; set; }		
+=======
+		public virtual Coupon Coupon { get; set; }
+>>>>>>> main
 		public virtual ICollection<OrdersDetails> OrdersDetails { get; set; }
 	}
 }

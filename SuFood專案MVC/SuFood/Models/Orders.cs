@@ -25,7 +25,11 @@ namespace SuFood.Models
         public int? ShippingMethodId { get; set; }
         public int? AccountId { get; set; }
         public int? CouponId { get; set; }
+<<<<<<< HEAD
         public int? CustomerPaymentId { get; set; }
+=======
+        public int CustomerPaymentId { get; set; }
+>>>>>>> main
         public string Name { get; set; }
         public string Phone { get; set; }
         public string ReMark { get; set; }

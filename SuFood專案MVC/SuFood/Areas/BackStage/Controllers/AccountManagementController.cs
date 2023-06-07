@@ -27,41 +27,39 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmAccount>> GetAllAccounts()
         {
-            return _context.Account.Select(x => new VmAccount
+            return _context.Account.Where( x => x.Role == "Customer").Select(x => new VmAccount
             {
                 AccountId = x.AccountId,
                 Account1 = x.Account1,
-                Password = x.Password,
-                FirstName = x.FirstName,
-                LastName = x.LastName,
+                FirstName = $"{x.FirstName}{x.LastName}",
                 BirthDate = x.BirthDate,
                 Gender = x.Gender,
                 Phone = x.Phone,
-                DefaultShipAddress = x.DefaultShipAddress,                
+                DefaultShipAddress = x.DefaultShipAddress,
                 CreateDatetime = x.CreateDatetime,
                 LasttImeLogin = x.LasttImeLogin,
                 Role = x.Role,
-                IsActive = x.IsActive,
+                IsActive = x.IsActive
             });
         }
 
         //修改會員資料
         [HttpPost]
-        public async Task<string> EditAccounts([FromBody] VmAccount account)
+        public async Task<string> EditAccounts([FromBody] VmAccount model)
         {
-                var editacc = await _context.Account.FindAsync(account.AccountId);
-
-                try
+            var editacc = await _context.Account.FirstOrDefaultAsync(x => x.AccountId == model.AccountId);
+           
+            try
                 {
-                    editacc.FirstName = account.FirstName;
-                    editacc.LastName = account.LastName;
-                    editacc.Phone = account.Phone;
+                    editacc.FirstName = model.FirstName;
+                    editacc.LastName = model.LastName;
+                    editacc.Phone = model.Phone;
                     _context.Update(editacc);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AccountExists(account.AccountId))
+                    if (!AccountExists(model.AccountId))
                     {
                         return "修改失敗";
                     }
@@ -96,6 +94,27 @@ namespace SuFood.Areas.BackStage.Controllers
             await _context.SaveChangesAsync();
             return "刪除成功";
         }
+
+        //取得訂單資料
+        [HttpGet]
+        public async Task<IEnumerable<VmOrders>> GetOrdersByAccountId(int accountId)
+        {
+            var orders = await _context.Orders
+                .Where(x => x.AccountId == accountId)
+                .Select(o => new VmOrders
+                {
+                    OrdersId = o.OrdersId,
+                    SubTotal = o.SubTotal,
+                    SubDiscount= o.SubDiscount,
+                    SetOrdersDatetime = o.SetOrdersDatetime,
+                    OrderStatus = o.OrderStatus,
+                    AccountId = o.AccountId
+                })
+                .ToListAsync();
+
+            return orders;
+        }
+
 
 
 

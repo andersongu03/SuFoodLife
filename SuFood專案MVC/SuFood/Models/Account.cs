@@ -10,7 +10,6 @@ namespace SuFood.Models
         public Account()
         {
             CouponUsedList = new HashSet<CouponUsedList>();
-            CustomerPayment = new HashSet<CustomerPayment>();
             Orders = new HashSet<Orders>();
             ShoppingCart = new HashSet<ShoppingCart>();
         }
@@ -24,8 +23,6 @@ namespace SuFood.Models
         public string Gender { get; set; }
         public string Phone { get; set; }
         public string DefaultShipAddress { get; set; }
-        public string DefaultCreditCardNumber { get; set; }
-        public string DefaultCreditCardHolder { get; set; }
         public DateTime? CreateDatetime { get; set; }
         public DateTime? LasttImeLogin { get; set; }
         public string Role { get; set; }
@@ -33,7 +30,6 @@ namespace SuFood.Models
         public string HashPassword { get; set; }
 
         public virtual ICollection<CouponUsedList> CouponUsedList { get; set; }
-        public virtual ICollection<CustomerPayment> CustomerPayment { get; set; }
         public virtual ICollection<Orders> Orders { get; set; }
         public virtual ICollection<ShoppingCart> ShoppingCart { get; set; }
     }

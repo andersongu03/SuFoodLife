@@ -35,10 +35,6 @@
          "ObjectType": 0
       },
       {
-         "Name": "[dbo].[Customer_Payment]",
-         "ObjectType": 0
-      },
-      {
          "Name": "[dbo].[FreeChoicePlans]",
          "ObjectType": 0
       },
@@ -64,6 +60,10 @@
       },
       {
          "Name": "[dbo].[ProductsOfPlans]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[RecyleOrder_Details]",
          "ObjectType": 0
       },
       {

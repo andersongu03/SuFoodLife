@@ -25,8 +25,7 @@ namespace SuFood.Controllers
 		{
 			this._context = context;
 			this.encryptService = encryptService;
-		}
-		[HttpGet]
+		}		
 		public IActionResult Login()
 		{
 			return PartialView();

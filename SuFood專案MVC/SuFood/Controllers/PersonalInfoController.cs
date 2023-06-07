@@ -35,8 +35,7 @@ namespace SuFood.Controllers
                 Gender = acc.Gender,
                 Phone = acc.Phone,
                 DefaultShipAddress = acc.DefaultShipAddress,
-                DefaultCreditCardNumber = acc.DefaultCreditCardNumber,
-                DefaultCreditCardHolder = acc.DefaultCreditCardHolder
+                
             });
             return acc;
         }
@@ -60,9 +59,7 @@ namespace SuFood.Controllers
             alertacc.BirthDate = account.BirthDate;
             alertacc.Gender = account.Gender;
             alertacc.Phone = account.Phone;
-            alertacc.DefaultShipAddress = account.DefaultShipAddress;
-            alertacc.DefaultCreditCardNumber = account.DefaultCreditCardNumber;
-            alertacc.DefaultCreditCardHolder = account.DefaultCreditCardHolder;
+            alertacc.DefaultShipAddress = account.DefaultShipAddress;            
 
             try
             {

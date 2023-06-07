@@ -48,7 +48,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://b3f6-114-32-252-175.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://3611-125-227-38-129.ngrok-free.app/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 
@@ -124,7 +124,8 @@ namespace SuFood.Controllers
 					var removeUserCoupon = _context.CouponUsedList.Where(x => x.CouponId == order.CouponId && x.AccountId == order.AccountId).SingleOrDefault();
 					if(removeUserCoupon != null)
 					{
-						_context.CouponUsedList.Remove(removeUserCoupon);
+						removeUserCoupon.CouponUsedOrNot = 0;
+						_context.CouponUsedList.Update(removeUserCoupon);
 						await _context.SaveChangesAsync();
 					}
 					//付款成功把產品數量減掉

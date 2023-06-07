@@ -111,7 +111,7 @@
                                         <button type="submit"
                                                 class="btn btn-danger btn-lg"
                                                 name="submit"
-                                                value="buy">
+                                            value="buy" @@click="goOrder(product.productId)">
                                             Buy
                                         </button>
                                     </div>
@@ -217,6 +217,35 @@
                     }).catch(error => {
                         console.log(error);
                     });
+                },
+                goOrder(productId){
+                    let _this = this;
+                    this.cart = {
+                        ProductId: productId,
+                        CartQuantity: this.buyQuantity,
+                    };
+                    axios.post("/Retail/AddSingle2Cart", this.cart, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }).then(response => {
+                        cartttt.GetCart();
+                        if (response.data.getAccountId != "null") {
+                            this.getAccountId = response.data.getAccountId;
+                            this.showAlert = "成功加入購物車";
+                            window.location.href = "/CheckOut/Retail2Order";
+                            console.log(this.cart);
+                        } else {
+                            this.showAlert = "你要先登入哦";
+                        }
+                        this.modalVisible = true;
+                        setTimeout(() => {
+                            this.modalVisible = false;
+                        }, 1500);
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                    
                 }
 
             },

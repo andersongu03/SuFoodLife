@@ -62,8 +62,7 @@ namespace SuFood.Controllers
 				}
 
 				var oldRecyleOrderList = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == oldOrderId).ToList();
-				_context.RemoveRange(oldRecyleOrderList);
-				_context.SaveChanges();
+				_context.RemoveRange(oldRecyleOrderList);				
 				_context.Remove(oldOrder);
 				_context.SaveChanges();
 

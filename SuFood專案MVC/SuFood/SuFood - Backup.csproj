@@ -13,8 +13,6 @@
 
   <ItemGroup>
     <Content Remove="bundleconfig.json" />
-    <Content Remove="wwwroot\css\accountManage.css" />
-    <Content Remove="wwwroot\css\accountManage1.css" />
   </ItemGroup>
 
   <ItemGroup>

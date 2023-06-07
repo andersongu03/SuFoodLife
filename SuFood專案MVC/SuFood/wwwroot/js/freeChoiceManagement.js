@@ -1,6 +1,8 @@
 const vm = new Vue({
     el: ".Recent-order",
     data: {
+        isNowEditHelp: false,
+        tobeEditedHelpList:[],
         deleteId: undefined,
         editId: undefined,
         toast: "",
@@ -25,6 +27,7 @@ const vm = new Vue({
             StockQuantity: 0,
             Img: null
         },
+        OldEditProductItem: {},
         EditOrDeleteorCreate: "Edit",
         modalContentStyle: {
             w200: true,
@@ -162,6 +165,7 @@ const vm = new Vue({
             this.EditProdcutItem = item
             this.editId = item.productId
             this.openModal()
+            this.storeOldEditData(item)
         },
         DeleteProducts(p) {
             this.EditOrDeleteorCreate = "Delete"
@@ -189,10 +193,34 @@ const vm = new Vue({
         },
         closeModal() {
             this.modalContainerStyle.showModal = false;
+            this.reverseEditData()
         },
         closeModalWithHint() {
             this.modalContainerStyle.showModal = false;
             this.toastHint();
+        },
+        storeOldEditData(item) {
+            this.OldEditProductItem.productName = item.productName
+            this.OldEditProductItem.category = item.category
+            this.OldEditProductItem.cost = item.cost
+            this.OldEditProductItem.img = item.img
+            this.OldEditProductItem.price = item.price
+            this.OldEditProductItem.productDescription = item.productDescription
+            this.OldEditProductItem.quantity = item.quantity
+            this.OldEditProductItem.stockUnit = item.stockUnit
+            this.OldEditProductItem.stockQuantity = item.stockQuantity
+        },
+        reverseEditData() {
+            let target = vm.products.find(x => x.productId == this.editId)
+            target.productName = this.OldEditProductItem.productName
+            target.category = this.OldEditProductItem.category
+            target.cost = this.OldEditProductItem.cost 
+            target.img = this.OldEditProductItem.img 
+            target.price = this.OldEditProductItem.price
+            target.productDescription = this.OldEditProductItem.productDescription
+            target.quantity = this.OldEditProductItem.quantity
+            target.stockUnit = this.OldEditProductItem.stockUni
+            target.stockQuantity = this.OldEditProductItem.stockQuantity
         },
         //查詢資料的方法
         GetProductDetail() {
@@ -233,7 +261,7 @@ const vm = new Vue({
                 formData.append('Cost', item.cost);
                 formData.append('Price', item.price);
                 formData.append('StockQuantity', item.stockQuantity);                
-                if (this.uplodaImgPreview.image != '') formData.append('Img', this.uplodaImgPreview.image);
+                formData.append('Img', this.uplodaImgPreview.image);
                 axios.post("/BackStage/FreeChoiceProductManagement/Edit", formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data'
@@ -246,7 +274,8 @@ const vm = new Vue({
                     }).catch((error) => console.log(error))
             }
             this.toast = "請確認內容";
-            this.toastHint();            
+            this.toastHint();
+            this.uplodaImgPreview.image = null
         },
         CreateProduct() {
             if (this.CreateRequestIsNotEmpty()) {
@@ -286,6 +315,21 @@ const vm = new Vue({
             StockQuantity: "",
             Img: null
             }
+        },
+        EditHelp() {
+            this.isNowEditHelp = true;
+        },
+        calcelHelp() {
+            this.isNowEditHelp = false;
+        },
+        submitHelp() {
+            this.isNowEditHelp = false;
+            let result = this.products.filter(a => a.isHelpUchioce == true)
+
+            axios.post("/BackStage/FreeChoiceProductManagement/EditHelpChoiceList", result)
+                .then(response => {
+                    console.log(response)
+            })
         }
     },
 

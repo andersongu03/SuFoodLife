@@ -12,5 +12,6 @@
         public string Category { get; set; }
         public byte[] Img { get; set; }
         public int Quantity { get; set; }
+        public bool? IsHelpUchioce { get; set; }
     }
 }

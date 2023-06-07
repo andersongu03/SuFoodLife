@@ -67,6 +67,10 @@
          "ObjectType": 0
       },
       {
+         "Name": "[dbo].[RecyleOrder_Details]",
+         "ObjectType": 0
+      },
+      {
          "Name": "[dbo].[RecyleSubscribe_Orders]",
          "ObjectType": 0
       },

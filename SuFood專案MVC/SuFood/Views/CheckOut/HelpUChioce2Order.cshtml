@@ -1,0 +1,138 @@
+﻿@section styles{
+    <link href="~/css/checkout.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+}<section class="check-out__section" id="app">
+
+    <div class="check-out__container">
+        <div class="check-out-status-container">
+            <div v-for="tab in tabs"
+                 class="check-out-status flexItem"
+                 :class="{currentStatus: currentTab === tab}"
+                 @@click="currentTab = tab">
+                <p class="flexItem">{{tab}}</p>
+            </div>
+        </div>
+        <div class="check-out-content row">
+            <!-- 填寫訂單資訊 -->
+            <template v-if="currentTab == '2.填寫訂單資訊'">
+                <div class="col-md-8 row flex-column-reverse flex-md-row">
+                    <div class="col-md-7 orderInfo">
+                        <h2 class="section-title">訂單資訊</h2>
+                        <div class="card">
+                            <form action="" class="card-body">
+                                <div class="from-group">
+                                    <label for="name" class="title">收件人姓名</label>
+                                    <input type="text"
+                                           id="name"
+                                           name="name"
+                                           class="form-control isInvalid"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="submit.RecipientName" />
+                                    <small class="invalidFeedback">請填寫姓名</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="email" class="title">Email</label>
+                                    <input type="text"
+                                           id="email"
+                                           name="email"
+                                           class="form-control"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="submit.Email" />
+                                    <small class="invalidFeedback">Email不能為空</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="tel" class="title">電話</label>
+                                    <input type="text"
+                                           id="tel"
+                                           name="tel"
+                                           class="form-control"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="submit.Phone" />
+                                    <small class="invalidFeedback">請填寫聯絡電話</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="tel" class="title">聯絡地址</label>
+                                    <input type="text"
+                                           id="tel"
+                                           name="tel"
+                                           class="form-control"
+                                           aria-required="true"
+                                           aria-invalid="false"
+                                           v-model="submit.Address" />
+                                    <small class="invalidFeedback">請填寫聯絡地址</small>
+                                </div>
+                                <div class="from-group">
+                                    <label for="message" class="title">
+                                        備註
+                                        <small class="text-primary"
+                                               style="color: #6527a0 !important">此欄位非必填</small>
+                                    </label>
+                                    <textarea name=""
+                                              id="mesage"
+                                              cols="30"
+                                              rows="6"
+                                              class="form-control"></textarea>
+                                </div>
+                                <div class="text-right">
+                                    <button type="submit" class="btn btn-success">
+                                        送出訂單
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="sticky-top commoditiesDetail">
+                            <h2 class="section-title">訂閱明細</h2>
+                            <div class="flex-shrink-1">
+                                <p>總運送次數：</p>
+                            </div>
+                            <div class="list-unstyled list-group mb-3">
+                                <p>每次配送商品數量：</p>
+                            </div>
+                            <ul class="list-unstyled list-group mb-3">
+                                預計派送時間
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="flex-shrink-1">
+                                        <h5 class="font-weight-bold mb-0">
+                                            Hyper Light Drifter
+                                        </h5>
+                                    </div>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="flex-shrink-1">
+                                        <h5 class="font-weight-bold mb-0">SUPERHOT</h5>
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item text-right">
+                                    <strong>總計：$988</strong>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</section>
+
+<script src="./vue.js"></script>
+<script>
+    const vm = new Vue({
+        el: "#app",
+        data: {
+            
+            },
+            isInvalid: true,
+        },
+        methods: {},
+        computed: {},
+    });
+</script>

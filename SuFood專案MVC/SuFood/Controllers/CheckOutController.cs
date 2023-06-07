@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.Models.DTO;
 using SuFood.ViewModel;
+using System.Linq;
 using System.Net;
 using System.Numerics;
 using System.Security.Policy;
@@ -244,7 +245,63 @@ namespace SuFood.Controllers
 
 			return Json(new { GetOrderId = orderId });
 		}
+		// ============================幫你選們=======================
 
+		public IActionResult HelpUChioce2Order()
+		{
+			return View();
+		}
+		[HttpGet]
+		public async Task<IEnumerable<GetHelpUChioceOrderViewModel>> GetHelpUChoiceOrder()
+		{
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+			var order = _context.Orders
+				.FirstOrDefault(x => x.AccountId == Convert.ToInt32(getAccountId) && x.OrderStatus == "未付款" && x.BuyMethod == "幫你選");
+						
+			var shipCount = _context.RecyleSubscribeOrders.Count(x => x.OrdersId == Convert.ToInt32(order.OrdersId));
+
+			var viewList = _context.Orders
+				.Include(x => x.RecyleSubscribeOrders)
+				.Where(x => x.OrdersId == order.OrdersId)
+				.Select(x => new GetHelpUChioceOrderViewModel
+				{
+					OrdersId = x.OrdersId,
+					SubTotal = x.SubTotal,
+					countShip = shipCount,
+					DetailsViewModels = x.RecyleSubscribeOrders
+					.Select(x => new RecyleOrderDetailsViewModel
+					{
+						ShipDate = x.ShipDate
+					}).ToList()
+				})
+				.ToList();
+
+			return viewList;
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> CreateHelpUChioceOrder([FromBody] HelpUChioce4OrderViewModel model)
+		{
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+			var order = _context.Orders.Where(x => x.OrdersId == model.OrdersId).FirstOrDefault();
+
+			if (order != null)
+			{
+				order.ReMark = model.ReMark;
+				order.ShipAddress = model.ShipAddress;
+				order.Name = model.Name;
+				order.Email = model.Email;
+				order.Phone = model.Phone;
+
+				_context.Update(order);
+				_context.SaveChanges();
+			}
+
+			return Json(new { OrderId = order.OrdersId });
+			
+		}
 	}
 
 }

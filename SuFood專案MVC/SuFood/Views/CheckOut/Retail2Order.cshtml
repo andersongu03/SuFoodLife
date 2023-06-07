@@ -281,7 +281,7 @@
 				coupons: [],
 				selectedOption: null,
 				chooseCoupon: null,
-				GetCouponMinPrice:null,
+				//GetCouponMinPrice:null,
 				retailOrder: {
 					Order: {
 						Name: '',
@@ -528,9 +528,9 @@
 			},
 			mounted() {
 				let _this = this;
-				//_this.GetCart();
-				//_this.GetCouponsToCart();
-				_this.executeMultipleMethods();
+				_this.GetCart();
+				_this.GetCouponsToCart();
+				
 			}
 		});
 	</script>

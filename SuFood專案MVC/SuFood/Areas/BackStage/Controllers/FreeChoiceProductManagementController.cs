@@ -39,7 +39,8 @@ namespace SuFood.Areas.BackStage.Controllers
                 StockUnit = pro.StockUnit,
                 StockQuantity = pro.StockQuantity,
                 Category = pro.Category,
-                Img = pro.Img
+                Img = pro.Img,
+                IsHelpUchioce = pro.IsHelpUchioce,                
             });
         }
 
@@ -108,7 +109,14 @@ namespace SuFood.Areas.BackStage.Controllers
                             data = br.ReadBytes((int)Request.Form.Files["Img"].Length);
                             products.Img = data; //把檔案放回
                         }
+
+                        
                     }
+                    if (products.Img.Length < 500)
+                    {
+                        products.Img = _context.Products.Where(p => p.ProductId == products.ProductId).Select(p => p.Img).FirstOrDefault();
+                    }
+
 
                     _context.Products.Update(products);
                     await _context.SaveChangesAsync();
@@ -128,6 +136,42 @@ namespace SuFood.Areas.BackStage.Controllers
             }
             return "修改失敗";
             }
+
+        //修改幫你選商品清單功能
+        //新增ProdcutOfPlans資料表
+        [HttpPost]
+        public async Task<string> EditHelpChoiceList([FromBody] List<VmProduct> vmParameters)
+        {
+            foreach (var vmParameter in vmParameters)
+            {
+                if (!_context.Products.Any(p => p.IsHelpUchioce == vmParameter.IsHelpUchioce))
+                {
+                    return "不存在該產品";
+                }
+
+                var product = _context.Products.Where(p => p.ProductId == vmParameter.ProductId);
+                Products pro = new Products
+                {
+                    ProductId = vmParameter.ProductId,
+                    IsHelpUchioce = vmParameter.IsHelpUchioce,
+                    ProductName = vmParameter.ProductName,
+                    Price= vmParameter.Price,
+                    ProductDescription= vmParameter.ProductDescription,
+                    Category = vmParameter.Category,
+                    Cost= vmParameter.Cost,
+                    Img= vmParameter.Img,
+                    StockQuantity= vmParameter.StockQuantity,
+                    StockUnit= vmParameter.StockUnit
+                };
+
+                _context.Products.Update(pro);
+            }
+
+            await _context.SaveChangesAsync();
+
+            return "新增成功";
+        }
+
 
         private bool ProductsExists(int id)
         {

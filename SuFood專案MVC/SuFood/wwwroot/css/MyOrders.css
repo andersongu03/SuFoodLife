@@ -67,6 +67,10 @@
     position: relative;
 }
 
+.cardPopup{
+    height: 0;
+}
+
 .showPopup {
     display: flex;
     justify-content: center;

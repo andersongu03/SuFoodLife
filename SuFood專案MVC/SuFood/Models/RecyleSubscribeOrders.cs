@@ -7,11 +7,17 @@ namespace SuFood.Models
 {
     public partial class RecyleSubscribeOrders
     {
+        public RecyleSubscribeOrders()
+        {
+            RecyleOrderDetails = new HashSet<RecyleOrderDetails>();
+        }
+
         public int ReSubOrdersId { get; set; }
         public string ShipStatus { get; set; }
         public DateTime ShipDate { get; set; }
         public int OrdersId { get; set; }
 
         public virtual Orders Orders { get; set; }
+        public virtual ICollection<RecyleOrderDetails> RecyleOrderDetails { get; set; }
     }
 }

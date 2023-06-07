@@ -2,6 +2,7 @@
     el:".MyOrders",
     data:
     {
+        recyleSubscribeOrders:[],
         recomment: [],
         ordersId:0,
         title: "我的訂單",
@@ -49,12 +50,13 @@
                 this.toastHintStyle.fadeInUp = false
             },2000)
         },
-        watchComment(id) {
-            this.comments = id;
+        watchComment(re) {
+            this.recomment = re;
             this.CreateOrEditOrDelete = 'Response';
             this.popupShowing.showPopup = true;
         },
-        openmydetails() {
+        openmydetails(rso) {
+            this.recyleSubscribeOrders = rso;
             this.CreateOrEditOrDelete = 'Details';
             this.popupShowing.showPopup = true;
         },

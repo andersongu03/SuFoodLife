@@ -37,13 +37,14 @@ namespace SuFood.Controllers
 
             List<VmMymodel> vmMymodels = new List<VmMymodel>();
 
-            await _context.Orders.Include(x => x.OrdersReview).Include(rc => rc.RecyleSubscribeOrders).ThenInclude(d=>d.RecyleOrderDetails).Where(o => o.AccountId == AccountId)
+            await _context.Orders.Include(od => od.OrdersDetails).Include(x => x.OrdersReview).Include(rc => rc.RecyleSubscribeOrders).ThenInclude(d=>d.RecyleOrderDetails).Where(o => o.AccountId == AccountId)
                 .ForEachAsync(o =>
                 {
                     vmMymodels.Add(new VmMymodel()
                     {
                         AccountId = AccountId,
                         OrdersId = o.OrdersId,
+                        
                         Comments = o.OrdersReview.Select(x => x.Comment),
                         OrderStatus = o.OrderStatus,
                         SetOrdersDateTime = o.SetOrdersDatetime,

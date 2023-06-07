@@ -27,7 +27,7 @@
                                 <th scope="col">我的評論</th>
                                 <th scope="col">新增評論</th>
                                 <th scope="col">查看回覆</th>
-                                <th scope="col">訂閱明細</th>
+                                <th scope="col">明細</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -54,10 +54,10 @@
                                     <button class="btn" @@click="createComment(o.ordersId)">新增</button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary" @@click="watchComment()">查看</button>
+                                    <button class="btn btn-primary" @@click="watchComment(o.recomment)">查看</button>
                                 </td>
                                 <td>
-                                    <button class="btn btn-primary" @@click="openmydetails">查看</button>
+                                    <button class="btn btn-primary" @@click="openmydetails(o.recyleSubscribeOrders)">查看</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -102,10 +102,10 @@
                                            我們的評論
                                        </div>
                                        <div>
-                                            <textarea class="textarea" readonly></textarea>
+                                            <textarea class="textarea" readonly v-model="recomment" style="border:none"></textarea>
                                        </div>
                                        <div>
-                                            <button type="button" class="btn-close" @@click="CloseComment"> 關閉 </button>
+                                            <button type="button" class="btn-close" @@click="CloseComment" style="color:white">Ｘ</button>
                                        </div>
                                     </form>
                                 </div>
@@ -116,21 +116,26 @@
                         <div class="cardContent" id="" :class="popupShowing">
                             <div class="cardPopup-body">
                                 <div class="cardPopup">
-                                    <form id="form">
+                                    <form id="form" v-for="d in recyleSubscribeOrders">
                                         <div class="topic">
-                                            切拜
+                                            <span>{{d.productName}}</span>
                                         </div>
                                         <div class="form-group">
+                                            <span>{{d.reSubOrdersId}}</span>
                                         </div>
                                         <div class="form-group">
+                                            <span v-for="od in d.recyleOrderDetails">{{od.productName}}</span>
                                         </div>
                                         <div class="form-group">
+                                            <span>{{d.shipDate}}</span>
                                         </div>
-                                        <div>
-                                            <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
-                                            <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(od)"> 新增 </button>
+                                        <div class="form-group">
+                                            <span>{{d.shipStatus}}</span>
                                         </div>
                                     </form>
+                                    <div>
+                                        <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

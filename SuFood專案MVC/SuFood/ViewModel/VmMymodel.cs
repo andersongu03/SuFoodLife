@@ -27,5 +27,6 @@ namespace SuFood.ViewModel
 
         public IEnumerable<VmRecyleSubscribeOrders> RecyleSubscribeOrders { get; set; }
 
+		public IEnumerable<VmOrdersDetails> OrdersDetails { get; set; }
     }
 }

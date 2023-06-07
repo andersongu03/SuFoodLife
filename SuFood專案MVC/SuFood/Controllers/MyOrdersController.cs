@@ -44,7 +44,11 @@ namespace SuFood.Controllers
                     {
                         AccountId = AccountId,
                         OrdersId = o.OrdersId,
-                        
+                        OrdersDetails = o.OrdersDetails.Select(od => new VmOrdersDetails()
+                        {
+                            ProductName = od.ProductName,
+                            Quantity = od.Quantity,
+                        }),
                         Comments = o.OrdersReview.Select(x => x.Comment),
                         OrderStatus = o.OrderStatus,
                         SetOrdersDateTime = o.SetOrdersDatetime,
@@ -65,7 +69,7 @@ namespace SuFood.Controllers
                                 RecyleOrderDetailsId = rod.RecyleOrderDetailsId,
                                 ProductName = rod.ProductName,
                                 Quantity = rod.Quantity
-                            }),                            
+                            }),
                         }),
                     });
                 });

@@ -27,7 +27,8 @@
                                 <th scope="col">我的評論</th>
                                 <th scope="col">新增評論</th>
                                 <th scope="col">查看回覆</th>
-                                <th scope="col">明細</th>
+                                <th scope="col">訂閱明細</th>
+                                <th scope="col">訂單明細</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,6 +60,9 @@
                                 <td>
                                     <button class="btn btn-primary" @@click="openmydetails(o.recyleSubscribeOrders)">查看</button>
                                 </td>
+                                <td>
+                                    <button class="btn btn-primary" @@click="ordersDetail(o.ordersDetails)">查看</button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -72,7 +76,6 @@
                                             <h1>留下你的意見吧</h1>
                                             <label>你的回覆是我們的最大動力</label>
                                         </div>
-
                                         <div class="form-group">
                                             <label class="form-label">評論ID<span></span></label>
                                         </div>
@@ -114,8 +117,8 @@
                     </template>
                     <template v-if="CreateOrEditOrDelete === 'Details'">
                         <div class="cardContent" id="" :class="popupShowing">
-                            <div class="cardPopup-body">
-                                <div class="cardPopup">
+                            <div class="cardPopup-body" style="overflow: auto;">
+                                <div class="cardPopup" style="height: 100%;">
                                     <form id="form" v-for="d in recyleSubscribeOrders">
                                         <div class="topic">
                                             <span>{{d.productName}}</span>
@@ -131,6 +134,27 @@
                                         </div>
                                         <div class="form-group">
                                             <span>{{d.shipStatus}}</span>
+                                        </div>
+                                    </form>
+                                    <div>
+                                        <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="CreateOrEditOrDelete === 'ordersDetail'">
+                        <div class="cardContent" id="" :class="popupShowing">
+                            <div class="cardPopup-body">
+                                <div class="cardPopup">
+                                    <form id="form" v-for="o in myDetails">
+                                        <div class="topic">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{o.productName}}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{o.quantity}}</span>
                                         </div>
                                     </form>
                                     <div>

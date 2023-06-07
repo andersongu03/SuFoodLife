@@ -2,6 +2,7 @@
     el:".MyOrders",
     data:
     {
+        myDetails: [],
         recyleSubscribeOrders:[],
         recomment: [],
         ordersId:0,
@@ -49,6 +50,11 @@
             setTimeout(() => {
                 this.toastHintStyle.fadeInUp = false
             },2000)
+        },
+        ordersDetail(od) {
+            this.myDetails = od;
+            this.CreateOrEditOrDelete = 'ordersDetail';
+            this.popupShowing.showPopup = true;
         },
         watchComment(re) {
             this.recomment = re;

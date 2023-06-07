@@ -8,6 +8,7 @@ using System.Net;
 
 namespace SuFood.Areas.BackStage.Controllers
 {
+    [Authorize(Roles = "Employee")]
     [Area("BackStage")] //所有寫在Area裡面的Controller記得都要加這一行
     public class BackHomeController : Controller
     {
@@ -36,28 +37,28 @@ namespace SuFood.Areas.BackStage.Controllers
 
         //會員管理頁面
         public IActionResult AccountManage()
-        {
+        {// 檢查使用者是否已驗證
             return View();
         }
 
         //訂單管理頁面
         public IActionResult OrdersManage()
-        {
+        {// 檢查使用者是否已驗證
             return View();
         }
 
         public IActionResult FreeChoicePlans()
-        {
+        {// 檢查使用者是否已驗證
             return View();
         }
 
         public IActionResult CommentManagement()
-        {
+        {// 檢查使用者是否已驗證
             return View();
         }
 
         public IActionResult BackStageChat()
-        {
+        {// 檢查使用者是否已驗證
             return View();
         }
 

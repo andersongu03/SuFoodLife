@@ -47,7 +47,8 @@ namespace SuFood
 
              builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                .AddCookie(options =>
-               {                    
+               {
+                   options.LoginPath= "/User/Login";
                    options.AccessDeniedPath = "/User/Login"; //登入失敗路徑
                    options.LogoutPath = "/Home/Index";  //登出路徑
                    options.ExpireTimeSpan = TimeSpan.FromDays(30); //Cookie 預期時間                   

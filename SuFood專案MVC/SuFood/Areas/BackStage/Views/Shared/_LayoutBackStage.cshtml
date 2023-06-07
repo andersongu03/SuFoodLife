@@ -47,7 +47,7 @@
                         <i class='bx bx-user icon'></i>
                         <div class="users__info">
                             <!-- 如果是登入狀態顯示這個 -->
-                            <a href="#"><span>登出</span> </a>
+                            <a asp-area="" asp-controller="User" asp-action="Logout"><span>登出</span> </a>
                         </div>
                     </div>
                 </div>
@@ -71,7 +71,6 @@
                         <a asp-area="BackStage" asp-controller="BackHome" asp-action="Coupon"><i class='bx bx-purchase-tag-alt'></i><span>優惠券管理</span></a>
                         <a asp-area="BackStage" asp-controller="BackHome" asp-action="#"><i class='bx bx-store-alt'></i><span>首頁管理</span></a>
                         <a asp-area="BackStage" asp-controller="BackHome" asp-action="CommentManagement"><i class='bx bx-message-dots'></i><span>評論管理</span></a>
-                        <a asp-area="BackStage" asp-controller="BackHome" asp-action="#"><i class='bx bx-bar-chart-alt-2'></i><span>銷售分析</span></a>
                         <a asp-area="BackStage" asp-controller="BackHome" asp-action="BackStageChat"><i class='bx bx-chat'></i><span>顧客聯繫</span></a>
                     </div>
                 </div>

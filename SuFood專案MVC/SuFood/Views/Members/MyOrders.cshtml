@@ -70,8 +70,8 @@
                     <template v-if="CreateOrEditOrDelete === 'Create'">
                         <div class="cardContent" id="" :class="popupShowing">
                             <div class="cardPopup-body">
-                                <div class="cardPopup">
-                                    <form  id="form">
+                                <div class="cardPopup" style="height: 100%;">
+                                    <form id="form" style="display: contents;">
                                         <div class="topic">
                                             <h1>留下你的意見吧</h1>
                                             <label>你的回覆是我們的最大動力</label>
@@ -88,10 +88,12 @@
                                             <input class="form-control" type="text" v-model="createCommentList.comment" />
                                         </div>
                                         <div>
-                                            <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
                                             <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(od)"> 新增 </button>
                                         </div>
                                     </form>
+                                    <div>
+                                        <button type="button" class="btn-close" @@click="CloseComment" style="color:white">Ｘ</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

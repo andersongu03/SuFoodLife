@@ -148,7 +148,12 @@ namespace SuFood.Controllers
 			if (existingOrderId != 0)
 			{
 				int OldOrderId = (int)existingOrderId;
-				return await EditRetailOrder(OldOrderId, model);
+				var oldOrderDetails = _context.OrdersDetails.Where(od => od.OrderId == OldOrderId).ToList();
+				_context.RemoveRange(oldOrderDetails);
+
+				var oldOrder = _context.Orders.Where(o => o.OrdersId == OldOrderId).FirstOrDefault();
+				_context.Remove(oldOrder);
+				_context.SaveChanges();
 			}
 
 
@@ -199,52 +204,6 @@ namespace SuFood.Controllers
 
 			return Json(new { GetOrderId = getNewOrderId });
 		}
-		[HttpPost]
-		public async Task<IActionResult> EditRetailOrder(int orderId, RetailOrdersViewModel model)
-		{
-			var order = await _context.Orders.FindAsync(orderId);
-
-			var getSubCost = 0;
-			foreach (var details in model.Details)
-			{
-				var getSingleCost = _context.Products.Where(p => p.ProductName == details.ProductName).Select(p => p.Cost).First();
-				var getCartQuantity = details.Quantity;
-				getSubCost += getSingleCost * getCartQuantity;
-
-			}
-
-			if (order == null) { return Ok("我是誰我在哪"); }
-
-			order.Name = model.Order.Name;
-			order.Phone = model.Order.Phone;
-			order.ShipAddress = model.Order.ShipAddress;
-			order.SubCost = getSubCost;
-			order.SubTotal = model.Order.SubTotal;
-			order.SubDiscount = model.Order.SubDiscount;
-			order.SetOrdersDatetime = DateTime.Now;
-			order.ReMark = model.Order.ReMark;
-			order.Email = model.Order.Email;
-
-			await _context.SaveChangesAsync();
-
-			var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
-			_context.OrdersDetails.RemoveRange(orderDetails);
-
-			foreach (var detail in model.Details)
-			{
-				var NewOrderDetails = new OrdersDetails
-				{
-					OrderId = orderId,
-					ProductName = detail.ProductName,
-					UnitPrice = detail.UnitPrice,
-					Quantity = detail.Quantity,
-				};
-				_context.OrdersDetails.Add(NewOrderDetails);
-				await _context.SaveChangesAsync();
-			}
-
-			return Json(new { GetOrderId = orderId });
-		}
 		// ============================幫你選們=======================
 
 		public IActionResult HelpUChioce2Order()
@@ -285,7 +244,9 @@ namespace SuFood.Controllers
 		{
 			var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
-			var order = _context.Orders.Where(x => x.OrdersId == model.OrdersId).FirstOrDefault();
+			var orderId = _context.Orders.Where(x => x.AccountId == Convert.ToInt32(getAccountId) && x.OrderStatus == "未付款" && x.BuyMethod == "幫你選").Select(x => x.OrdersId).First();
+
+			var order = _context.Orders.Where(x => x.OrdersId == orderId).FirstOrDefault();
 
 			if (order != null)
 			{
@@ -299,7 +260,7 @@ namespace SuFood.Controllers
 				_context.SaveChanges();
 			}
 
-			return Json(new { OrderId = order.OrdersId });
+			return Json(new { OrderId = orderId });
 			
 		}
 	}

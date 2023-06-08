@@ -9,6 +9,8 @@ using SuFood.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Policy;
 using System.Text;
 using System.Web;
@@ -48,7 +50,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://026b-2407-4d00-1c01-7e46-c1f4-47f9-5c62-3d47.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://c26c-2407-4d00-1c01-7e46-6170-6f6d-77b2-d536.ngrok-free.app/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 
@@ -119,17 +121,13 @@ namespace SuFood.Controllers
 				if (order != null)
 				{
 					order.OrderStatus = "已付款";
-					//order.SubTotal = int.Parse(orderTotal);
-
-					//if (paymentType == "CREDIT")
-					//{
-
-					//}
+					
 					//把使用過的優惠券刪掉
 					var removeUserCoupon = _context.CouponUsedList.Where(x => x.CouponId == order.CouponId && x.AccountId == order.AccountId).SingleOrDefault();
 					if(removeUserCoupon != null)
 					{
-						_context.CouponUsedList.Remove(removeUserCoupon);
+						removeUserCoupon.CouponUsedOrNot = 0;
+						_context.CouponUsedList.Update(removeUserCoupon);
 						await _context.SaveChangesAsync();
 					}
 					//付款成功把產品數量減掉
@@ -144,6 +142,33 @@ namespace SuFood.Controllers
 						}
 					}
 
+					//寄信
+					var sendEmail = order.Email;
+
+					var mail = new MailMessage()
+					{
+						From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
+						Subject = "感謝訂購", //主旨
+						Body = ($@"{order.Name}您好，您成功訂購SuFoodLife蔬服人生，訂單編號{order.OrdersId}，金額 {order.SubTotal - order.SubDiscount}"),
+						IsBodyHtml = true,
+						BodyEncoding = Encoding.UTF8,
+					};
+					mail.To.Add(new MailAddress(order.Email)); //寄給哪位
+					try
+					{
+						using (var sm = new SmtpClient("smtp.gmail.com", 587)) //465 ssl
+						{
+							sm.EnableSsl = true;
+							sm.Credentials = new NetworkCredential("SuFood2u@gmail.com", "okjzbnxgsmkmfwlq");
+							sm.Send(mail);
+						}
+					}
+					catch (Exception ex)
+					{
+						throw ex;
+					}
+
+
 				}
 				_context.SaveChanges();
 			}
@@ -157,8 +182,8 @@ namespace SuFood.Controllers
 				Version = r_Version,
 			};
 
-			return RedirectToAction("CheckPayment", "Check", onlinePaymentReturn);
-			/*return RedirectToAction("Index")*/
+			return RedirectToAction("PaymentSucceed", "CheckOut");
+			
 		}
 
 		

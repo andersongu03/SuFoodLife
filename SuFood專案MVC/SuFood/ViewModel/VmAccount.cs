@@ -11,8 +11,8 @@
         public string Phone { get; set; }
         public string DefaultShipAddress { get; set; }
         public DateTime? CreateDatetime { get; set; }
-        public DateTime? LasttImeLogin { get; set; }
-        public string Role { get; set; }
+		public DateTime? LasttImeLogin { get; set; }
+		public string Role { get; set; }
         public bool? IsActive { get; set; }
     }
 }

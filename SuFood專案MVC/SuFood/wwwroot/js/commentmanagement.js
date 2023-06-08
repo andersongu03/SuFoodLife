@@ -6,8 +6,6 @@
         topic: '評論管理',
         toast: "",
         deleteId: undefined,
-        reviewId: undefined,
-        OrdersId: undefined,
         popupShowing: {
             showPopup: false
         },
@@ -17,10 +15,13 @@
         CreateOrEditOrDelete: "",
         or: [],
         createCommentList: {
-            reviewId: 0,
-            ratingStar:0,
-            comment:"",
-            ordersId:0
+            ReviewId: 0,
+            RatingStar: 0,
+            Comment: "",
+            OrdersId: 0,
+            AccountId: 0,
+            Phone:"",
+            Recomment:"",
         },
         editCommentList: {
             ReviewId: "",
@@ -35,12 +36,7 @@
             showModal: false,
         },
         isActive: false,
-    },
-    request: {
-        reviewId: "",
-        ratingStar:"",
-        ordersId: "",
-        comment: "",
+        selectedStars: 'all',
     },
     methods: {
         toastHint() {
@@ -49,14 +45,19 @@
             this.toastHintStyle.fadeInUp = false
             }, 2000)
         },
-        createComment() {
-           /* console.log('123')*/
-            this.CreateOrEditOrDelete = 'Create';
-            this.popupShowing.showPopup= true;
-           
+        createComment(c) {
+            let _this = this;
+            _this.createCommentList.ReviewId = c.reviewId;
+            _this.createCommentList.RatingStar = c.ratingStar;
+            _this.createCommentList.Comment = c.comment;
+            _this.createCommentList.OrdersId = c.ordersId;
+            _this.createCommentList.AccountId = c.accountId;
+            _this.createCommentList.Phone = c.phone;
+            _this.createCommentList.recomment = "";
+            _this.CreateOrEditOrDelete = 'Create';
+            _this.popupShowing.showPopup = true;
         },
         CloseComment() {
-           /* console.log('123')*/
             this.popupShowing.showPopup = false;
         },
         closepopupShowHint() {
@@ -64,16 +65,11 @@
             this.toastHint();
         },
         editComment(item) {
-            /*alert('213')*/
-            /*console.log(item);*/
             this.CreateOrEditOrDelete = 'Edit';
             this.popupShowing.showPopup = true; 
             this.editCommentList = item;
-            
-            //this.reviewId=item.reviewId
         },
         deleteComment(c) {
-            /*console.log(c);*/
             this.CreateOrEditOrDelete = 'Delete';
             this.popupShowing.showPopup = true;
             this.editCommentList = c;
@@ -90,7 +86,6 @@
             })
         },
         DeleteComment: function (id) {
-            /*console.log("觸發");*/
             var _this = this
             axios.delete(`/BackStage/CommentManagement/DeleteComment/${id}`).then(response => {
                 this.toast = response.data;
@@ -100,30 +95,13 @@
         },
         CreateComment(createCommentList) {
             let _this = this;
-
-            var request = null;
-
-            request = {
-                    "reviewId": _this.createCommentList.reviewId,
-                    "ratingStar": _this.createCommentList.ratingStar,
-                    "comment": _this.createCommentList.comment,
-                    "ordersId": _this.createCommentList.ordersId
-             }
-
-
-            if (this.createCommentList.ordersId == 0 || this.createCommentList.ratingStar > 6 || this.createCommentList.ratingStar < 0) {
-                alert('客戶ID為必填欄位,星數不得大於5或是小於0')
-            }
-            else {
-                axios.post('/BackStage/CommentManagement/CreateComment', request 
-                ).then(response => {
-                    _this.toast = response.data
-                    /*console.log('123')*/
-                    this.closepopupShowHint()
-                    _this.GetComments()
-                })
-            }
+            axios.post('/BackStage/BackHome/CommentManagement/CreateComment', createCommentList).then(response => {
+                this.toast = response.data;
+                this.closepopupShowHint();
+                this.GetComments();
+            })
         },
+        //沒用到
         EditComment: function (editCommentList) {
             var _this = this;
             var Cdata = {
@@ -144,8 +122,31 @@
         }
     },
     computed: {
-        filter() {
-            arr = this.or.filter(o => {return o.or.indexOf(this.keyword)!=-1})
+        filterproducts() {
+            let arr = this.or
+            if (this.keyword != '') {
+                arr = arr.filter(o => { return o.ordersId == this.keyword })
+            }
+
+            //下拉式選單篩選結果
+
+            
+            switch (this.selectedStars) {
+                case "all":
+                    break;
+                case "good":
+                    arr = arr.filter(o => {
+                        return o.ratingStar == 5
+                    })
+                    break;
+                case "bad":
+                    arr = arr.filter(o => {
+                        return o.ratingStar >= 1 && o.ratingStar < 5
+                    })
+                    break;
+            }
+
+            return arr
         }
     },
     mounted() {

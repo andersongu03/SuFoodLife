@@ -88,7 +88,7 @@
         },
         //取得後台資料路由丟這邊
         GetDetail() {
-            axios.get(`https://localhost:7086/MyOrders/GetMyOrders/${id}`).then(response => {
+            axios.get(`/MyOrders/GetMyOrders/${id}`).then(response => {
                 this.od = response.data;
                 this.mycomment = response.data.comment;
             })
@@ -98,12 +98,12 @@
             var request = null;
             createCommentList = {
                 reviewId: _this.createCommentList.reviewId,
-                ratingStar: _this.createCommentList.ratingStar,
+                ratingStar: parseInt(_this.stars),
                 comment: _this.createCommentList.comment,
                 ordersId: _this.ordersId
             }
             
-            axios.post('https://localhost:7086/MyOrders/CreateComment/', createCommentList).then(response => {
+            axios.post('/MyOrders/CreateComment/', createCommentList).then(response => {
                 this.toast = response.data;
                 this.closepopupShowHint();
                 this.GetDetail();

@@ -6,131 +6,151 @@ using SuFood.ViewModel;
 
 namespace SuFood.Controllers
 {
-    public class HelpUChioceController : Controller
-    {
-        private readonly SuFoodDBContext _context;
-        public HelpUChioceController(SuFoodDBContext context)
-        {
-            this._context = context;
-        }
-        public IActionResult HelpUBuy()
-        {
-            return View();
-        }
-        [HttpGet]
-        public async Task<IEnumerable<GetHelpProductViewModels>> GetHelpProduct()
-        {
-            var HelpProduct = _context.Products
-                .Where(x => x.IsHelpUchioce == true)
-                .Select(x => new GetHelpProductViewModels
-                {
-                    ProductId = x.ProductId,
-                    ProductName = x.ProductName,
-                    ProductDescription = x.ProductDescription,
-                    Img = x.Img,
-                })
-                .ToList();
+	public class HelpUChioceController : Controller
+	{
+		private readonly SuFoodDBContext _context;
 
+		public HelpUChioceController(SuFoodDBContext context)
+		{
+			this._context = context;
+		}
 
-            return HelpProduct;
-        }
-        [HttpPost]
-        public async Task<bool> CreateHelpOrder([FromBody]HelpOrder2BackViewModel model)
-        {
-            var getAccountId = HttpContext.Session.GetString("GetAccountId");
+		public IActionResult HelpUBuy()
+		{
+			return View();
+		}
 
-            if (getAccountId == null)
-            {
-                return false;
-            }
+		[HttpGet]
+		public async Task<IEnumerable<GetHelpProductViewModels>> GetHelpProduct()
+		{
+			var HelpProduct = _context.Products
+				.Where(x => x.IsHelpUchioce == true)
+				.Select(x => new GetHelpProductViewModels
+				{
+					ProductId = x.ProductId,
+					ProductName = x.ProductName,
+					ProductDescription = x.ProductDescription,
+					Img = x.Img,
+				})
+				.ToList();
 
-            var oldOrder = _context.Orders.FirstOrDefault(x => x.AccountId == Convert.ToInt32(getAccountId) && x.BuyMethod == "幫你選" && x.OrderStatus == "未付款")?.OrdersId;
+			return HelpProduct;
+		}
 
-            if (oldOrder != null)
-            {
-                var oldRecyleOrderId = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == oldOrder).Select(x => x.ReSubOrdersId).ToList();
+		[HttpPost]
+		public async Task<bool> CreateHelpOrder([FromBody] HelpOrder2BackViewModel model)
+		{
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
-                foreach (var o in oldRecyleOrderId)
-                {
-                    var oldRecyleOrderDetailList = _context.RecyleOrderDetails.Where(x => x.ReSubOrdersId == o).ToList();
-                    _context.RemoveRange(oldRecyleOrderDetailList);
-                    _context.SaveChanges();
-                }
+			if (getAccountId == null)
+			{
+				return false;
+			}
 
-                var oldRecyleOrderList = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == oldOrder).ToList();
-                _context.RemoveRange(oldRecyleOrderList);
-                _context.Remove(oldOrder);
-                _context.SaveChanges();
-            }
+			var oldOrderId = _context.Orders.FirstOrDefault(x => x.AccountId == Convert.ToInt32(getAccountId) && x.BuyMethod == "幫你選" && x.OrderStatus == "未付款")?.OrdersId;
+			var oldOrder = _context.Orders.FirstOrDefault(x => x.AccountId == Convert.ToInt32(getAccountId) && x.BuyMethod == "幫你選" && x.OrderStatus == "未付款");
 
-            var ShipTimes = (model.TimeRange * 28) / (model.OrderFrequency * 7);
-            var getTotalPay = model.OrderTotalPay * ShipTimes;
-            var getSubCost = getTotalPay * 0.6;
+			if (oldOrder != null)
+			{
+				var oldRecyleOrderId = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == oldOrderId).Select(x => x.ReSubOrdersId).ToList();
 
-            var order = new Orders
-            {
-                SubTotal = getTotalPay,
-                SubCost = (int)Math.Round(getSubCost),
-                SubDiscount = 0,
-                SetOrdersDatetime = DateTime.Now,
-                OrderStatus = "未付款",
-                AccountId = Convert.ToInt32(getAccountId),
-                BuyMethod = "幫你選"
-            };
+				foreach (var o in oldRecyleOrderId)
+				{
+					var oldRecyleOrderDetailList = _context.RecyleOrderDetails.Where(x => x.ReSubOrdersId == o).ToList();
+					_context.RemoveRange(oldRecyleOrderDetailList);
+					_context.SaveChanges();
+				}
 
-            _context.Orders.Add(order);
-            _context.SaveChanges();
+				var oldRecyleOrderList = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == oldOrderId).ToList();
+				_context.RemoveRange(oldRecyleOrderList);				
+				_context.Remove(oldOrder);
+				_context.SaveChanges();
 
-            var getNewOrder = order.OrdersId;            
+			}
 
-            for (var i = 0; i < ShipTimes; i++)
-            {
-                var HelpRecyleOrder = new RecyleSubscribeOrders
-                {
-                    OrdersId = getNewOrder,
-                    ShipStatus = "未出貨",
-                    ShipDate = model.StartOrderDate.AddDays(i * 7),
-                };
+			var ShipTimes = (model.TimeRange * 28) / (model.OrderFrequency * 7);
+			var getTotalPay = model.OrderTotalPay * ShipTimes;
+			var getSubCost = getTotalPay * 0.6;
 
-                _context.RecyleSubscribeOrders.Add(HelpRecyleOrder);
-                _context.SaveChanges();
+			var order = new Orders
+			{
+				SubTotal = getTotalPay,
+				SubCost = (int)Math.Round(getSubCost),
+				SubDiscount = 0,
+				SetOrdersDatetime = DateTime.Now,
+				OrderStatus = "未付款",
+				AccountId = Convert.ToInt32(getAccountId),
+				BuyMethod = "幫你選"
+			};
 
-                var SubscribeOrdersId = HelpRecyleOrder.ReSubOrdersId;
+			_context.Orders.Add(order);
+			_context.SaveChanges(); 
 
-                var random = new Random(); //把方法new出來
-                var productCount = model.OrderTotalPay / 50; //算出總共要Random幾次(單次寄送有幾樣商品)
-                var userChoices = model.UserChioce.Select(c => c.ProductName).ToList(); //原始Random清單
-                var recyleOrderDetails = new List<RecyleOrderDetails>(); //把RecyleOrderDetails變成集合
+			var getNewOrder = order.OrdersId;
 
-                for (var j = 0; j < productCount; j++)
-                {
-                    var randomProductIndex = random.Next(userChoices.Count); //這就很像是陣列[i]，的i。用random所以每次都會是不同個值
-                    var productName = userChoices[randomProductIndex]; //userChoices陣列的第[randomProductIndex]個
+			for (var i = 0; i < ShipTimes; i++)
+			{
+				var HelpRecyleOrder = new RecyleSubscribeOrders
+				{
+					OrdersId = getNewOrder,
+					ShipStatus = "未出貨",
+					ShipDate = model.StartOrderDate.AddDays(i * 7),
+				};
 
-                    var orderDetail = recyleOrderDetails.FirstOrDefault(d => d.ProductName == productName && d.ReSubOrdersId == SubscribeOrdersId);
-                    //先看有沒有以存在的有的話數量++
-                    if (orderDetail != null)
-                    {
-                        orderDetail.Quantity++;
-                    }
-                    else
-                    {
-                        orderDetail = new RecyleOrderDetails
-                        {
-                            ProductName = productName,
-                            Quantity = 1,
-                            ReSubOrdersId = SubscribeOrdersId
-                        };
-                        recyleOrderDetails.Add(orderDetail);
-                    }
-                }
+				_context.RecyleSubscribeOrders.Add(HelpRecyleOrder);
+				_context.SaveChanges(); 
 
-                _context.RecyleOrderDetails.AddRange(recyleOrderDetails);
-                _context.SaveChanges();
-            }
+				var SubscribeOrdersId = HelpRecyleOrder.ReSubOrdersId;
 
-            return true;
-        }
+				var random = new Random();
+				var productCount = model.OrderTotalPay / 50;
+				var userChoices = model.UserChioce.Select(c => c.ProductName).ToList();
+				var recyleOrderDetails = new List<RecyleOrderDetails>();
 
-    }
+				for (var j = 0; j < productCount; j++)
+				{
+					var randomProductIndex = random.Next(userChoices.Count);
+					var productName = userChoices[randomProductIndex];
+
+					var checkSubId = recyleOrderDetails.FirstOrDefault(d => d.ReSubOrdersId == SubscribeOrdersId);
+					if(checkSubId != null)
+					{
+						var orderDetail = recyleOrderDetails.FirstOrDefault(d => d.ProductName == productName && d.ReSubOrdersId == SubscribeOrdersId);
+
+						if (orderDetail != null)
+						{
+							orderDetail.Quantity++;
+						}
+						else
+						{
+							orderDetail = new RecyleOrderDetails
+							{
+								ProductName = productName,
+								Quantity = 1,
+								ReSubOrdersId = SubscribeOrdersId
+							};
+							recyleOrderDetails.Add(orderDetail);
+						}
+					}
+					else
+					{
+						var newOrderDetail = new RecyleOrderDetails
+						{
+							ProductName = productName,
+							Quantity = 1,
+							ReSubOrdersId = SubscribeOrdersId
+						};
+						recyleOrderDetails.Add(newOrderDetail);
+					}
+
+					
+				}
+
+				_context.RecyleOrderDetails.AddRange(recyleOrderDetails);
+				_context.SaveChanges(); 
+			}
+
+			return true;
+		}
+	}
 }

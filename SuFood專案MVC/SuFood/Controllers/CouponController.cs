@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.ViewModel;
+using static SuFood.ViewModel.VmCouponForFront;
+using VmCoupon = SuFood.ViewModel.VmCoupon;
 
 namespace SuFood.Controllers
 {
@@ -34,7 +36,6 @@ namespace SuFood.Controllers
 				.Select(x => x.Coupon)
 				.ToListAsync();
 
-
 			return Json(CouponList);
 		}
 
@@ -44,7 +45,7 @@ namespace SuFood.Controllers
 			var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
 			var existingCoupon = _context.CouponUsedList
-				.FirstOrDefault(x => x.Coupon.CouponName == model.CouponName && x.AccountId == Convert.ToInt32(getAccountId));
+				.FirstOrDefault(x => x.Coupon.CouponName == model.CouponName);
 
 			if (existingCoupon != null)
 			{
@@ -52,7 +53,7 @@ namespace SuFood.Controllers
 			}
 
 			var canUseCouponId =
-				 _context.Coupon.Where(x => x.CouponStartDate <= DateTime.Now && x.CouponEndDate >= DateTime.Now && x.CouponName == model.CouponName)
+				 _context.Coupon.Where(x => x.CouponName == model.CouponName)
 				.Select(x => x.CouponId).First();
 
 			var newCoupon = new CouponUsedList

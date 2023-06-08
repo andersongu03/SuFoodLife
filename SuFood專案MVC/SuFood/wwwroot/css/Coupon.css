@@ -31,41 +31,42 @@
 }
 
 .table_container {
-    height: 800px;
-    /* overflow: auto; */
+    height: 72%;
+    /*overflow: auto;*/
 }
 /* 可使用&已過期設定 */
-.couponValid,
-.couponInvalid {
+.couponValid {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    max-height: 250px;
+    max-height: 80%;
     overflow: auto;
     background-color: #eee;
     /*margin-top: 30px;*/
     margin-bottom: 80px;
     border-radius: 5px;
-    padding: 0px 100px;
+    /*padding: 0px 100px;*/
 }
     /* 優惠碼coupon */
-    .coupon-card {
-        /* background: linear-gradient(135deg, hsl(0, 99%, 67%), hsl(330, 75%, 60%)); */
-        /* background: linear-gradient(135deg, #e66465, #9198e5); */
-        background: linear-gradient(135deg, #7158fe, #9d4de6);
-        color: #fff;
-        text-align: center;
-        padding: 0px 60px;
-        border-radius: 10px;
-        box-shadow: 0 10px 10px 0 rgba(0,0,0,0.15);
-        position: relative;
-        margin: 15px;
-        width: 460px;
-        height: 211px;
-        max-width: 460px;
-        min-width: 28%;
-    }
+.coupon-card {
+    /* background: linear-gradient(135deg, hsl(0, 99%, 67%), hsl(330, 75%, 60%)); */
+    /* background: linear-gradient(135deg, #e66465, #9198e5); */
+    background: linear-gradient(135deg, #7158fe, #9d4de6);
+    color: #fff;
+    text-align: center;
+    padding: 0px 60px;
+    border-radius: 10px;
+    box-shadow: 0 10px 10px 0 rgba(0,0,0,0.15);
+    position: relative;
+    margin: 15px;
+    width: 45%;
+    height: 25%;
+    max-width: 60%;
+    max-height: 40%;
+  /*  min-height: 45%;
+    min-width: 30%;*/
+}
 
         .coupon-card h3 {
             font-size: 24px;
@@ -87,7 +88,6 @@
     #cpnCode {
         border: 1px dashed #fff;
         padding: 10px 20px;
-        border-right: 0;
         font-size: 20px;
         /* 差複製text的功能 */
     }
@@ -118,9 +118,6 @@
         right: -25px;
     }
 
-.couponInvalid {
-    opacity: 50%;
-}
 
 /* Search Bar */
 .form {

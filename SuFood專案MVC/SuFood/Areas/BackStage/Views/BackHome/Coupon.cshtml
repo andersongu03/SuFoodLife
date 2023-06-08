@@ -56,7 +56,7 @@
 												</div>
 												<div class="form-group">
 													<label class="form-label">開始日期</label>
-								<input type="date" class="form-control" id="date" name="date" v-model="editCouponList.couponstartdate2String">
+													<input type="date" class="form-control" id="date" name="date" v-model="editCouponList.couponstartdate2String">
 												</div>
 												<div class="form-group">
 													<label class="form-label">結束日期</label>
@@ -173,7 +173,8 @@
 							</div>
 						<!--========== Messge toast ==========-->
 						<div class="message-toast-wrapper" :class="toastHintStyle">
-							<i class='bx bxs-check-circle message-toast-icon'></i>
+							<i v-if="toast=='新增成功' || toast=='修改成功' || toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
+							<i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
 							<p class="message-toast-title">{{toast}}</p>
 						</div>
 					</div>

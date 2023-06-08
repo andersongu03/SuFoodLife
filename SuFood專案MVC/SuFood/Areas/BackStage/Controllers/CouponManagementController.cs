@@ -49,8 +49,21 @@ namespace SuFood.Areas.BackStage.Controllers
 		//Create
 		[HttpPost]
 		//[Bind("CouponId,CouponName,CouponDescription,CouponMinusCost,MinimumPurchasingAmount,CouponStartDate,CouponEndDate")]
-		public async Task<string> Create([FromBody] VmCoupon vmCoupons)
+		public async Task<string> CreateCoupon([FromBody] VmCoupon vmCoupons)
 		{
+			var getAccountId = HttpContext.Session.GetString("getAccountId");
+			//var getRole = HttpContext.Session.Get("getRole");
+
+			if (vmCoupons == null)
+			{
+				return "新增失敗";
+			}
+			
+			if(vmCoupons.CouponStartDate <= DateTime.Now || vmCoupons.CouponEndDate <= DateTime.Now)
+			{
+				return "新增失敗";
+			}
+
 			Coupon coupon = new Coupon
 			{
 				CouponId = vmCoupons.CouponId,
@@ -61,16 +74,41 @@ namespace SuFood.Areas.BackStage.Controllers
 				CouponStartDate = vmCoupons.CouponStartDate,
 				CouponEndDate = vmCoupons.CouponEndDate
 			};
-			
+
 			_context.Coupon.Add(coupon);
 			await _context.SaveChangesAsync();
+
+			// 获取CouponUsedList中的最大CouponUsed_Id
+			int GetCouponUsedId = await _context.CouponUsedList.MaxAsync(c => (int?)c.CouponUsedId) ?? 0;
+			CouponUsedList couponUsed = new CouponUsedList
+			{
+				CouponUsedId = GetCouponUsedId,
+				AccountId = Convert.ToInt32(getAccountId),
+				CouponUsedOrNot = 1,
+				CouponId = coupon.CouponId
+			};
+
+			_context.CouponUsedList.Add(couponUsed);
+			await _context.SaveChangesAsync();
+
 			return "新增成功";
+
 		}
 
 		//Edit
 		[HttpPost]
-		public async Task<string> Edit([FromBody] VmCoupon vmCoupons)
+		public async Task<string> EditCoupon([FromBody] VmCoupon vmCoupons)
 		{
+			if (vmCoupons == null)
+			{
+				return "修改失敗";
+			};
+
+			if (vmCoupons.CouponStartDate < DateTime.Now || vmCoupons.CouponEndDate < DateTime.Now)
+			{
+				return "修改失敗";
+			}
+
 			Coupon coupon = new Coupon
 			{
 				CouponId = vmCoupons.CouponId,
@@ -88,7 +126,7 @@ namespace SuFood.Areas.BackStage.Controllers
 
 		//Delete
 		[HttpDelete]
-		public async Task<string> Delete(int id)
+		public async Task<string> DeleteCoupon(int id)
 		{
 			var couponDel = await _context.Coupon.FindAsync(id);
 			if(couponDel != null)

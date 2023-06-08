@@ -1,0 +1,191 @@
+﻿@section Styles{
+    <style>
+        .app {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100%;
+            margin-top: 10%;
+            gap: 15px;
+        }
+
+        .left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .right {
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            width: 180px;
+        }
+
+        .btn {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+    <link href="~/css/helpuchoice.css.css" rel="stylesheet" />
+}
+<div class="app row">
+    <div class="left col-2">
+        <h2>選擇訂閱週期</h2>
+        <div class="StatusBar">
+            <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.OrderTotalPay" required>
+                <option selected>請輸入你每次配送的預算</option>
+                <option value="200">200</option>
+                <option value="300">300</option>
+                <option value="500">500</option>
+            </select>
+        </div>
+        <div class="StatusBar">
+            <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.TimeRange" required>
+                <option selected>請輸入您想訂閱的時間</option>
+                <option value="3">3個月</option>
+                <option value="2">2個月</option>
+                <option value="1">1個月</option>
+            </select>
+        </div>
+        <div class="StatusBar">
+            <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.OrderFrequency" required>
+                <option selected>請輸入您配送的頻率</option>
+                <option value="1">一周一次</option>
+                <option value="2">兩周一次</option>
+                <option value="4">一個月一次</option>
+            </select>
+        </div>
+        <label for="start">請輸入訂購起始日</label>
+        <div class="StatusBar">
+            <input type="date" id="start" name="trip-start" :min="setStartDate" value="" v-model="helpOrder2Back.StartOrderDate" required>
+        </div>
+    </div>
+    <div class="right col-9">
+        <div>
+            <h2>選擇不要的商品</h2>
+        </div>
+        <!-- ==================== CARDS ==================== -->
+        <div class="cards__container" id="cardsContainer">
+            <label v-for="h in helpList" class="box" :for="h.productId" @@click.prevent="SeeUProductName(h)" :class="{checked: notWantedList.includes(h.productName)}">
+                <input type="checkbox" :id="h.productId">
+                <div class="noChoice"></div>
+                <p>NO</p>
+                <img :src="'data:image/png;base64,'+h.img" alt="零售商品圖片">
+                <div class="content">
+                    <div class="price">
+                        <span>{{ h.productName }}</span>
+                        <span class="tag">$20</span>
+                    </div>
+                </div>
+            </label>
+        </div>
+
+        @*<table class="table">
+        <input class="form-check-input" type="checkbox" id="flexCheckDefault"  @@click="SeeUProductName(h.ProductName)">
+
+        </table>*@
+        <div>
+            <button type="button" class="btn btn-danger shake" @@click="createHelpOrder">送出訂單</button>
+        </div>
+    </div>
+
+    <div class="message-toast-wrapper" id="toastWrapper" :class="toastHintStlye">
+        <i class='bx bx-x-circle' style='color:#e91111'></i>
+        <p class="message-toast-title">你還沒登入喔</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const helpUChioce = new Vue({
+            el: ".app",
+            data: {
+                helpList: [],
+                notWantedList: [],
+                helpOrder2Back: {
+                    TimeRange: "請輸入您想訂閱的時間",
+                    OrderFrequency: "請輸入您配送的頻率",
+                    OrderTotalPay: "請輸入你每次配送的預算",
+                    StartOrderDate: "請輸入訂購起始日",
+                    UserChioce: [],
+                },
+                toastHintStlye: {
+                    fadeInUp: false
+                },
+            },
+            methods: {
+                GetHelpList: function () {
+                    let _this = this;
+                    axios.get("/HelpUChioce/GetHelpProduct").then(response => {
+                        this.helpList = response.data;
+                        this.helpOrder2Back.UserChioce = this.helpList.map(x => ({ ProductName: x.productName }));
+                    }).catch(error => {
+                        console.log(error);
+                    });
+                },
+                createHelpOrder: function () {
+                    this.FinalFilterProduct()
+                    this.helpOrder2Back.UserChioce = this.allProductList.map(x => ({ ProductName: x }));
+                    axios.post("/HelpUChioce/CreateHelpOrder", this.helpOrder2Back).then(response => {
+                        if (response.data) {
+                            window.location.href = "/CheckOut/HelpUChioce2Order"
+                        } else {
+
+                            this.toastHint()
+                        }
+                    })
+                },
+                SeeUProductName: function (item) {
+                    let productName = item.productName
+                    item.checked = !item.checked;
+                    if (!this.notWantedList.includes(productName)) {
+                        this.notWantedList.push(productName);
+                    } else {
+                        this.notWantedList.splice(this.notWantedList.indexOf(productName), 1);
+                    }
+                },
+                FinalFilterProduct() {
+                    for (let i = this.allProductList.length - 1; i >= 0; i--) {
+                        if (this.notWantedList.includes(this.allProductList[i])) {
+                            this.allProductList.splice(i, 1);
+                        }
+                    }
+                },
+                toastHint() {
+                    this.toastHintStlye.fadeInUp = true
+                    setTimeout(() => {
+                        this.toastHintStlye.fadeInUp = false
+                    }, 2100)
+                },
+            },
+            computed: {
+                setStartDate: function () {
+                    const currentDate = new Date();
+                    currentDate.setDate(currentDate.getDate() + 7);
+                    const year = currentDate.getFullYear();
+                    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(currentDate.getDate()).padStart(2, '0');
+
+                    return `${year}-${month}-${day}`;
+                },
+                allProductList() {
+                    return helpUChioce.helpOrder2Back.UserChioce.map(x => x.ProductName)
+                }
+            },
+            mounted() {
+                this.GetHelpList();
+            }
+
+        })
+    </script>
+}

@@ -1,0 +1,231 @@
+/*=============== GOOGLE FONTS ===============*/
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@300;400;500;600;700&family=Ubuntu:wght@400;500&display=swap');
+
+/*=============== VARIABLES CSS ===============*/
+:root {
+    --logo-color: #FF385C;
+    --grey-color: #DDDDDD;
+    --second-grey-color: #ACACAC;
+}
+
+
+/*=============== BASE ===============*/
+* {
+    font-family: 'Oswald', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    /* display: grid; */
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(10, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 5px;
+    z-index: 1000;
+    overflow: auto;
+}
+
+body.active {
+    overflow: hidden;
+}
+
+a:visited {
+    color: #000;
+}
+
+/*=============== CARDS ===============*/
+.cards__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin: 0 5rem;
+    position: initial;
+    max-height: 680px;
+    overflow: auto;
+}
+
+.box{
+    transition: all .3s ease-in-out;
+}
+
+.box {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
+    background: #ffffffec;
+    position: relative;
+    margin: 20px;
+    transition: .4s;
+    transform: translateY(0px);
+    max-width: 200px;
+    height: 250px;
+    width: 200px;
+    color: #000;
+    cursor: pointer;
+}
+
+.box input {
+    display: none;
+}
+
+.box p {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: none;
+    opacity: 1;
+    font-size: 6rem;
+}
+
+
+.box.checked .noChoice {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    opacity: .5;
+    z-index: 1;
+}
+
+.box.checked p {
+    z-index: 2;
+    opacity: 1;
+    display: block;
+}
+
+.box img {
+    position: relative;
+    width: 120%;
+    height: 180px;
+    object-fit: cover;
+    right: 20px;
+}
+
+.tag {
+    background: bisque;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 50%;
+    color: darkgoldenrod;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    height: 45%;
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+.price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*=============== SELECT ===============*/
+/*.left {
+    padding-top: 20px;
+}*/
+
+.StatusBar {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+}
+
+
+select,
+input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.right>div {
+    margin: 0 5rem;
+}
+
+/*========== Toast ==========*/
+.app{
+    position: relative;
+}
+
+.bx-x-circle{
+    font-size: 2rem;
+}
+
+.message-toast-wrapper {
+    position: fixed;
+    top: 70px;
+    left: calc(50% - 125px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #fff;
+    width: 300px;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 0px 15px hsl(0, 0%, 0.3);
+    transition: all .3s;
+    opacity: 0;
+    display: none;
+}
+
+.message-toast-icon {
+    color: green;
+    font-size: 2rem;
+    height: 100%;
+}
+
+.message-toast-title {
+    font-size: 2rem;
+    font-weight: bolder;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.fadeInUp {
+    opacity: 0;
+    display: flex;
+    animation: fadeInUp 2s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-30px)
+    }
+}

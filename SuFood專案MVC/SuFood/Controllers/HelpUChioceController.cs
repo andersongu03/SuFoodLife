@@ -20,7 +20,12 @@ namespace SuFood.Controllers
 			return View();
 		}
 
-		[HttpGet]
+        public IActionResult HelpUBuy2()
+        {
+            return View();
+        }
+
+        [HttpGet]
 		public async Task<IEnumerable<GetHelpProductViewModels>> GetHelpProduct()
 		{
 			var HelpProduct = _context.Products

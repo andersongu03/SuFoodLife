@@ -2,6 +2,7 @@
     el:".MyOrders",
     data:
     {
+        stars: 0,
         myDetails: [],
         recyleSubscribeOrders:[],
         recomment: [],

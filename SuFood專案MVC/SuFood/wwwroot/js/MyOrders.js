@@ -1,13 +1,16 @@
-﻿var app = new Vue({
+﻿    var app = new Vue({
     el:".MyOrders",
     data:
     {
+        myDetails: [],
+        recyleSubscribeOrders:[],
+        recomment: [],
+        ordersId:0,
         title: "我的訂單",
         od: {
             comments: [],
         }, //orderdetail  你要抓的model值丟這裡
-        toast: "", //新增成功用
-        ordersId:'',  //要新的Id就新增在這邊
+        toast: "", //新增成功用 塞字串
         CreateOrEditOrDelete: "",
         keyword: "",
         popupShowing: {
@@ -21,7 +24,7 @@
             reviewId: 0,
             ratingStar: 0,
             comment: "",
-            ordersId: 0
+            ordersId:0,
         },
         modalContentStyle: {
             w200: true,
@@ -48,8 +51,23 @@
                 this.toastHintStyle.fadeInUp = false
             },2000)
         },
-        createComment() {
-            /*console.log('123')*/
+        ordersDetail(od) {
+            this.myDetails = od;
+            this.CreateOrEditOrDelete = 'ordersDetail';
+            this.popupShowing.showPopup = true;
+        },
+        watchComment(re) {
+            this.recomment = re;
+            this.CreateOrEditOrDelete = 'Response';
+            this.popupShowing.showPopup = true;
+        },
+        openmydetails(rso) {
+            this.recyleSubscribeOrders = rso;
+            this.CreateOrEditOrDelete = 'Details';
+            this.popupShowing.showPopup = true;
+        },
+        createComment(id) {
+            this.ordersId = id;
             this.CreateOrEditOrDelete = 'Create';
             this.popupShowing.showPopup = true;
         },
@@ -74,35 +92,21 @@
                 this.mycomment = response.data.comment;
             })
         },
-        async CreateComment() {
+        CreateComment(od) {
             let _this = this;
             var request = null;
-            request = {
+            createCommentList = {
                 reviewId: _this.createCommentList.reviewId,
                 ratingStar: _this.createCommentList.ratingStar,
                 comment: _this.createCommentList.comment,
-                ordersId: _this.createCommentList.ordersId
+                ordersId: _this.ordersId
             }
-
-            // newbiew solution
-            /*axios.post('http://localhost:50490/MyOrders/CreateComment', request).then(response => {
+            
+            axios.post('https://localhost:7086/MyOrders/CreateComment/', createCommentList).then(response => {
                 this.toast = response.data;
-                console.log(`Toast: ${this.toast}`);
                 this.closepopupShowHint();
                 this.GetDetail();
-            })*/
-
-            // Professional solution
-            // 剛才的寫法是打到 web server
-            // 你應該要打 API Server
-            // async/await 處理非同步行為
-            // 使用 await 的 function 必須使用 async
-            const response = await axios.post('https://localhost:7086/MyOrders/CreateComment/', request);
-            this.toast = response.data;
-            console.log(`Toast: ${this.toast}`);
-            this.closepopupShowHint();
-            this.GetDetail();
-            
+            })
         },
     },
     //篩選

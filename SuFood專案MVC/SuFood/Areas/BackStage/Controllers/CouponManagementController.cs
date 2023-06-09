@@ -48,12 +48,9 @@ namespace SuFood.Areas.BackStage.Controllers
 
 		//Create
 		[HttpPost]
-		//[Bind("CouponId,CouponName,CouponDescription,CouponMinusCost,MinimumPurchasingAmount,CouponStartDate,CouponEndDate")]
 		public async Task<string> CreateCoupon([FromBody] VmCoupon vmCoupons)
 		{
-			var getAccountId = HttpContext.Session.GetString("getAccountId");
-			
-			//var getRole = HttpContext.Session.Get("getRole");
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
 			if (vmCoupons == null)
 			{
@@ -80,10 +77,9 @@ namespace SuFood.Areas.BackStage.Controllers
 			await _context.SaveChangesAsync();
 
 			// 获取CouponUsedList中的最大CouponUsed_Id
-			int GetCouponUsedId = await _context.CouponUsedList.MaxAsync(c => (int?)c.CouponUsedId) ?? 0;
+			//int GetCouponUsedId = await _context.CouponUsedList.MaxAsync(c => (int?)c.CouponUsedId) ?? 0;
 			CouponUsedList couponUsed = new CouponUsedList
 			{
-				CouponUsedId = GetCouponUsedId,
 				AccountId = Convert.ToInt32(getAccountId),
 				CouponUsedOrNot = 1,
 				CouponId = coupon.CouponId
@@ -129,26 +125,27 @@ namespace SuFood.Areas.BackStage.Controllers
 		[HttpDelete]
 		public async Task<string> DeleteCoupon(int id)
 		{
-			var couponDel = await _context.Coupon.FindAsync(id);
-			if(couponDel != null)
+			var existUsedCoupons = _context.CouponUsedList.Where(c => c.CouponId == id).ToList();
+			if(existUsedCoupons == null)
 			{
-				try
-				{
-					_context.Coupon.Remove(couponDel);
-					await _context.SaveChangesAsync();
-				}
-				catch(DbUpdateConcurrencyException e)
-				{
-					return "找不到對應優惠券，刪除失敗";
-				}
-
-				return "刪除成功";
+				return "刪除失敗";
 			}
-			return "刪除失敗";
+			_context.RemoveRange(existUsedCoupons);
+
+			var coupon = _context.Coupon.FirstOrDefault(c => c.CouponId == id);
+			if(coupon == null)
+			{
+				return "刪除失敗";
+			}
+			_context.Coupon.Remove(coupon);
+
+			_context.SaveChanges();
+
+			return "刪除成功";
 		}
-		private bool CouponsExists(int id)
-		{
-			return (_context.Coupon?.Any(c => c.CouponId == id)).GetValueOrDefault();
-		}
+		//private bool CouponsExists(int id)
+		//{
+		//	return (_context.Coupon?.Any(c => c.CouponId == id)).GetValueOrDefault();
+		//}
 	}
 }

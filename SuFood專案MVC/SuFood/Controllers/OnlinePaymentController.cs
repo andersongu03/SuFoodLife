@@ -22,12 +22,10 @@ namespace SuFood.Controllers
 		private readonly SuFoodDBContext _context;
 		private readonly IConfiguration _configuration;
 		public AesService _aes = new AesService();
-		private readonly IEmailService _emailService;
-		public OnlinePaymentController(SuFoodDBContext context, IConfiguration configuration, IEmailService emailService)
+		public OnlinePaymentController(SuFoodDBContext context, IConfiguration configuration)
 		{
 			_context = context;
 			_configuration = configuration;
-			_emailService = emailService;
 		}
 		
 		//傳送訂單付款
@@ -145,8 +143,30 @@ namespace SuFood.Controllers
 					}
 
 					//寄信
-					_emailService.SendEmail(order.Email, "感謝訂購", $@"{order.Name}您好，您成功訂購SuFoodLife蔬服人生，訂單編號{order.OrdersId}，金額 {order.SubTotal - order.SubDiscount}");
+					var sendEmail = order.Email;
 
+					var mail = new MailMessage()
+					{
+						From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
+						Subject = "感謝訂購", //主旨
+						Body = ($@"{order.Name}您好，您成功訂購SuFoodLife蔬服人生，訂單編號{order.OrdersId}，金額 {order.SubTotal - order.SubDiscount}"),
+						IsBodyHtml = true,
+						BodyEncoding = Encoding.UTF8,
+					};
+					mail.To.Add(new MailAddress(order.Email)); //寄給哪位
+					try
+					{
+						using (var sm = new SmtpClient("smtp.gmail.com", 587)) //465 ssl
+						{
+							sm.EnableSsl = true;
+							sm.Credentials = new NetworkCredential("SuFood2u@gmail.com", "okjzbnxgsmkmfwlq");
+							sm.Send(mail);
+						}
+					}
+					catch (Exception ex)
+					{
+						throw ex;
+					}
 
 
 				}

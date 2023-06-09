@@ -7,7 +7,7 @@ using SuFood.Services;
 using Microsoft.AspNetCore.Http;
 using SuFood.Hubs;
 using Hangfire;
-using System.Configuration;
+using SuFood.Controllers;
 
 namespace SuFood
 {
@@ -18,7 +18,6 @@ namespace SuFood
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -36,14 +35,16 @@ namespace SuFood
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
-            //HangFire
+            // Add Hangfire services.
             builder.Services.AddHangfire(configuration => configuration
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
                 .UseSimpleAssemblyNameTypeSerializer()
                 .UseRecommendedSerializerSettings()
                 .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
-
             builder.Services.AddHangfireServer();
+            
+            
+
 
 
             // 啟用Session
@@ -60,6 +61,7 @@ namespace SuFood
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
               .AddCookie(options =>
               {
+                  options.LoginPath = "/User/Login";
                   options.AccessDeniedPath = "/User/Login"; //登入失敗路徑
                   options.LogoutPath = "/Home/Index";  //登出路徑
                   options.ExpireTimeSpan = TimeSpan.FromDays(30); //Cookie 預期時間                   
@@ -85,11 +87,12 @@ namespace SuFood
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            
+            app.UseHangfireServer();
+            BackgroundJob.Enqueue<HelpUChioceController>(x => x.CheckSendEmail()); 
+
             app.UseSession();
-
-            //hangFire
-            app.UseHangfireDashboard();
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

@@ -136,7 +136,7 @@ namespace SuFood.Areas.BackStage.Controllers
 		[HttpDelete]
 		public async Task<string> DeleteOrders(int orderId)
 		{
-			//刪除Order Review的資料表
+			//刪除Order Review關聯
 			var OrderReview = _context.OrdersReview.Where(or => or.OrdersId == orderId).FirstOrDefault();
 			if(OrderReview != null)
 			{

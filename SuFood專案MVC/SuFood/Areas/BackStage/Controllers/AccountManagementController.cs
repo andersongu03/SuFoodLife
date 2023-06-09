@@ -90,7 +90,46 @@ namespace SuFood.Areas.BackStage.Controllers
                 return "找不到此帳戶，刪除失敗";
             }
 
-            _context.Account.Remove(account);
+			//刪除ShoppingCart關聯
+			var shoppingCart = _context.ShoppingCart.Where(x => x.AccountId == id).ToList();
+            if(shoppingCart.Count > 0)
+            {
+                _context.ShoppingCart.RemoveRange(shoppingCart);
+                _context.SaveChanges();
+            };
+
+			//刪除CouponUsedList關聯
+			var couponUsed = _context.CouponUsedList.Where(x => x.AccountId == id).ToList();
+            if (couponUsed.Count > 0) { 
+                _context.CouponUsedList.RemoveRange(couponUsed); 
+                _context.SaveChanges();
+            };
+
+            //刪除Orders關聯 (只能刪零售及自由選的訂單)
+            var orderId = _context.Orders.Where(x => x.AccountId == id).ToList();
+            if (orderId.Count > 0)
+            {
+                foreach(var order in orderId)
+                {
+					//刪除OrdersReview關聯
+					var OrderReview = _context.OrdersReview.Where(or => or.OrdersId == order.OrdersId).FirstOrDefault();
+					if (OrderReview != null)
+					{
+						_context.OrdersReview.RemoveRange(OrderReview);
+						_context.SaveChanges();
+					}
+
+					//刪除OrdersDetails關聯
+					var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == order.OrdersId);
+					_context.OrdersDetails.RemoveRange(ordersdetails);
+					_context.SaveChanges();
+
+					_context.Orders.Remove(order);
+					_context.SaveChanges();
+				}
+            }
+
+			_context.Account.Remove(account);
             _context.SaveChanges();
             return "刪除成功";
         }

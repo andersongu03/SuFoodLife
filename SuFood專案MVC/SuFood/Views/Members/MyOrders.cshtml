@@ -1,7 +1,8 @@
 ﻿@section Styles{
-	<link href="~/css/usermanagement.css" rel="stylesheet" />
-	<link href="~/css/myorders.css" rel="stylesheet" />
-	<link href="~/css/model.css" rel="stylesheet" />
+    <link href="~/css/usermanagement.css" rel="stylesheet" />
+    <link href="~/css/myorders.css" rel="stylesheet" />
+    <link href="~/css/model.css" rel="stylesheet" />
+    <link href="~/css/reviewstars.css.css" rel="stylesheet" />
 }
 <section class="user__management section align-items-center section-bg" id="user__management">
     <div class="user__management-container container row">
@@ -9,9 +10,9 @@
 
 
 
-		<div class="col-10 user__management-content">
-			@* ----------內容-------------*@
-			<div class="MyOrders col-sm-10  col-md-8 col-xl-8">
+        <div class="col-10 user__management-content">
+            @* ----------內容-------------*@
+            <div class="MyOrders col-sm-10  col-md-8 col-xl-8">
                 <div class="Mytitle">
                     <span>{{title}}</span>
                 </div>
@@ -19,16 +20,20 @@
                     <table class="table table-striped table-hover">
                         <thead>
                             <tr class="table tr">
-                                <th scope="col">訂單編號</th>
+                                <th scope="col">我的帳號</th>
                                 <th scope="col">訂購日期</th>
                                 <th scope="col">訂單狀態</th>
-                                <th scope="col">評論</th>
-                                <th scope="col">金額</th>
+                                <th scope="col">折扣</th>
+                                <th scope="col">訂單總金額</th>
+                                <th scope="col">我的評論</th>
                                 <th scope="col">新增評論</th>
+                                <th scope="col">查看回覆</th>
+                                <th scope="col">訂閱明細</th>
+                                <th scope="col">訂單明細</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="o in od">
+                            <tr v-for="o in od" :key="o.ordersId">
                                 <td>
                                     <span>{{o.accountId}}</span>
                                 </td>
@@ -39,13 +44,25 @@
                                     <span>{{o.orderStatus}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.comments}}</span>
+                                    <span>{{o.subDiscount}}</span>
                                 </td>
                                 <td>
-                                    <span>{{o.subCost}}</span>
+                                    <span>{{o.subTotal}}</span>
                                 </td>
                                 <td>
-                                    <button class="btn" @@click="createComment(o)">新增</button>
+                                    <span v-for="mo in o.comments">{{mo}}</span>
+                                </td>
+                                <td>
+                                    <button class="btn" @@click="createComment(o.ordersId)">新增</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" @@click="watchComment(o.recomment)">查看</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" @@click="openmydetails(o.recyleSubscribeOrders)">查看</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-primary" @@click="ordersDetail(o.ordersDetails)">查看</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -53,34 +70,113 @@
                     @*---------------------Create的視窗--------------*@
                     <template v-if="CreateOrEditOrDelete === 'Create'">
                         <div class="cardContent" id="" :class="popupShowing">
-                            <div class="cardPopup-body" style="width: 600px; height:500px">
-                                <div class="cardPopup">
-                                    <form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
-                                        <div class="topic">
-                                            <h1>留下你的意見吧</h1>
-                                            <label>你的回覆是我們的最大動力</label>
+                            <div class="cardPopup-body">
+                                <div class="cardPopup" style="height: 100%;">
+                                    <div class="feedback" id="feedback">
+                                        <div class="rating">
+                                            <input type="radio" name="rating" id="rating-5" value="5" v-model="stars">
+                                            <label for="rating-5"></label>
+                                            <input type="radio" name="rating" id="rating-4" value="4" v-model="stars">
+                                            <label for="rating-4"></label>
+                                            <input type="radio" name="rating" id="rating-3" value="3" v-model="stars">
+                                            <label for="rating-3"></label>
+                                            <input type="radio" name="rating" id="rating-2" value="2" v-model="stars">
+                                            <label for="rating-2"></label>
+                                            <input type="radio" name="rating" id="rating-1" value="1" v-model="stars">
+                                            <label for="rating-1"></label>
+                                            <div class="emoji-wrapper">
+                                                <div class="emoji">
+                                                    <img src="~/img/ratingstars/question.png" />
+                                                    <img src="~/img/ratingstars/1s.png" />
+                                                    <img src="~/img/ratingstars/2s.png" />
+                                                    <img src="~/img/ratingstars/3s.png" />
+                                                    <img src="~/img/ratingstars/4s.png" />
+                                                    <img src="~/img/ratingstars/5s.png" />
+                                                </div>
+                                            </div>
                                         </div>
+                                    </div>
 
-                                        <div class="form-group">
-                                            <label class="form-label">評論ID<span></span></label>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="form-label">評價</label>
-                                            <input class="form-control" placeholder="5" v-model="createCommentList.ratingStar" />
-                                        </div>
+                                    <form id="form" style="display: contents;">
                                         <div class="form-group">
                                             <label class="form-label">評論</label>
                                             <input class="form-control" type="text" v-model="createCommentList.comment" />
                                         </div>
-                                        <div class="form-group">
-                                            <label class="form-label">客戶ID</label>
-                                            <input class="form-control" type="text" v-model="createCommentList.ordersId" />
-                                        </div>
                                         <div>
-                                            <button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
-                                            <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment()"> 新增 </button>
+                                            <button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(od)"> 新增 </button>
                                         </div>
                                     </form>
+                                    <div>
+                                        <button type="button" class="btn-close" @@click="CloseComment" style="color:white">Ｘ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="CreateOrEditOrDelete === 'Response'">
+                        <div class="cardContent" id="" :class="popupShowing">
+                            <div class="cardPopup-body">
+                                <div class="cardPopup">
+                                    <form id="form">
+                                        <div class="mycomment">
+                                            我們的評論
+                                        </div>
+                                        <div>
+                                            <textarea class="textarea" readonly v-model="recomment" style="border:none"></textarea>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn-close" @@click="CloseComment" style="color:white">Ｘ</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="CreateOrEditOrDelete === 'Details'">
+                        <div class="cardContent" id="" :class="popupShowing">
+                            <div class="cardPopup-body" style="overflow: auto;">
+                                <div class="cardPopup" style="height: 100%;">
+                                    <form id="form" v-for="d in recyleSubscribeOrders">
+                                        <div class="topic">
+                                            <span>{{d.productName}}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{d.reSubOrdersId}}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span v-for="od in d.recyleOrderDetails">{{od.productName}}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{d.shipDate}}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{d.shipStatus}}</span>
+                                        </div>
+                                    </form>
+                                    <div>
+                                        <button type="button" class="btn-close" @@click="CloseComment" style="color:white">Ｘ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-if="CreateOrEditOrDelete === 'ordersDetail'">
+                        <div class="cardContent" id="" :class="popupShowing">
+                            <div class="cardPopup-body">
+                                <div class="cardPopup">
+                                    <form id="form" v-for="o in myDetails">
+                                        <div class="topic">
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{o.productName}}</span>
+                                        </div>
+                                        <div class="form-group">
+                                            <span>{{o.quantity}}</span>
+                                        </div>
+                                    </form>
+                                    <div>
+                                        <button type="button" class="btn-close" @@click="CloseComment" style="color:white">Ｘ</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -91,7 +187,7 @@
                     <i class='bx bxs-check-circle message-toast-icon'></i>
                     <p class="message-toast-title">{{toast}}</p>
                 </div>
-			</div>
+            </div>
         </div>
     </div>
 </section>
@@ -99,6 +195,6 @@
 @section Scripts{
     <script>var id = "";//@ViewBag.id</script>
     <script src="~/js/vue.js"></script>
-	<script src="~/js/myorders.js"></script>
-    
+    <script src="~/js/myorders.js"></script>
+
 }

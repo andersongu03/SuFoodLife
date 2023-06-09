@@ -6,6 +6,8 @@ using SuFood.Models;
 using SuFood.Services;
 using Microsoft.AspNetCore.Http;
 using SuFood.Hubs;
+using Hangfire;
+using SuFood.Controllers;
 
 namespace SuFood
 {
@@ -14,7 +16,7 @@ namespace SuFood
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Add services to the container.
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -32,7 +34,18 @@ namespace SuFood
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
+
+            // Add Hangfire services.
+            builder.Services.AddHangfire(configuration => configuration
+                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                .UseSimpleAssemblyNameTypeSerializer()
+                .UseRecommendedSerializerSettings()
+                .UseSqlServerStorage(builder.Configuration.GetConnectionString("HangfireConnection")));
+            builder.Services.AddHangfireServer();
             
+            
+
+
 
             // 啟用Session
             builder.Services.AddSession(options =>
@@ -45,17 +58,18 @@ namespace SuFood
             });
 
 
-             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-               .AddCookie(options =>
-               {                    
-                   options.AccessDeniedPath = "/User/Login"; //登入失敗路徑
-                   options.LogoutPath = "/Home/Index";  //登出路徑
-                   options.ExpireTimeSpan = TimeSpan.FromDays(30); //Cookie 預期時間                   
-                   options.Cookie.IsEssential = true;//設定session Id，可透過你設定的id找到哪個是你的               
-                   options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
-                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;//設定傳送時一定要透過加密方式傳送
-               });
-            
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+              .AddCookie(options =>
+              {
+                  options.LoginPath = "/User/Login";
+                  options.AccessDeniedPath = "/User/Login"; //登入失敗路徑
+                  options.LogoutPath = "/Home/Index";  //登出路徑
+                  options.ExpireTimeSpan = TimeSpan.FromDays(30); //Cookie 預期時間                   
+                  options.Cookie.IsEssential = true;//設定session Id，可透過你設定的id找到哪個是你的               
+                  options.Cookie.HttpOnly = true;//設定Request只能透過HTTP傳送
+                  options.Cookie.SecurePolicy = CookieSecurePolicy.Always;//設定傳送時一定要透過加密方式傳送
+              });
+
 
             builder.Services.AddTransient<EncryptService>();
 
@@ -73,8 +87,12 @@ namespace SuFood
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseSession();
+            
+            app.UseHangfireServer();
+            BackgroundJob.Enqueue<HelpUChioceController>(x => x.CheckSendEmail()); 
 
+            app.UseSession();
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -89,6 +107,7 @@ namespace SuFood
                   name: "areas",
                   pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
+                endpoints.MapHangfireDashboard();
             });
 
             app.MapControllerRoute(

@@ -1,10 +1,33 @@
 ﻿.btn {
-    background-color: #4f8180 !important;
-    color: white !important;
+    background-color: #4f8180;
+    color: white;
 }
+.btn-primary {
+    background-color: #198754;
+    color: white;
+}
+.btn-primary:hover{
+    background-color: #198754;
+    color: black;
+}
+.btn-close {
+    background: red;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
 .Mytitle {
     font-size: 2.5rem;
     padding-top: 1rem;
+}
+
+.Mytitle span{
+    font-weight: bold;
+}
+.mycomment {
+    font-weight: bold;
+    font-size: xx-large;
 }
 
 .MyOrders {
@@ -35,8 +58,17 @@
     border-radius: 10px;
     background-color: white;
     padding: 3%;
-    width: 650px;
-    height: 650px;
+    width: 600px;
+    height: 500px;
+    display: flex;
+    flex-direction:column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.cardPopup{
+    height: 0;
 }
 
 .showPopup {
@@ -49,4 +81,22 @@
     width: 100vw;
     height: 100vh;
     background-color: hsla(240, 18%, 75%, .97);
+}
+.table.tr th {
+    background-color: #4f8180 !important;
+    color: white !important;
+    padding: 1rem;
+    text-align: center;
+}
+table tbody tr td {
+    text-align: center;
+}
+
+.textarea {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 540px;
+    height: 380px;
+    resize:none;
 }

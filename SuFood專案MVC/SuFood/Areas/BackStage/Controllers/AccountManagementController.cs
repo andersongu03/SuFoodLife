@@ -47,7 +47,7 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpPost]
         public async Task<string> EditAccounts([FromBody] VmAccount model)
         {
-            var editacc = await _context.Account.FirstOrDefaultAsync(x => x.AccountId == model.AccountId);
+            var editacc = _context.Account.FirstOrDefault(x => x.AccountId == model.AccountId);
            
             try
                 {
@@ -55,7 +55,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     editacc.LastName = model.LastName;
                     editacc.Phone = model.Phone;
                     _context.Update(editacc);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -84,14 +84,14 @@ namespace SuFood.Areas.BackStage.Controllers
                 return "刪除失敗";
             }
 
-            var account = await _context.Account.FindAsync(id);
+            var account = _context.Account.Find(id);
             if (account == null)
             {
                 return "找不到此帳戶，刪除失敗";
             }
 
             _context.Account.Remove(account);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return "刪除成功";
         }
 
@@ -99,7 +99,7 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmOrders>> GetOrdersByAccountId(int accountId)
         {
-            var orders = await _context.Orders
+            var orders =  _context.Orders
                 .Where(x => x.AccountId == accountId)
                 .Select(o => new VmOrders
                 {
@@ -110,7 +110,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     OrderStatus = o.OrderStatus,
                     AccountId = o.AccountId
                 })
-                .ToListAsync();
+                .ToList();
 
             return orders;
         }

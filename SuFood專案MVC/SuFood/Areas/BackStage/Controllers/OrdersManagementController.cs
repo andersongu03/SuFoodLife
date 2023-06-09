@@ -53,13 +53,11 @@ namespace SuFood.Areas.BackStage.Controllers
 				.Where(od => od.OrderId == orderId)
 				.Select(od => new VmOrdersDetails
 				{
-
 					OrderId = od.OrderId,
 					ProductName = od.ProductName,
 					UnitPrice = od.UnitPrice,
 					Quantity = od.Quantity,
-					OrdersDetailsId = od.OrdersDetailsId,
-
+					OrdersDetailsId = od.OrdersDetailsId
 				});			 
 		}
 
@@ -69,32 +67,45 @@ namespace SuFood.Areas.BackStage.Controllers
 
 		//取得幫你選訂單("/BackStage/OrdersManagement/GetRecyleOrders")
 		[HttpGet]
-        public async Task<VmRecyleSubscribeOrders> GetRecyleOrders(int orderId)
+        public IQueryable<VmRecyleSubscribeOrders> GetRecyleOrders(int orderId)
         {
-            var recyledetail = await _context.RecyleSubscribeOrders
-                .Where(x => x.OrdersId == orderId)
-                .Select(d => new VmRecyleSubscribeOrders
-                {
-                   OrdersId = d.OrdersId,
-                   ReSubOrdersId = d.ReSubOrdersId,
-                   ShipDate = d.ShipDate,
-                   ShipStatus = d.ShipStatus
-                }).SingleOrDefaultAsync();
+			var recyleorder = _context.RecyleSubscribeOrders
+				.Where(x => x.OrdersId == orderId)
+				.Select(d => new VmRecyleSubscribeOrders
+				{
+					OrdersId = d.OrdersId,
+					ReSubOrdersId = d.ReSubOrdersId,
+					ShipDate = d.ShipDate,
+					ShipStatus = d.ShipStatus,					
+				});
 
-            return recyledetail;
+            return recyleorder;
         }
 
-		//取得幫你選的訂單明細
+		//取得幫你選訂單明細("/BackStage/OrdersManagement/GetRecyleOD")
+		[HttpGet]
+		public IQueryable<VmRecyleOrderDetails> GetRecyleOD(int ReSubOrdersId)
+		{
+			var recyleod = _context.RecyleOrderDetails
+				.Where(x => x.ReSubOrdersId == ReSubOrdersId)
+				.Select(od => new VmRecyleOrderDetails
+				{
+					RecyleOrderDetailsId = od.RecyleOrderDetailsId,
+					ProductName = od.ProductName,
+					Quantity = od.Quantity,
+					ReSubOrdersId = od.ReSubOrdersId 
+
+				});
+
+			return recyleod;
+		}
 
 
 
 
 
-
-
-
-        //編輯收件資訊 ("/BackStage/OrdersManagement/EditRecipientInfo")
-        [HttpPost]
+		//編輯收件資訊 ("/BackStage/OrdersManagement/EditRecipientInfo")
+		[HttpPost]
 		public async Task<string> EditRecipientInfo([FromBody] VmOrders model)
 		{
 			var editinfo = await _context.Orders.FirstOrDefaultAsync(x => x.OrdersId == model.OrdersId);
@@ -121,15 +132,24 @@ namespace SuFood.Areas.BackStage.Controllers
 			return "修改成功";
 		}
 
-		//刪除訂單 ("/BackStage/OrdersManagement/DeleteOrders")
+		//刪除零售及自由選訂單 ("/BackStage/OrdersManagement/DeleteOrders")
 		[HttpDelete]
 		public async Task<string> DeleteOrders(int orderId)
 		{
-			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == orderId).Select(x => x);
-			_context.OrdersDetails.RemoveRange(ordersdetails);
-			await _context.SaveChangesAsync();
+			//刪除Order Review的資料表
+			var OrderReview = _context.OrdersReview.Where(or => or.OrdersId == orderId).FirstOrDefault();
+			if(OrderReview != null)
+			{
+				_context.OrdersReview.RemoveRange(OrderReview);
+				_context.SaveChanges();
+			}
+			
 
-			var orders = _context.Orders.Where(o => o.OrdersId == orderId).Select(o => o).SingleOrDefault();
+			var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == orderId);
+			_context.OrdersDetails.RemoveRange(ordersdetails);
+			_context.SaveChanges();
+
+			var orders = _context.Orders.Where(o => o.OrdersId == orderId).SingleOrDefault();
 			
 			if (orders == null)
 			{
@@ -140,6 +160,34 @@ namespace SuFood.Areas.BackStage.Controllers
 			return "刪除成功";
 		}
 
+		//刪除幫你選訂單 ("/BackStage/OrdersManagement/DeleteRecyleOrders")
+		[HttpPost]
+
+		public async Task<string> DeleteRecyleOrders(int orderId)
+		{
+			var recyleorderId = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == orderId).Select(x => x.ReSubOrdersId).ToList();
+
+			foreach (var o in recyleorderId) 
+			{
+				var recyleod = _context.RecyleOrderDetails.Where(x => x.ReSubOrdersId == o).ToList();
+				_context.RecyleOrderDetails.RemoveRange(recyleod);
+				await _context.SaveChangesAsync();
+
+			}
+
+			var recyleorder = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == orderId).ToList();
+			_context.RecyleSubscribeOrders.RemoveRange(recyleorder);
+			await _context.SaveChangesAsync();
+
+			var order = _context.Orders.FirstOrDefault(x => x.OrdersId == orderId);
+			if (order == null) 
+			{
+				return "刪除失敗";
+			}
+			_context.Orders.Remove(order);
+			await _context.SaveChangesAsync();
+			return "刪除成功";
+		}
 
 
 

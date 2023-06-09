@@ -13,14 +13,14 @@ namespace SuFood.Controllers
     public class HelpUChioceController : Controller
     {
         private readonly SuFoodDBContext _context;
-              
+
 
         public HelpUChioceController(SuFoodDBContext context)
         {
-            this._context = context;            
+            this._context = context;
         }
 
-        public IActionResult HelpUBuy()
+        public IActionResult HelpUBuy2()
         {
             return View();
         }
@@ -158,42 +158,52 @@ namespace SuFood.Controllers
             return true;
         }
 
-        
+
         public void CheckSendEmail()
-        {           
-            RecurringJob.AddOrUpdate("myrecurringjob",() => SendEmails(),Cron.Daily(03, 20)); // 每天中午 12 點執行     
+        {
+            RecurringJob.AddOrUpdate("myrecurringjob", () => SendEmails(), Cron.Daily(03, 20));
 
         }
         public void SendEmails()
         {
-            var orders = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Today).ToList();            
+            var paidOrders = _context.Orders.Where(x => x.BuyMethod == "幫你選" && x.OrderStatus == "已付款").Select(x => x.OrdersId).ToList();
 
-            foreach (var order in orders)
+            foreach (var check in paidOrders)
             {
-                var o = _context.Orders.Where(x=>x.OrdersId == order.OrdersId).FirstOrDefault();
-                var mail = new MailMessage()
+                var orders = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Today && x.OrdersId == check).ToList();
+
+                foreach (var order in orders)
                 {
-                    From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
-                    Subject = "感謝訂購", //主旨
-                    Body = $"{o.Name}您好，您的訂單編號{o.OrdersId}，於今日{DateTime.Today}成功寄送，請期待我們隨機幫您搭配的{o.SubTotal/50}樣商品，SuFoodLife蔬服人生感謝您~",
-                    IsBodyHtml = true,
-                    BodyEncoding = Encoding.UTF8,
-                };
-                mail.To.Add(new MailAddress(o.Email)); //寄給哪位
-                try
-                {
-                    using (var sm = new SmtpClient("smtp.gmail.com", 587)) //465 ssl
+                    var o = _context.Orders.Where(x => x.OrdersId == order.OrdersId).FirstOrDefault();
+                    var recyleOrderId = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == o.OrdersId).Select(x => x.ReSubOrdersId).FirstOrDefault();
+                    var countShipTimes = _context.RecyleOrderDetails.Count(x => x.RecyleOrderDetailsId == recyleOrderId);
+
+                    var mail = new MailMessage()
                     {
-                        sm.EnableSsl = true;
-                        sm.Credentials = new NetworkCredential("SuFood2u@gmail.com", "okjzbnxgsmkmfwlq");
-                        sm.Send(mail);
+                        From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
+                        Subject = "感謝訂購", //主旨
+                        Body = $"{o.Name}您好，您的訂單編號{o.OrdersId}，於今日{DateTime.Today}成功寄送，請期待我們隨機幫您搭配的{o.SubTotal / 50 / countShipTimes}樣商品，SuFoodLife蔬服人生感謝您~",
+                        IsBodyHtml = true,
+                        BodyEncoding = Encoding.UTF8,
+                    };
+                    mail.To.Add(new MailAddress(o.Email)); //寄給哪位
+                    try
+                    {
+                        using (var sm = new SmtpClient("smtp.gmail.com", 587)) //465 ssl
+                        {
+                            sm.EnableSsl = true;
+                            sm.Credentials = new NetworkCredential("SuFood2u@gmail.com", "okjzbnxgsmkmfwlq");
+                            sm.Send(mail);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
                     }
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
             }
+
+
         }
 
 

@@ -52,6 +52,7 @@ namespace SuFood.Areas.BackStage.Controllers
 		public async Task<string> CreateCoupon([FromBody] VmCoupon vmCoupons)
 		{
 			var getAccountId = HttpContext.Session.GetString("getAccountId");
+			
 			//var getRole = HttpContext.Session.Get("getRole");
 
 			if (vmCoupons == null)

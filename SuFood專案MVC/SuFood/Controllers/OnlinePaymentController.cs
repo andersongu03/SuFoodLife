@@ -50,7 +50,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://c26c-2407-4d00-1c01-7e46-6170-6f6d-77b2-d536.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://82bb-36-224-14-177.ngrok-free.app/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 

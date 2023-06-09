@@ -24,15 +24,15 @@
 		<table>
 			<thead>
 				<tr>
-					<th>ID</th>
+					<th>會員ID</th>
 					<th>帳號</th>
 					<th>姓名</th>
 					<th>手機號碼</th>
-					<th>狀態</th>
+					<th>啟用狀態</th>
 					<th>訂單</th>
 					<th>編輯</th>
 					<th>刪除</th>
-					<th>會員創建時間</th>
+					<th>創建時間</th>
 					<th>最新登入時間</th>
 				</tr>
 			</thead>
@@ -46,8 +46,8 @@
 					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(a)"></i></td>
 					<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(a)"></i></td>
 					<td><i class='bx bx-trash sortIcon delete-item' data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteConfirm(a)"></i></td>
-					<td>{{(a.createDatetime).slice(0,10)}}</td>
-					<td>{{a.lasttImeLogin}}</td>
+					<td>{{(a.createDatetime).slice(0,19)}}</td>
+					<td>{{(a.lasttImeLogin).slice(0,19)}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -198,7 +198,6 @@
 				editAcc: {
 					accountId: 0,
 					firstName: "",
-					lastName: "",
 					phone: ""
 				},
 				//toastHintStlye: {

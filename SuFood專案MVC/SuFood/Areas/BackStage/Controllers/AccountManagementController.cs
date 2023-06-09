@@ -47,7 +47,7 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpPost]
         public async Task<string> EditAccounts([FromBody] VmAccount model)
         {
-            var editacc = await _context.Account.FirstOrDefaultAsync(x => x.AccountId == model.AccountId);
+            var editacc = _context.Account.FirstOrDefault(x => x.AccountId == model.AccountId);
            
             try
                 {
@@ -55,7 +55,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     editacc.LastName = model.LastName;
                     editacc.Phone = model.Phone;
                     _context.Update(editacc);
-                    await _context.SaveChangesAsync();
+                    _context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -84,14 +84,53 @@ namespace SuFood.Areas.BackStage.Controllers
                 return "刪除失敗";
             }
 
-            var account = await _context.Account.FindAsync(id);
+            var account = _context.Account.Find(id);
             if (account == null)
             {
                 return "找不到此帳戶，刪除失敗";
             }
 
-            _context.Account.Remove(account);
-            await _context.SaveChangesAsync();
+			//刪除ShoppingCart關聯
+			var shoppingCart = _context.ShoppingCart.Where(x => x.AccountId == id).ToList();
+            if(shoppingCart.Count > 0)
+            {
+                _context.ShoppingCart.RemoveRange(shoppingCart);
+                _context.SaveChanges();
+            };
+
+			//刪除CouponUsedList關聯
+			var couponUsed = _context.CouponUsedList.Where(x => x.AccountId == id).ToList();
+            if (couponUsed.Count > 0) { 
+                _context.CouponUsedList.RemoveRange(couponUsed); 
+                _context.SaveChanges();
+            };
+
+            //刪除Orders關聯 (只能刪零售及自由選的訂單)
+            var orderId = _context.Orders.Where(x => x.AccountId == id).ToList();
+            if (orderId.Count > 0)
+            {
+                foreach(var order in orderId)
+                {
+					//刪除OrdersReview關聯
+					var OrderReview = _context.OrdersReview.Where(or => or.OrdersId == order.OrdersId).FirstOrDefault();
+					if (OrderReview != null)
+					{
+						_context.OrdersReview.RemoveRange(OrderReview);
+						_context.SaveChanges();
+					}
+
+					//刪除OrdersDetails關聯
+					var ordersdetails = _context.OrdersDetails.Where(x => x.OrderId == order.OrdersId);
+					_context.OrdersDetails.RemoveRange(ordersdetails);
+					_context.SaveChanges();
+
+					_context.Orders.Remove(order);
+					_context.SaveChanges();
+				}
+            }
+
+			_context.Account.Remove(account);
+            _context.SaveChanges();
             return "刪除成功";
         }
 
@@ -99,7 +138,7 @@ namespace SuFood.Areas.BackStage.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmOrders>> GetOrdersByAccountId(int accountId)
         {
-            var orders = await _context.Orders
+            var orders =  _context.Orders
                 .Where(x => x.AccountId == accountId)
                 .Select(o => new VmOrders
                 {
@@ -110,7 +149,7 @@ namespace SuFood.Areas.BackStage.Controllers
                     OrderStatus = o.OrderStatus,
                     AccountId = o.AccountId
                 })
-                .ToListAsync();
+                .ToList();
 
             return orders;
         }

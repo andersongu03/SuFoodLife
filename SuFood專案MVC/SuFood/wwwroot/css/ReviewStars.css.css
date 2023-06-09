@@ -1,0 +1,148 @@
+/*---------- 基礎設定 ----------*/
+
+/*---------- 字型(粉圓體) ----------*/
+/*@font-face {
+    font-family: 'CustomFont';
+    src: url('./jf-openhuninn-1.0.699905d9.ttf') format('truetype');
+}*/
+
+
+/*---------- 基礎設定 ----------*/
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    /*font-family: 'CustomFont', sans-serif;*/
+}
+
+/* 調整滾動條的寬度 */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* 調整滾動條的背景顏色 */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* 調整滾動條滑塊的顏色 */
+::-webkit-scrollbar-thumb {
+    background-color: hsl(210, 2%, 83%);
+}
+
+/* 評價卡片 */
+.feedback {
+    max-width: 360px;
+    background-color: #fff;
+    width: 100%;
+    padding: 30px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* 評價卡片內容 */
+.rating {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    overflow: hidden;
+    flex-direction: row-reverse;
+    height: 150px;
+    position: relative;
+}
+
+/* 隱藏Radio */
+.rating>input {
+    display: none;
+}
+
+    .rating > label {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        margin-top: auto;
+        background-image: url('../img/ratingstars/nonestar.png');
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 76%;
+        transition: 0.3s;
+    }
+
+/* 表情貼圖 */
+.emoji-wrapper {
+    width: 100%;
+    text-align: center;
+    height: 100px;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.emoji-wrapper:before,
+.emoji-wrapper:after {
+    content: "";
+    height: 15px;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+}
+
+.emoji-wrapper:before {
+    top: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0) 100%);
+}
+
+.emoji-wrapper:after {
+    bottom: 0;
+    background: linear-gradient(to top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 35%, rgba(255, 255, 255, 0) 100%);
+}
+
+.emoji {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.emoji>img {
+    margin: 15px 0;
+    width: 70px;
+    height: 70px;
+    flex-shrink: 0;
+}
+
+.rating > input:checked ~ label,
+.rating > input:checked ~ label ~ label {
+    background-image: url('../img/ratingstars/star.png');
+}
+
+#rating-1:checked~.emoji-wrapper>.emoji {
+    transform: translateY(-100px);
+}
+
+#rating-2:checked~.emoji-wrapper>.emoji {
+    transform: translateY(-200px);
+}
+
+#rating-3:checked~.emoji-wrapper>.emoji {
+    transform: translateY(-300px);
+}
+
+#rating-4:checked~.emoji-wrapper>.emoji {
+    transform: translateY(-400px);
+}
+
+#rating-5:checked~.emoji-wrapper>.emoji {
+    transform: translateY(-500px);
+}
+
+.rating > input:not(:checked) ~ label:hover,
+.rating > input:not(:checked) ~ label:hover ~ label {
+    background-image: url('../img/ratingstars/star.png');
+}

@@ -41,19 +41,21 @@
 										</div>
 									</td>
 									<td>
-										<div class="plusAndMinus">
-											<button @@click="minusItem(c)">
-												<i class="bx bx-minus cartsIcon plus"></i>
-											</button>
-											<p>{{ c.cartQuantity }}</p>
-											<button @@click="addItem(c)">
-												<i class="bx bx-plus cartsIcon minus"></i>
-											</button>
+										<div class="plusAndMinus" style="background-color: white">
+											<div>
+												<i class="bx bx-plus cartsIcon plus" @@click="addItem(c)"></i>
+											</div>
+											<div>
+												<p>{{ c.cartQuantity }}</p>
+											</div>
+											<div>
+												<i class="bx bx-minus cartsIcon plus" @@click="minusItem(c)"></i>
+											</div>
 										</div>
 									</td>
 									<td>${{c.price * c.cartQuantity}}</td>
 									<td>
-										<button @@click="deleteItem(c)">
+										<button @@click="deleteItem(c)" style="border:0px; background-color:white">
 											<i class="bx bxs-trash tableIcon"></i>
 										</button>
 
@@ -145,8 +147,11 @@
 						<div class="eachCoupon" v-for="coupon in coupons" :key="coupon.couponId">
 							<input type="radio" name="check" v-model="selectedOption" :value="coupon.couponId">
 							<div class="coupon-card" :class="{'selected': isSelected(coupon)}">
-								<div class="coupon-row">
+								<div class="coupon-row" style="margin-bottom: 5px">
 									<span id="cpnCode" class="fw-bolder">{{ coupon.couponName }}</span>
+								</div>
+								<div>
+									<p class="fw-bolder" style="">滿{{ coupon.minimumPurchasingAmount }}折{{ coupon.couponMinusCost}}</p>
 								</div>
 								<p class="fw-bolder">有效期限: {{ coupon.couponenddate2String }}</p>
 								<div class="circle1"></div>
@@ -171,8 +176,8 @@
 										   class="form-control isInvalid"
 										   aria-required="true"
 										   aria-invalid="false"
-										   v-model="retailOrder.Order.Name" />
-									<small class="invalidFeedback">請填寫姓名</small>
+										   v-model="retailOrder.Order.Name" required/>
+									@*<small class="invalidFeedback" v-if="showErrorMessage">請填寫姓名</small>*@
 								</div>
 								<div class="from-group">
 									<label for="email" class="title">Email</label>
@@ -183,7 +188,7 @@
 										   aria-required="true"
 										   aria-invalid="false"
 										   v-model="retailOrder.Order.Email" />
-									<small class="invalidFeedback">Email不能為空</small>
+									@*<small class="invalidFeedback">Email不能為空</small>*@
 								</div>
 								<div class="from-group">
 									<label for="tel" class="title">電話</label>
@@ -194,7 +199,7 @@
 										   aria-required="true"
 										   aria-invalid="false"
 										   v-model="retailOrder.Order.Phone" />
-									<small class="invalidFeedback">請填寫聯絡電話</small>
+									@*<small class="invalidFeedback">請填寫聯絡電話</small>*@
 								</div>
 								<div class="from-group">
 									<label for="address" class="title">聯絡地址</label>
@@ -205,7 +210,7 @@
 										   aria-required="true"
 										   aria-invalid="false"
 										   v-model="retailOrder.Order.ShipAddress" />
-									<small class="invalidFeedback">請填寫聯絡地址</small>
+									@*<small class="invalidFeedback">請填寫聯絡地址</small>*@
 								</div>
 								<div class="from-group">
 									<label for="message" class="title">
@@ -257,6 +262,7 @@
 										<div style="color:red">
 											<strong>優惠：<span>{{ getDiscount }}</span></strong>
 										</div>
+										<div v-if="showMessage" style="color:red"><img src="~/img/chat/exclamation-mark (1).png" style="padding-right:1%"/>金額未超過使用門檻</div>
 									</div>
 								</li>
 								<li class="list-group-item text-right"><strong>總計：${{ totalPrice }}</strong></li>
@@ -274,14 +280,13 @@
 		const vm = new Vue({
 			el: "#app",
 			data: {
-				tabs: ["1.確認購物車", "2.填寫訂單資訊"],
+				tabs: ["1.確認購物車", "2.填寫訂單資訊", '3.完成購買'],
 				currentTab: "1.確認購物車",
 				carts: [],
 				getId:'',
 				coupons: [],
 				selectedOption: null,
 				chooseCoupon: null,
-				GetCouponMinPrice:null,
 				retailOrder: {
 					Order: {
 						Name: '',
@@ -324,9 +329,8 @@
 				closeUsingCoupon(selectedOption) {
 					if (this.GetCouponMinPrice < this.myTotal){
 						this.modalShowing.showModal = false;
-					}else{
-						alert('無法使用!!!!!!!!!')
 					}
+					this.modalShowing.showModal = false;
 				},
 				closePopup() {
 					this.chooseCoupon = this.coupons.couponName;
@@ -427,7 +431,6 @@
 				},//資料加密送到藍星
 				prepareInfo() {
 					//this.onlinePayment.OrderId = orderId
-					console.log()
 					let _this = this;
 
 					let onlinePayment = {
@@ -467,7 +470,7 @@
 				//GET優惠券
 				GetCouponsToCart() {
 					let _this = this;
-					axios("/Coupon/GetCouponsForFront").then(response => {
+					axios("/CheckOut/GetCouponsToCart").then(response => {
 						_this.coupons = response.data;
 					});
 				},
@@ -479,7 +482,10 @@
 			computed: {
 				//GET取到優惠券的MinimumAmount
 				GetCouponMinPrice(){
-					return this.coupons.find(x => x.couponId == this.selectedOption).minimumPurchasingAmount;
+					if(this.coupons && this.selectedOption){
+						return this.coupons.find(x => x.couponId == this.selectedOption).minimumPurchasingAmount;
+					}
+					return 0;
 				},
 				//總計
 				totalPrice(){
@@ -492,6 +498,10 @@
 						(sum, item) => sum + (item.cartQuantity * item.price), 0
 					);
 					//sum 為目前加總金額，從0開始加總。item為cart目前加總的元素
+				},
+				//小於使用優惠券最低金額跳出提示
+				showMessage(){
+					return this.selectedOption && this.myTotal < this.GetCouponMinPrice;
 				},
 				isCartEmpty() {
 					return this.$data.carts.length === 0;
@@ -507,6 +517,11 @@
 					if (this.coupons.length === 0) {
 					    return 0;
 					}
+
+					if(this.showMessage){
+						return 0;
+					}
+
 					let _this = this;
 					if (this.selectedOption) {
 						const selectedCoupon = this.coupons.find(coupon => coupon.couponId === this.selectedOption);

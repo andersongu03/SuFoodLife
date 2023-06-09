@@ -62,6 +62,16 @@
         },
     },
     methods: {
+        //自動滑動到最下方
+        scrollToBottom() {
+            this.$nextTick(() => {
+                const chatHistory = this.$refs.chatHistory;
+                chatHistory.scrollTo({
+                    top: chatHistory.scrollHeight,
+                    behavior: "smooth" // 可选：平滑滚动
+                });
+            });
+        },
         previewImage: function (event) {
             console.log("change")
             var input = event.target;
@@ -138,6 +148,7 @@
                 this.selectedProducts.splice(index, 1);
             } else {
                 this.selectedProducts.push(product);
+                this.scrollToBottom()
                 //this.CreateProductsList.productsOfPlans.push({ productId: product.productId })
             }
         },

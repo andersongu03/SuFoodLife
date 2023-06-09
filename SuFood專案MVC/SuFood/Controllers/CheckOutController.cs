@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SuFood.Models;
 using SuFood.Models.DTO;
 using SuFood.ViewModel;
+using System.Linq;
 using System.Net;
 using System.Numerics;
 using System.Security.Policy;
@@ -147,7 +148,12 @@ namespace SuFood.Controllers
 			if (existingOrderId != 0)
 			{
 				int OldOrderId = (int)existingOrderId;
-				return await EditRetailOrder(OldOrderId, model);
+				var oldOrderDetails = _context.OrdersDetails.Where(od => od.OrderId == OldOrderId).ToList();
+				_context.RemoveRange(oldOrderDetails);
+
+				var oldOrder = _context.Orders.Where(o => o.OrdersId == OldOrderId).FirstOrDefault();
+				_context.Remove(oldOrder);
+				_context.SaveChanges();
 			}
 
 
@@ -198,53 +204,65 @@ namespace SuFood.Controllers
 
 			return Json(new { GetOrderId = getNewOrderId });
 		}
-		[HttpPost]
-		public async Task<IActionResult> EditRetailOrder(int orderId, RetailOrdersViewModel model)
+		// ============================幫你選們=======================
+
+		public IActionResult HelpUChioce2Order()
 		{
-			var order = await _context.Orders.FindAsync(orderId);
+			return View();
+		}
+		[HttpGet]
+		public async Task<IEnumerable<GetHelpUChioceOrderViewModel>> GetHelpUChoiceOrder()
+		{
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
 
-			var getSubCost = 0;
-			foreach (var details in model.Details)
-			{
-				var getSingleCost = _context.Products.Where(p => p.ProductName == details.ProductName).Select(p => p.Cost).First();
-				var getCartQuantity = details.Quantity;
-				getSubCost += getSingleCost * getCartQuantity;
+			var order = _context.Orders
+				.FirstOrDefault(x => x.AccountId == Convert.ToInt32(getAccountId) && x.OrderStatus == "未付款" && x.BuyMethod == "幫你選");
+						
+			var shipCount = _context.RecyleSubscribeOrders.Count(x => x.OrdersId == Convert.ToInt32(order.OrdersId));
 
-			}
-
-			if (order == null) { return Ok("我是誰我在哪"); }
-
-			order.Name = model.Order.Name;
-			order.Phone = model.Order.Phone;
-			order.ShipAddress = model.Order.ShipAddress;
-			order.SubCost = getSubCost;
-			order.SubTotal = model.Order.SubTotal;
-			order.SubDiscount = model.Order.SubDiscount;
-			order.SetOrdersDatetime = DateTime.Now;
-			order.ReMark = model.Order.ReMark;
-			order.Email = model.Order.Email;
-
-			await _context.SaveChangesAsync();
-
-			var orderDetails = _context.OrdersDetails.Where(od => od.OrderId == orderId);
-			_context.OrdersDetails.RemoveRange(orderDetails);
-
-			foreach (var detail in model.Details)
-			{
-				var NewOrderDetails = new OrdersDetails
+			var viewList = _context.Orders
+				.Include(x => x.RecyleSubscribeOrders)
+				.Where(x => x.OrdersId == order.OrdersId)
+				.Select(x => new GetHelpUChioceOrderViewModel
 				{
-					OrderId = orderId,
-					ProductName = detail.ProductName,
-					UnitPrice = detail.UnitPrice,
-					Quantity = detail.Quantity,
-				};
-				_context.OrdersDetails.Add(NewOrderDetails);
-				await _context.SaveChangesAsync();
-			}
+					OrdersId = x.OrdersId,
+					SubTotal = x.SubTotal,
+					countShip = shipCount,
+					DetailsViewModels = x.RecyleSubscribeOrders
+					.Select(x => new RecyleOrderDetailsViewModel
+					{
+						ShipDate = x.ShipDate
+					}).ToList()
+				})
+				.ToList();
 
-			return Json(new { GetOrderId = orderId });
+			return viewList;
 		}
 
+		[HttpPost]
+		public async Task<IActionResult> CreateHelpUChioceOrder([FromBody] HelpUChioce4OrderViewModel model)
+		{
+			var getAccountId = HttpContext.Session.GetString("GetAccountId");
+
+			var orderId = _context.Orders.Where(x => x.AccountId == Convert.ToInt32(getAccountId) && x.OrderStatus == "未付款" && x.BuyMethod == "幫你選").Select(x => x.OrdersId).First();
+
+			var order = _context.Orders.Where(x => x.OrdersId == orderId).FirstOrDefault();
+
+			if (order != null)
+			{
+				order.ReMark = model.ReMark;
+				order.ShipAddress = model.ShipAddress;
+				order.Name = model.Name;
+				order.Email = model.Email;
+				order.Phone = model.Phone;
+
+				_context.Update(order);
+				_context.SaveChanges();
+			}
+
+			return Json(new { OrderId = orderId });
+			
+		}
 	}
 
 }

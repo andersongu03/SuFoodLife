@@ -10,7 +10,7 @@
         <h4>商品總數:{{products.length}}</h4>
     </div>
     <div class="row mb-3">
-        <div class="col-3">
+        <div class="col-4">
             <div class="content">
                 <div class="searchBar">
                     <div class="inputWrapper">
@@ -20,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="content">
                 <div class="StatusBar">
                     <select v-model="selectedStatus">
@@ -31,7 +31,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div class="content">
                 <div class="StatusBar">
                     <select v-model="selectedCategory">
@@ -43,9 +43,20 @@
                 </div>
             </div>
         </div>
-        <div class="col-3 CreateButton-container">
+        <div class="col-2 CreateButton-container">
             <button @@click="CreateProducts" class="CreateButton">新增</button>
         </div>
+        <div class="col-2 CreateButton-container" v-if="!isNowEditHelp">
+            <button @@click="EditHelp" class="CreateButton">編輯幫你選</button>
+        </div>
+        <template v-if="isNowEditHelp">
+            <div class="col-1 CreateButton-container">
+                <button @@click="calcelHelp" class="CreateButton">取消</button>
+            </div>
+            <div class="col-1 CreateButton-container">
+                <button @@click="submitHelp" class="CreateButton">送出</button>
+            </div>
+        </template>
     </div>
     <div class="table__container">
         <table>
@@ -65,6 +76,7 @@
                     <th>狀態</th>
                     <th>編輯</th>
                     <th>刪除</th>
+                    <th v-if="isNowEditHelp">幫你選</th>
                 </tr>
             </thead>
             <tbody>
@@ -102,6 +114,9 @@
                         </td>
                         <td>
                             <i @@click="DeleteProducts(p)" :class="p.trash" :id="p.productId" :name="p.productId"></i>
+                        </td>
+                        <td v-if="isNowEditHelp">
+                            <input type="checkbox" class="isHelpChoice" v-model="p.isHelpUchioce"></input>
                         </td>
                     </tr>
                 </template>

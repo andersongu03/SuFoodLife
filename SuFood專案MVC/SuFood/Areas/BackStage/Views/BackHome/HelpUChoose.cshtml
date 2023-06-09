@@ -1,0 +1,74 @@
+﻿<div class="Recent-order col-10 col-sm-12 col-md-10 col-xl-10" id="huc">
+    <div class="d-flex align-items-center justify-content-between mb-2">
+        <h2>{{topic}}</h2>
+    </div>
+    <div class="row mb-3">
+        <div class="col-3">
+            <div class="content">
+                <div class="searchBar">
+                    <div class="inputWrapper">
+                        <i class='bx bx-search-alt-2 searchIcon'></i>
+                        <input type="text" class="inputSearch" placeholder="Search..." v-model="keyword">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="content">
+                <div class="StatusBar">
+                    <select>
+                        <option value="all">全部</option>
+                        <option value="active">庫存充足</option>
+                        <option value="frozen">庫存不足</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-3">
+            <div class="content">
+                <div class="StatusBar">
+                    <select>
+                        <option value="全部">全部</option>
+                        <template>
+                            <option></option>
+                        </template>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-3 CreateButton-container">
+            <button @@click="" class="CreateButton">新增</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>幫你選ID</th>
+                        <th>商品ID</th>
+                        <th>價格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template v-for="p in filterproducts">
+                        <tr>
+                            <td>
+                                <span>{{p.helpUChooseId}}</span>
+                            </td>
+                            <td>
+                                <span>{{p.productId}}</span>
+                            </td>
+                            <td>
+                                <span>{{p.pirce}}</span>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/helpuchoose.js"></script>
+}

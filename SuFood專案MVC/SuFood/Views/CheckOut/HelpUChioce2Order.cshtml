@@ -1,0 +1,342 @@
+﻿@section styles{
+	<link href="~/css/checkout.css" rel="stylesheet" />
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+		  integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+}
+
+<section class="check-out__section" id="app">
+	<div class="check-out__container">
+		<div class="check-out-status-container">
+			<div v-for="tab in tabs"
+				 class="check-out-status flexItem"
+				 :class="{currentStatus: currentTab === tab}">
+				<p class="flexItem">{{tab}}</p>
+			</div>
+		</div>
+		<div class="check-out-content row">
+			<!-- 確認購物車 -->
+			<template v-if="currentTab == '1.確認購物車'">
+			</template>
+			<!-- 填寫訂單資訊 -->
+			<template v-else-if="currentTab == '2.填寫訂單資訊'">
+				<template v-if="SubmitOrPay =='Submit'">
+					<div class="cardContent" id="" :class="popupShowing">
+						<div class="cardPopup-body" style="width: 375px; height:260px">
+							<div class="cardPopup">
+								<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+									<div class="col-12" style="display:flex; flex-direction:column;">
+										<div class="col-12" style="display:flex; justify-content: center;">
+											<h3 style="font-weight: bold; padding-bottom:30px;">確定送出訂單嗎?</h3>
+										</div>
+										<div class="col-12" style="display:flex; justify-content:space-around">
+											<div>
+												<button type="button" class="btn btn-success saveBtn" v-on:click.prevent="prepareInfo()"> 走一個!!! </button>
+											</div>
+											<div>
+												<button type="button" class="btn btn-danger" @@click="closePopup"> 下次一定 </button>
+											</div>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</template>
+				<template v-else>
+					<div class="cardContent" id="" :class="popupShowing">
+						<div class="cardPopup-body" style="width: 375px; height:260px">
+							<div class="cardPopup">
+								<form style="height: 1000px; display: flex; gap: .5rem; flex-direction: column;" id="form">
+									<div class="closeMark" @@click="closePopup">
+										<i class="fa-solid fa-circle-xmark fa-lg"></i>
+									</div>
+									<div class="col-12">
+										<h3 style="font-weight: bold">請選擇您的付款方式</h3>
+									</div>
+									<div class="col-12">
+										<!-- 用表單送給藍新 -->
+										<form name='Newebpay' method='post' action="https://ccore.newebpay.com/MPG/mpg_gateway">
+											<!-- 設定 hidden 可以隱藏不用給使用者看的資訊 -->
+											<!-- 藍新金流商店代號 -->
+											<input type='hidden' id='MerchantID' name='MerchantID' v-model="paymentData.MerchantID">
+											<!-- 交易資料透過 Key 及 IV 進行 AES 加密 -->
+											<input type='hidden' id='TradeInfo' name='TradeInfo' v-model="paymentData.TradeInfo">
+											<!-- 經過上述 AES 加密過的字串，透過商店 Key 及 IV 進行 SHA256 加密 -->
+											<input type='hidden' id='TradeSha' name='TradeSha' v-model="paymentData.TradeSha">
+											<!-- 串接程式版本 -->
+											<input type='hidden' id='Version' name='Version' v-model="paymentData.Version">
+											<!-- 直接執行送出 -->
+											<i class="fa-solid fa-credit-card fa-2xl" style="padding-left:14px"></i>
+											<input type='submit' value='信用卡支付' style="border:none; font-size: 1.3rem; background-color: white;">
+											@*<button value='前往付款'>123</button>*@
+											@*<button value='準備' v-on:click.prevent="pay(2)">123</button>*@
+										</form>
+										<div class="col-12">
+											<a v-on:click.prevent="pay('bank')" class="btn btnpaymentinstrument">
+												<i class="fa-solid fa-money-bill-transfer fa-2xl"></i>
+												<input type='submit' value='銀行轉帳' style="border:none; font-size: 1.3rem; background-color: white;">
+												@*<span style="font-size: 1.3rem">&nbsp銀行轉帳</span>*@
+											</a>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</template>
+				<div class="col-md-8 row flex-column-reverse flex-md-row">
+					<div class="col-md-7 orderInfo">
+						<h2 class="section-title">訂單資訊</h2>
+						<div class="card">
+							<form action="" class="card-body">
+								<div class="from-group">
+									<label for="name" class="title">收件人姓名</label>
+									<input type="text"
+										   id="name"
+										   name="name"
+										   class="form-control isInvalid"
+										   aria-required="true"
+										   aria-invalid="false"
+										   v-model="helpUChoiceOrder.Order.Name" required />
+									@*<small class="invalidFeedback" v-if="showErrorMessage">請填寫姓名</small>*@
+								</div>
+								<div class="from-group">
+									<label for="email" class="title">Email</label>
+									<input type="text"
+										   id="email"
+										   name="email"
+										   class="form-control"
+										   aria-required="true"
+										   aria-invalid="false"
+										   v-model="helpUChoiceOrder.Order.Email" />
+									@*<small class="invalidFeedback">Email不能為空</small>*@
+								</div>
+								<div class="from-group">
+									<label for="tel" class="title">電話</label>
+									<input type="text"
+										   id="tel"
+										   name="tel"
+										   class="form-control"
+										   aria-required="true"
+										   aria-invalid="false"
+										   v-model="helpUChoiceOrder.Order.Phone" />
+									@*<small class="invalidFeedback">請填寫聯絡電話</small>*@
+								</div>
+								<div class="from-group">
+									<label for="address" class="title">聯絡地址</label>
+									<input type="text"
+										   id="address"
+										   name="address"
+										   class="form-control"
+										   aria-required="true"
+										   aria-invalid="false"
+										   v-model="helpUChoiceOrder.Order.ShipAddress" />
+									@*<small class="invalidFeedback">請填寫聯絡地址</small>*@
+								</div>
+								<div class="from-group">
+									<label for="message" class="title">
+										備註
+										<small class="text-primary" style="color: #6527a0 !important">此欄位非必填</small>
+									</label>
+									<textarea name="message"
+											  id="message"
+											  cols="30"
+											  rows="6"
+											  class="form-control"
+											  v-model="helpUChoiceOrder.Order.ReMark"></textarea>
+								</div>
+								<div class="text-right">
+									<button type="submit" class="btn btn-success" @@click.prevent="createOrder()">
+										送出訂單
+									</button>
+								</div>
+
+							</form>
+						</div>
+					</div>
+					<div class="col-md-5">
+						<div class="sticky-top commoditiesDetail" v-for="getOrder in getHelpUChoiceOrder">
+							<h2 class="section-title">幫你選明細：配送次數{{ getOrder.countShip }}次</h2>
+							<div class="list-unstyled list-group mb-3" >
+								<div class="list-group-item " v-for="sd in getShipDate">
+									<div class="text-nowrap">
+										<div class="mr-3 fw-bolder">{{sd}}</div>
+									</div>
+								</div>
+								<div class="list-group-item text-right">
+									<div class="text-right">
+										<strong>每次配送：{{ eachProducts }}&nbsp;樣商品</strong>
+									</div>
+									<div class="text-right">
+										<strong>總計：${{ getOrder.subTotal }}</strong>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</template>
+		</div>
+	</div>
+</section>
+
+@section Scripts{
+	<script>
+		const vm = new Vue({
+			el: "#app",
+			data: {
+				tabs: ["1.確認購物車", "2.填寫訂單資訊", '3.完成購買'],
+				currentTab: "2.填寫訂單資訊",
+				getHelpUChoiceOrder: [],
+				getId: '',
+				helpUChoiceOrder: {
+					Order: {
+						Name: '',
+						Email: '',
+						Phone: '',
+						ShipAddress: '',
+						ReMark: '',
+						SubTotal: null,
+					},
+				},
+				modalShowing: {
+					showModal: false,
+				},
+				popupShowing: {
+					showPopup: false,
+				},
+				SubmitOrPay: '',
+				onlinePayment: {
+					"orderId": null,
+					"merchantID": null,
+					"tradeInfo": null,
+					"tradeSha": null,
+					"version": null
+				},
+				paymentData: {
+					MerchantID: '',
+					TradeInfo: '',
+					TradeSha: '',
+					Version: '2.0'
+				},
+				isInvalid: true,
+			},
+			methods: {
+				closePopup() {
+					this.chooseCoupon = this.coupons.couponName;
+					this.popupShowing.showPopup = false;
+				},
+				closeUsingCoupon(selectedOption) {
+					if (this.GetCouponMinPrice < this.myTotal) {
+						this.modalShowing.showModal = false;
+					}
+					this.modalShowing.showModal = false;
+				},
+				GetHelpUChoiceOrder: function(){
+					let _this = this;
+					axios("/CheckOut/GetHelpUChoiceOrder").then(response => {
+						_this.getHelpUChoiceOrder = response.data
+						this.getHelpUChoiceOrder
+					});
+				},
+				createOrder: function () {
+					let abc = {
+						Name: this.helpUChoiceOrder.Order.Name,
+						Email: this.helpUChoiceOrder.Order.Email,
+						Phone: this.helpUChoiceOrder.Order.Phone,
+						ShipAddress: this.helpUChoiceOrder.Order.ShipAddress,
+						ReMark: this.helpUChoiceOrder.Order.ReMark,
+					}
+					axios.post("/CheckOut/CreateHelpUChioceOrder", abc)
+						.then(response => {
+							console.log(response.data);
+							this.getId = response.data;
+							this.SubmitOrPay = "Submit";
+							this.popupShowing.showPopup = true;
+						});
+				},
+				//資料加密送到藍星
+				prepareInfo() {
+					//this.onlinePayment.OrderId = orderId
+					console.log()
+					let _this = this;
+
+					let onlinePayment = {
+						"orderId": this.getId.orderId,
+						"merchantID": null,
+						"tradeInfo": "",
+						"tradeSha": "",
+						"version": ""
+					};
+
+					axios.post("/OnlinePayment/Payment", onlinePayment, {
+						headers: {
+							'Content-Type': 'application/json'
+						}
+					}).then(response => {
+						this.paymentData.MerchantID = response.data.merchantID;
+						this.paymentData.TradeInfo = response.data.tradeInfo;
+						this.paymentData.TradeSha = response.data.tradeSha;
+						this.SubmitOrPay = "Pay";
+					})
+				},
+				//支付
+				pay2() {
+					this.pay()
+
+					var formData = new FormData();
+					formData.append('MerchantID', this.paymentData.MerchantID);
+					formData.append('TradeInfo', this.paymentData.TradeInfo);
+					formData.append('TradeSha', this.paymentData.TradeSha);
+					formData.append('Version', "2.0");
+
+					axios.post("https://ccore.newebpay.com/MPG/mpg_gateway", formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+						.then(response => {
+							console.log(response.data)
+						})
+				},
+			},
+			computed: {
+				getShipDate(){
+					let date = [];
+					const order = this.getHelpUChoiceOrder.map(x => x.detailsViewModels);
+					const totalShipDate = order[0].map(x => x.shipDate);
+					for(let i = 0; i < totalShipDate.length; i++){
+						date.push(totalShipDate[i].slice(0, 10));
+					}
+					return date;
+				},
+				eachProducts(){
+					const choiceOrder = this.getHelpUChoiceOrder
+					return choiceOrder.map(x=>x.subTotal) / (choiceOrder.map(x => x.countShip)[0] * 50);
+				},
+				////總計
+				//totalPrice() {
+				//	return this.myTotal;
+				//},
+				////小計
+				//myTotal: function () {
+				//	let _this = this;
+				//	return _this.carts.reduce(
+				//		(sum, item) => sum + (item.cartQuantity * item.price), 0
+				//	);
+				//	//sum 為目前加總金額，從0開始加總。item為cart目前加總的元素
+				//},
+				//isCartEmpty() {
+				//	return this.$data.carts.length === 0;
+				//},
+			},
+			//watch: {
+			//	totalPrice(newTotal) {
+			//		this.retailOrder.Order.SubTotal = newTotal;
+			//	}
+			//},
+			mounted() {
+				this.GetHelpUChoiceOrder();
+			}
+		});
+	</script>
+}
+

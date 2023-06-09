@@ -1,6 +1,4 @@
-﻿using SuFood.Models;
-
-namespace SuFood.ViewModel
+﻿namespace SuFood.ViewModel
 {
     public class VmRecyleOrderDetails
     {
@@ -8,7 +6,5 @@ namespace SuFood.ViewModel
         public string ProductName { get; set; }
         public int? Quantity { get; set; }
         public int ReSubOrdersId { get; set; }
-
-    
     }
 }

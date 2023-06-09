@@ -17,6 +17,20 @@
 			color: rgb(248 119 17);
 			font-weight: bold;
 		}
+
+		.time-button {
+			border:none;
+			display: inline-block;
+			background-color: hsl(120, 100%, 25%);
+			color: #fff;
+			padding: 1rem 1.25rem;
+			border-radius: .5rem;
+			transition: .3s;
+			width: 20%;
+			height: 20%;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
+		}
+
 	</style>
 }
 
@@ -70,7 +84,7 @@
 				<div class="date-picker">
 					<input id="start-date" type="date" v-model="startDate">
 					<input id="end-date" type="date" v-model="endDate">
-					<button type="button" @@click="search">搜尋</button>
+					<button class="time-button" type="button" @@click="search">搜尋</button>
 				</div>
 			</div>
 		</div>
@@ -96,31 +110,31 @@
 			<tbody>
 				<template v-if="filteredOrdersTime.length > 0">
 					<tr v-for="o in filteredOrdersTime">
-					<td>{{o.ordersId}}</td>
-					<td>{{o.accountId}}</td>
-					<td>{{o.buyMethod}}</td>
-					<td>{{o.orderStatus}}</td>
-					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
-					<td>{{(o.subTotal)-(o.subDiscount)}}</td>
-					<td>{{o.setOrdersDatetime}}</td>
-					<td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
-					<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
-					<td><i class='bx bx-trash sortIcon delete-item' @@click="deleteConfirm(o)"></i></td>
-				</tr>
+						<td>{{o.ordersId}}</td>
+						<td>{{o.accountId}}</td>
+						<td>{{o.buyMethod}}</td>
+						<td>{{o.orderStatus}}</td>
+						<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
+						<td>{{(o.subTotal)-(o.subDiscount)}}</td>
+						<td>{{o.setOrdersDatetime}}</td>
+						<td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
+						<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
+						<td><i class='bx bx-trash sortIcon delete-item' @@click="deleteConfirm(o)"></i></td>
+					</tr>
 				</template>
 				<template v-else>
 					<tr v-for="o in ordersInPage">
-					<td>{{o.ordersId}}</td>
-					<td>{{o.accountId}}</td>
-					<td>{{o.buyMethod}}</td>
-					<td>{{o.orderStatus}}</td>
-					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
-					<td>{{(o.subTotal)-(o.subDiscount)}}</td>
-					<td>{{ o.setOrdersDatetime.slice(0,19)}}</td>
-					<td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
-					<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
-					<td><i class='bx bx-trash sortIcon delete-item' @@click="deleteConfirm(o)"></i></td>
-				</tr>
+						<td>{{o.ordersId}}</td>
+						<td>{{o.accountId}}</td>
+						<td>{{o.buyMethod}}</td>
+						<td>{{o.orderStatus}}</td>
+						<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
+						<td>{{(o.subTotal)-(o.subDiscount)}}</td>
+						<td>{{ o.setOrdersDatetime.slice(0,19)}}</td>
+						<td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
+						<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
+						<td><i class='bx bx-trash sortIcon delete-item' @@click="deleteConfirm(o)"></i></td>
+					</tr>
 				</template>
 			</tbody>
 		</table>
@@ -128,18 +142,18 @@
 
 	<!-- 3.分頁 -->
 	<div>
-	<paginate :page-count="pageCount"
-	:click-handler="changePage"
-	:prev-text="'&laquo;'"
-	:next-text="'&raquo;'"
-	:page-class="'page-item'"
-	:page-link-class="'page-link'"
-	:prev-class="'page-item'"
-	:prev-link-class="'page-link'"
-	:next-class="'page-item'"
-	:next-link-class="'page-link'"
-	:container-class="'pagination justify-content-center'">
-	</paginate>
+		<paginate :page-count="pageCount"
+				  :click-handler="changePage"
+				  :prev-text="'&laquo;'"
+				  :next-text="'&raquo;'"
+				  :page-class="'page-item'"
+				  :page-link-class="'page-link'"
+				  :prev-class="'page-item'"
+				  :prev-link-class="'page-link'"
+				  :next-class="'page-item'"
+				  :next-link-class="'page-link'"
+				  :container-class="'pagination justify-content-center'">
+		</paginate>
 	</div>
 
 	<!-- 4.所有Modal -->

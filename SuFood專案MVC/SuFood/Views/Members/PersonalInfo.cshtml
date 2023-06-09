@@ -14,23 +14,50 @@
 		}
 
 
-		.info-label{
+		.info-label {
 			padding-right: 0px;
+			padding:5px;
 			width: fit-content;
 		}
-		.info-label2{
+
+		.info-label2 {
 			padding-right: 0;
+			padding:5px;
 			width: 15%;
 		}
 
-		.info-label3{
-			margin-left: 30px;
-		}
-		.info-label4{
-			margin-left: 16px;
+		.info-label3 {
+			/*margin-left: 30px;*/
+			padding:5px;
 		}
 
-		
+		.info-label4 {
+			/*margin-left: 16px;*/
+			padding:5px;
+		}
+
+		input{
+			padding:5px;
+		}
+
+		#editinfo-button{
+			margin-top:25px;
+		}
+
+
+
+		/*.personalInfo {
+			max-width: 360px;
+			background-color: #fff;
+			width: 100%;
+			padding: 30px;
+			border-radius: 8px;
+			display: flex;
+			flex-direction: column;
+			flex-wrap: wrap;
+			align-items: center;
+			box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+		}*/
 
 	</style>
 
@@ -49,75 +76,158 @@
 					<h3>個人資料</h3>
 				</div>
 
-					<div class="form row">
-						<div class="col-3 info-label">
-							<label for="accountId">會員編號：</label>
-						</div>
-						<div class="col-9">
-							<input type="text" name="accountId" id="accountId" v-model="info.accountId" disabled>
-						</div>
-					</div>
-					<div class="form row">
-						<div class="col-3 info-label">
-							<label for="account1">會員帳號：</label>
-						</div>
-						<div class="col-9">
-							<input type="text" name="account1" id="account1" v-model="info.account1" disabled>
-						</div>
-					</div>
-			
 
+				<div class="form row">
+					<div class="col-3 info-label">
+						<label for="accountId">會員編號：</label>
+					</div>
+					<div class="col-9">
+						<input type="text" name="accountId" id="accountId" v-model="info.accountId" disabled size="30">
+					</div>
+				</div>
+				<div class="form row">
+					<div class="col-3 info-label">
+						<label for="account1">會員帳號：</label>
+					</div>
+					<div class="col-9">
+						<input type="text" name="account1" id="account1" v-model="info.account1" disabled size="30">
+					</div>
+				</div>
+
+				@*<div class="container personalInfo" id="personal">
+				<table class="table">
+				<tbody>
 				<!--編輯範本-->
 				<template v-if="infoEdit">
-				<div class="form row">
-						<div class="col-3 info-label">
-						<label for="">會員姓名：</label>
-					</div>
-					<div class="col-9">
-						<input class="Error" type="text" name="firstname" id="firstname" v-model="info.firstName" required size="10" >
-					</div>
-				</div>
-				<div class="form row">
-					<div class="col-3 info-label2">
-						<label for="gender" class="info-label3">性別：</label>
-					</div>
-					<div class="col-9">
-						<input type="radio" name="gender" id="gender" value="男" v-model="info.gender" >男
-						<input type="radio" name="gender" id="gender" value="女" v-model="info.gender" >女
-					</div>
-				</div>
-				<div class="form row">
-						<div class="col-3 info-label2">
-							<label for="birthdate" class="info-label3">生日：</label>
-					</div>
-					<div class="col-9">
-						<input type="datetime" name="birthdate" id="birthdate" v-model="info.birthDate" >
-					</div>
-				</div>
-				<div class="form row">
-						<div class="col-3 info-label">
-						<label for="phone">手機號碼：</label>
-					</div>
-					<div class="col-9">
-						<input type="tel" name="phone" id="phone" v-model="info.phone" required>
-					</div>
-				</div>
-				<div class="form row">
-						<div class="col-3 info-label">
-						<label for="">聯絡地址：</label>
-					</div>
-					<div class="col-9">
-						<input type="text" name="" id=""  required size="30" v-model="info.defaultShipAddress">
-					</div>
-				</div>
+				<tr>
+				<th scope="col">帳號</th>
+				<td>
+				a0970552678@gmail.com
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">姓名</th>
+				<td>
+				毛毛蟲
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">年齡</th>
+				<td>
+				22
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">地址</th>
+				<td>
+				台北市大安區羅斯福路
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">性別</th>
+				<td>
+				男
+				</td>
+				</tr>
 				<div class="btn-block">
-					<button class="btn btn-primary" @@click="update(info.accountId)">儲存</button>
-					<button class="btn btn-secondary" @@click="cancel(info.accountId)">取消</button>
+				<button class="btn btn-primary" @@click="update(info.accountId)">儲存</button>
+				<button class="btn btn-secondary" @@click="cancel(info.accountId)">取消</button>
 				</div>
 				</template>
 
 				<!--顯示範本-->
 				<template v-else>
+				<tr>
+				<th scope="col">帳號</th>
+				<td>
+				a0970552678@gmail.com
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">姓名</th>
+				<td>
+				毛毛蟲
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">年齡</th>
+				<td>
+				22
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">地址</th>
+				<td>
+				台北市大安區羅斯福路
+				</td>
+				</tr>
+				<tr>
+				<th scope="col">性別</th>
+				<td>
+				男
+				</td>
+				</tr>
+				<div>
+				<button class="btn btn-primary" @@click="edit">編輯</button>
+				</div>
+				</template>
+				</tbody>
+				</table>
+				</div>*@
+
+				<!--編輯範本-->
+				<template v-if="infoEdit">
+
+					<div class="form row">
+						<div class="col-3 info-label">
+							<label for="">會員姓名：</label>
+						</div>
+						<div class="col-9">
+							<input class="Error" type="text" name="firstname" id="firstname" v-model="info.firstName" required size="30">
+						</div>
+					</div>
+					<div class="form row">
+						<div class="col-3 info-label2">
+							<label for="gender" class="info-label3">性別：</label>
+						</div>
+						<div class="col-9">
+							<input type="radio" name="gender" id="gender" value="男" v-model="info.gender">男
+							<input type="radio" name="gender" id="gender" value="女" v-model="info.gender">女
+						</div>
+					</div>
+					<div class="form row">
+						<div class="col-3 info-label2">
+							<label for="birthdate" class="info-label3">生日：</label>
+						</div>
+						<div class="col-9">
+							<input type="date" name="birthdate" id="birthdate" v-model="info.birthDate">
+						</div>
+					</div>
+					<div class="form row">
+						<div class="col-3 info-label">
+							<label for="phone">手機號碼：</label>
+						</div>
+						<div class="col-9">
+							<input type="tel" class="error" name="phone" id="phone" v-model="info.phone" required size="30">
+						</div>
+					</div>
+					<div class="form row">
+						<div class="col-3 info-label">
+							<label for="">聯絡地址：</label>
+						</div>
+						<div class="col-9">
+							<input type="text" name="" id="" required size="30" v-model="info.defaultShipAddress">
+						</div>
+					</div>
+					<div class="btn-block">
+						<button class="btn btn-primary" @@click="update(info.accountId)">儲存</button>
+						<button class="btn btn-secondary" @@click="cancel(info.accountId)">取消</button>
+					</div>
+				</template>
+
+				<!--顯示範本-->
+				<template v-else>
+
 					<div class="form row">
 						<div class="col-3 info-label">
 							<div>會員姓名：</div>
@@ -139,7 +249,7 @@
 							<div class="info-label3">生日：</div>
 						</div>
 						<div class="col-9">
-							<div>{{(info.birthDate)}}</div>
+							<div>{{info.birthDate}}</div>
 						</div>
 					</div>
 					<div class="form row">
@@ -159,8 +269,7 @@
 						</div>
 					</div>
 					<div>
-					
-						<button class="btn btn-primary" @@click="edit">編輯</button>
+						<button class="btn btn-primary" id="editinfo-button" @@click="edit">編輯</button>
 					</div>
 				</template>
 
@@ -183,13 +292,12 @@
 				infoEdit: false,
 
 			},
-			mounted() {				
+			mounted() {
 				this.getInfos();
-			},		
+			},
 			methods: {
-				getInfos:function() {
+				getInfos: function () {
 					let _this = this;
-					//取得id方法之後寫在這~
 					axios.get(`/PersonalInfo/GetAccount`,).then(res => {
 						_this.info = res.data[0];
 					})
@@ -231,23 +339,8 @@
 				},
 			},
 			computed: {
-				//Error: function () {
-				//	if (this.val.length == "") {
-				//		return "Error";
-				//	}
-				//	else {
-				//		return "noError";
-				//	}
-				//},
 
 			}
-
-
-
-
-
-
-
 		})
 
 	</script>

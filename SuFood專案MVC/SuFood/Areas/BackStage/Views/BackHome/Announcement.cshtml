@@ -1,0 +1,176 @@
+﻿@section Styles{
+	<link href="~/css/announcement.css" rel="stylesheet" />
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.css">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.21.2/dist/bootstrap-vue.min.js"></script>
+	<script src="https://kit.fontawesome.com/6643c6516c.js" crossorigin="anonymous"></script>
+}
+
+<main id="app">
+	<header>
+		<nav>
+			<ul>
+				<li v-for="(tab, tabName) in tabs" :key="tabName">
+					<button class="tab"
+							@@click="setTabActive(tabName, selectedType)"
+							:class="{'active': tabName === activeTab}">
+						<span class="tab-copy">{{ tabName }}</span>
+						<span class="tab-background">
+							<span class="tab-rounding left"></span>
+							<span class="tab-rounding right"></span>
+						</span>
+					</button>
+				</li>
+			</ul>
+		</nav>
+	</header>
+	<article>
+		<div class="container">
+			<div>
+				<transition name="fade"
+							mode="out-in"
+							appear
+							:duration="500">
+					@*<keep-alive>*@
+					<tabcontent v-for="(tabContent, t) in tabs"
+								:data="tabContent"
+								:key="'content'+t"
+								v-if="t === activeTab"
+								inline-template>
+						<template>
+							<div class="tabContent">
+								<!-- 内容 -->
+								<div class="table">
+									<button type="button" @@click="CreateAA()" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">+</button>
+									<i class='bx bx-search-alt-2 searchIcon'></i>
+									<input type="text" class="inputSearch" placeholder="Search..." v-model="keyword" @@input="GetSearchDetail" />
+									<table>
+										<thead>
+											<tr>
+												<th>ID</th>
+												<th>圖片</th>
+												<th>內容</th>
+												<th>建立時間</th>
+												<th>建立者</th>
+												<th>狀態</th>
+												<th>編輯</th>
+												<th>刪除</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr v-for="item in filteredAnnouncementes" :key="item.AnnouncementId">
+												<template v-if="item.changeEdit == true">
+													<td>{{EditInfo.Id}}</td>
+													<td><input name="Img" v-on:change="previewImage" type="file" id="fileInput"></td>
+													<td><img width="300px" class="imgPreview" v-if="uplodaImgPreview.preview" :src="uplodaImgPreview.preview" alt=""></td>
+													<td><input v-model="EditInfo.Context" /></td>
+													<td><input v-model="EditInfo.Type" /></td>
+													<td><input v-model="EditInfo.Createtime" /></td>
+													<td class="form-check form-switch"><input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="EditInfo.Status" /></td>
+													<td>
+														<button class="btn btn-success" @@click="EditAnnouncement(item)">修改</button>
+														<button class="btn btn-warning" @@click="cancel">取消</button>
+													</td>
+												</template>
+												<template v-else="item.changeEdit == false">
+													<td>
+														<span>{{item.announcementId}}</span>
+													</td>
+													<td>
+														<img :src="'data:image/jpeg;base64,'+item.announcementImage" class="AnnouncementImage" width="300px">
+													</td>
+													<td>
+														<span>{{item.announcementContent}}</span>
+													</td>
+													<td>
+														<span>{{item.announcementStartDate}}</span>
+													</td>
+													<td>
+														<span>{{item.announcementStatus}}</span>
+													</td>
+													<td>
+														<i class="fa-solid fa-pen-to-square" style="color: #1239fd;" @@click="EditAA(item)"></i>
+													</td>
+													<td>
+														<i class="fa-solid fa-trash-can" style="color: #bd0013;" @@click="DeleteAnnouncement(item.announcementId)"></i>
+													</td>
+												</template>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<!-- 内容 -->
+							</div>
+						</template>
+
+
+
+
+					</tabcontent>
+					@*	</keep-alive>*@
+				</transition>
+			</div>
+		</div>
+	</article>
+
+
+	@* 彈出的視窗*@
+	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+		<div class="modal-dialog modal-xl modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="staticBackdropLabel">新增</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body container text-center">
+					<div class="row">
+						<div class="col-3">
+							<select name="Type" class="form-control form-control-lg" aria-label=".form-control-lg example" v-model="createInfo.Type">
+								<option value="首頁" selected>首頁</option>
+								<option>輪播圖</option>
+								<option>優惠公告</option>
+								<option>熱賣</option>
+							</select>
+						</div>
+						<div class="form-check form-switch">
+							<label class="form-check-label" for="flexSwitchCheckDefault">上架顯示</label>
+							<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="createInfo.Status" />
+						</div>
+						<div class="col-3">
+							<input name="Context" class="form-control form-control-lg" type="text" placeholder="輸入內容" aria-label=".form-control-lg example" v-model="createInfo.Context">
+						</div>
+
+					</div>
+					<div class="col-3">
+						<label name="Img">圖片:</label>
+						<input name="Img" v-on:change="previewImage" type="file" id="fileInput">
+					</div>
+
+					<div class="imgPreview">
+						<i v-if="!uplodaImgPreview.preview" class='bx bx-image-add icon'></i>
+						<img v-if="uplodaImgPreview.preview" :src="uplodaImgPreview.preview" alt="">
+
+					</div>
+					<div class="modal-footer">
+						<div>
+							<label name="Createtime">建立時間:</label>
+							<input name="Createtime" type="text" v-model="createInfo.Createtime">
+						</div>
+						<div>
+							<label name="Creator">建立者:</label>
+							<input name="Creator" type="text" placeholder="自動填後台登入管理者" class="" v-model="createInfo.Creator">
+						</div>
+						<button type="button" class="btn btn-dark" data-bs-dismiss="modal">關閉</button>
+						<button type="button" class="btn btn-success" @@click="CreateAnnouncement">建立</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</main>
+
+@section Scripts {
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/announcement.js"></script>
+	<script src="~/axios/axios.min.js"></script>
+}

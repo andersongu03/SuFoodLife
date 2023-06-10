@@ -294,7 +294,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/axios/axios.min.js"></script>
-    <script src="~/js/vue.js"></script>
+
 
     <script>
         const cartttt = new Vue({
@@ -402,7 +402,7 @@
                 },
                 cartStyle:function() {
                     return {
-                        content: this.cartttt.cart.length.toString(),
+                        content: this.cart.length.toString(),
                         fontSize: '10px',
                         width: '20px',
                         height: '20px',
@@ -424,7 +424,10 @@
                 this.GetCart();
             }
         })
+         
     </script>
+
+    <script src = "~/js/vue.js" ></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

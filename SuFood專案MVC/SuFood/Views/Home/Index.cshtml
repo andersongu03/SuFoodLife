@@ -38,9 +38,9 @@
                 <div class="col-lg-5 order-1 order-lg-2 text-center text-lg-start img-fluid" data-aos="zoom-out" data-aos-delay="300">
                     <div id="carouselExample" class="carousel slide">
                         <div class="carousel-inner">
-      @*                      <div v-for="(item, index) in CarouselArr" :key="item.announcementId" class="carousel-item" :class="{ 'active': index === 0 }">
+                            <div v-for="(item, index) in CarouselArr" :key="item.announcementId" class="carousel-item" :class="{ 'active': index === 0 }">
                                 <img :src="'data:image/jpeg;base64,'+item.announcementImage" width="600px" height="380px">
-                            </div>*@
+                            </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -71,7 +71,7 @@
                 <div class="row gy-4">
                     <div class="col-lg-7 position-relative about-img" data-aos="fade-up" data-aos-delay="150">
                        
-                        <img :src="'data:image/jpeg;base64,'+AnnouncementArr[1].announcementImage" width="750px">
+                        <img v-if="AnnouncementArr[0] && AnnouncementArr[0].announcementImage" :src="'data:image/jpeg;base64,'+AnnouncementArr[0].announcementImage" width="750px">
                         <div class="call-us @*position-absolute*@">
                             <h4>優惠倒數</h4>
                             <p>08:16:58:49</p>
@@ -96,7 +96,7 @@
                             </p>
 
                             <div class="position-relative mt-4">
-                                <img :src="'data:image/jpeg;base64,'+AnnouncementArr[0].announcementImage" width="500px">
+                                <img v-if="AnnouncementArr[1] && AnnouncementArr[1].announcementImage" :src="'data:image/jpeg;base64,'+AnnouncementArr[1].announcementImage" width="500px">
                                 <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ" class="glightbox play-btn"></a>
                             </div>
                         </div>
@@ -225,10 +225,8 @@
                                                 <span v-text="item.comment"></span>
                                                 <i class="bi bi-quote quote-icon-right"></i>
                                             </p>
-                                            <h3>Saul Goodman</h3>
-                                            <h4>Ceo &amp; Founder</h4>
                                             <div class="stars">
-                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
+                                                'StarComment.rating_star'<i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
                                             </div>
                                         </div>
                                     </div>
@@ -334,7 +332,7 @@
                     <div class="swiper-wrapper">
 
                         <div class="swiper-slide  d-flex flex-column justify-content-end">
-                            <img :src="'data:image/jpeg;base64,'+homePageArr[4].announcementImage">
+                            <img v-if="homePageArr[4] && homePageArr[4].announcementImage" :src="'data:image/jpeg;base64,'+homePageArr[4].announcementImage">
                         </div>
 
                     </div>
@@ -351,71 +349,21 @@
                     <h2>選擇障礙?</h2>
                     <p>看看這些 <span>熱銷商品</span></p>
                 </div>
-@*
-                <div class="gallery-slider swiper">
-                    <div class="swiper-wrapper align-items-center">
-                        <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery"
-                               href="~/img/hotproducts/line_album_水果圖片_230504_69.jpg">
-                                <img src="~/img/hotproducts/line_album_水果圖片_230504_69.jpg" class="img-fluid"  />
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery"
-                               href="~/img/hotproducts/line_album_水果圖片_230504_69.jpg">
-                                <img src="~/img/hotproducts/line_album_水果圖片_230504_10.jpg" class="img-fluid" />
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery"
-                               href="~/img/hotproducts/line_album_水果圖片_230504_69.jpg">
-                                <img src="~/img/hotproducts/line_album_水果圖片_230504_28.jpg" class="img-fluid" />
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery"
-                               href="~/img/hotproducts/line_album_水果圖片_230504_69.jpg">
-                                <img src="~/img/hotproducts/line_album_水果圖片_230504_48.jpg" class="img-fluid" />
-                            </a>
-                        </div>
-                        <div class="swiper-slide">
-                            <a class="glightbox" data-gallery="images-gallery"
-                               href="~/img/hotproducts/line_album_水果圖片_230504_69.jpg">
-                                <img src="~/img/hotproducts/line_album_水果圖片_230504_35.jpg" class="img-fluid" />
-                            </a>
-                        </div>
-                    </div>
-                    <div class="swiper-pagination"></div>
-                </div>
-*@
+
                 
                 <div class="gallery-slider swiper" >
                 <div class="swiper-wrapper align-items-center">
-                   @*     <div class="swiper-slide" v-for="(item, index) in HotSaleArr" :key="item.announcementId">
+                        <div class="swiper-slide" v-for="(item, index) in HotSaleArr" :key="item.announcementId">
                             <a class="glightbox" data-gallery="images-gallery" :href="item.announcementImage">
                                 <img :src="'data:image/jpeg;base64,'+item.announcementImage" class="img-fluid announcementImage" alt="" width="100px" height="200px">
-                </a>*@
-                </div>
-                </div>
-                <div class="swiper-pagination"></div>
-                </div>
-
-
-                @*  <div class="gallery-slider swiper">
-                <div class="swiper-wrapper align-items-center">
-
-                <div  v-for="(item, index) in HotSaleArr" :key="item.AnnouncementId"  class="swiper-slide">
-                <a class="glightbox" data-gallery="images-gallery"
-                href="./img/gallery/LINE_ALBUM_水果圖片_230504_69.jpg">
-                <div class="swiper-slide">
-                <img :src="'data:image/jpeg;base64,'+item.announcementImage" class="img-fluid AnnouncementImage">
-                </div>
                 </a>
                 </div>
                 </div>
                 <div class="swiper-pagination"></div>
                 </div>
-                *@
+
+
+
 
             
         </section><!-- End Gallery Section -->
@@ -460,5 +408,5 @@
 
     <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/index.js"></script>@*解開封印畫面就會壞掉*@
+    <script src="~/js/index.js"></script>
 }

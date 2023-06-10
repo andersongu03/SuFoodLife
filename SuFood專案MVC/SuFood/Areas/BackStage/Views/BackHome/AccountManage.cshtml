@@ -46,8 +46,8 @@
 					<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(a)"></i></td>
 					<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(a)"></i></td>
 					<td><i class='bx bx-trash sortIcon delete-item' data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteConfirm(a)"></i></td>
-					<td>{{(a.createDatetime).slice(0,19)}}</td>
-					<td>{{(a.lasttImeLogin).slice(0,19)}}</td>
+					<td>{{(a.createDatetime).slice(0,10)}}</td>
+					<td>{{(a.lasttImeLogin).split("T").join(" ").slice(0,19)}}</td>
 				</tr>
 			</tbody>
 		</table>
@@ -137,27 +137,9 @@
 		</div>
 	</div>
 
-	<!-- DeleteModal -->
-	<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="modal-body">
-					<h5 id="exampleModalLabel">確定要刪除此帳戶嗎？{{delAcc.number}}</h5>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-primary" @@click="deleteAccount">確定</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	
 
 	<!--5.刪除、編輯後的提示訊息-->
-@*	<div class="message-toast-wrapper" :class="toastHintStlye">
+	@*	<div class="message-toast-wrapper" :class="toastHintStlye">
 	<i v-if="toast=='新增成功' || toast=='修改成功'|| toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
 	<i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
 	<p class="message-toast-title">{{toast}}</p>
@@ -170,6 +152,8 @@
 	<script src="https://unpkg.com/vuejs-paginate@0.9.0"></script>
 	<script src="~/js/vue.js"></script>
 	<script src="~/axios/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 	<script>
 		Vue.component('paginate', VuejsPaginate)
 
@@ -188,7 +172,7 @@
 					ordersId: "",
 					date: "",
 					total: "",
-					discount:"",
+					discount: "",
 					status: ""
 				},
 				delAcc: {
@@ -232,21 +216,12 @@
 						Phone: this.editAcc.phone
 					};
 					axios.post(`/BackStage/AccountManagement/EditAccounts`, request).then(res => {
-						$("#editModal").modal('hide'); 
+						$("#editModal").modal('hide');
 						_this.getAccounts();
 						//_this.toast = "修改成功";
 						//_this.toastHint();
 					});
-					
-				},
-				deleteAccount: function () {
-					let _this = this;
-					axios.delete(`/backstage/accountmanagement/deleteaccounts/${this.delAcc.accid}`).then(res => {
-						$("#deleteModal").modal("hide");
-						//_this.toast = "刪除成功";
-						//_this.toastHint();
-						_this.getAccounts();
-					});
+
 				},
 				ordersConfirm: function (a) {
 					this.ordersAcc.accountId = a.accountId;
@@ -265,7 +240,27 @@
 				},
 				deleteConfirm: function (a) {
 					this.delAcc.accid = a.accountId;
-					this.delAcc.number = a.account1;
+					let number = a.account1;
+					let _this = this;
+					Swal.fire({
+						title: '您是否要刪除此帳號？',
+						text: `${number}`,
+						icon: 'warning',
+						showCancelButton: true,
+						confirmButtonColor: '#3085d6',
+						cancelButtonColor: '#d33',
+						confirmButtonText: 'Yes, delete it!'
+					}).then((result) => {
+						if (result.isConfirmed) {
+							axios.delete(`/backstage/accountmanagement/deleteaccounts/${this.delAcc.accid}`).then(res => {
+								Swal.fire(
+									'Deleted Success!',
+									
+								)
+								_this.getAccounts();
+							});
+						}
+					})
 				},
 				changePage: function (currentpage) {
 					console.log(currentpage);
@@ -279,22 +274,22 @@
 				//}
 			},
 			computed: {
-				pageCount:function () {
+				pageCount: function () {
 					return Math.ceil(this.filterSearchText.length / this.pageItems);
 					//return Math.ceil(this.vmAccount.length / this.pageItems);
 				},
-				accountsInPage:function () {
+				accountsInPage: function () {
 					var max = this.cPage * this.pageItems;
 					var min = this.pageItems * (this.cPage - 1) + 1;
 					return this.filterSearchText.slice(min - 1, max)
 					//return this.vmAccount.slice(min - 1, max)
 				},
 				//篩選帳號、姓名
-				filterSearchText:function(){
-					return this.vmAccount.filter((x)=>{
-						return x.account1.indexOf(this.searchText) !== -1|| x.firstName.indexOf(this.searchText) !== -1 ;
+				filterSearchText: function () {
+					return this.vmAccount.filter((x) => {
+						return x.account1.indexOf(this.searchText) !== -1 || x.firstName.indexOf(this.searchText) !== -1;
 					})
-					
+
 				},
 			}
 		})

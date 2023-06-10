@@ -27,25 +27,13 @@
         let _this = this;
             axios.get("/Index/GetHomePageInfo").then(response => {
                 _this.homePageArr = response.data;
-            let AList = []
-                for (var i = 0; i < _this.homePageArr.length; i++) {
-                    var item = _this.homePageArr[i];
-                AList.push(item);
-            }
-                _this.homePageArr = AList
-        })
+            })
         },
         //取得輪播圖資料
         GetCarouselDetail() {
             let _this = this;
             axios.get("/Index/GetCarouselInfo").then(response => {
                 _this.CarouselArr = response.data;
-                let AList = []
-                for (var i = 0; i < _this.CarouselArr.length; i++) {
-                    var item = _this.CarouselArr[i];
-                    AList.push(item);
-                }
-                _this.CarouselArr = AList
             })
         },
         //取得優惠公告資料
@@ -53,12 +41,6 @@
             let _this = this;
             axios.get("/Index/GetAnnouncementInfo").then(response => {
                 _this.AnnouncementArr = response.data;
-                let AList = []
-                for (var i = 0; i < _this.AnnouncementArr.length; i++) {
-                    var item = _this.AnnouncementArr[i];
-                    AList.push(item);
-                }
-                _this.AnnouncementArr = AList
             })
         },
         //取得熱賣資料

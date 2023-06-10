@@ -38,9 +38,9 @@
                 <div class="col-lg-5 order-1 order-lg-2 text-center text-lg-start img-fluid" data-aos="zoom-out" data-aos-delay="300">
                     <div id="carouselExample" class="carousel slide">
                         <div class="carousel-inner">
-                            <div v-for="(item, index) in CarouselArr" :key="item.AnnouncementId" class="carousel-item" :class="{ 'active': index === 0 }">
+      @*                      <div v-for="(item, index) in CarouselArr" :key="item.announcementId" class="carousel-item" :class="{ 'active': index === 0 }">
                                 <img :src="'data:image/jpeg;base64,'+item.announcementImage" width="600px" height="380px">
-                            </div>
+                            </div>*@
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -57,7 +57,7 @@
         </div>
     </section><!-- End Hero Section -->
 
-    <main id="main">
+    <div id="main">
 
         <!-- ======= About Section ======= -->
         <section id="about" class="about">
@@ -70,7 +70,7 @@
 
                 <div class="row gy-4">
                     <div class="col-lg-7 position-relative about-img" data-aos="fade-up" data-aos-delay="150">
-                        @*style="background-image: url(assets/img/about.jpg) ;"*@
+                       
                         <img :src="'data:image/jpeg;base64,'+AnnouncementArr[1].announcementImage" width="750px">
                         <div class="call-us @*position-absolute*@">
                             <h4>優惠倒數</h4>
@@ -391,10 +391,10 @@
                 
                 <div class="gallery-slider swiper" >
                 <div class="swiper-wrapper align-items-center">
-                <div class="swiper-slide" v-for="(item, index) in HotSaleArr" :key="item.AnnouncementId">
-                <a class="glightbox" data-gallery="images-gallery" :href="item.announcementImage">
-								<img :src="'data:image/jpeg;base64,'+item.announcementImage" class="img-fluid AnnouncementImage" alt="" width="100px" height="200px">
-                </a>
+                   @*     <div class="swiper-slide" v-for="(item, index) in HotSaleArr" :key="item.announcementId">
+                            <a class="glightbox" data-gallery="images-gallery" :href="item.announcementImage">
+                                <img :src="'data:image/jpeg;base64,'+item.announcementImage" class="img-fluid announcementImage" alt="" width="100px" height="200px">
+                </a>*@
                 </div>
                 </div>
                 <div class="swiper-pagination"></div>
@@ -417,8 +417,9 @@
                 </div>
                 *@
 
-            </div>
+            
         </section><!-- End Gallery Section -->
+	</div>
         <!-- ======= Contact Section ======= -->
         <section id="contact" class="contact">
             <div class="container" data-aos="fade-up">
@@ -439,8 +440,7 @@
             </div>
         </section><!-- End Contact Section -->
 
-    </main><!-- End #main -->
-</div>
+    </div><!-- End #main -->
 @section Scripts{
     <script>
         var swiper = new Swiper('.gallery-slider', {
@@ -457,8 +457,8 @@
     <script src="~/assets/vendor/aos/aos.js"></script>
 
     <script src="~/axios/axios.min.js"></script>
-    <script src="~/js/vue.js"></script>
-   @* <script src="~/js/index.js"></script>*@@*解開封印畫面就會壞掉*@
+
     <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
     <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/index.js"></script>@*解開封印畫面就會壞掉*@
 }

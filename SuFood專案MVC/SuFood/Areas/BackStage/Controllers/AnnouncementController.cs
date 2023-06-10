@@ -5,6 +5,7 @@ using SuFood.ViewModel;
 
 namespace SuFood.Areas.BackStage.Controllers
 {
+    [Area("BackStage")]
     public class AnnouncementController : Controller
     {
 		private readonly SuFoodDBContext _context;

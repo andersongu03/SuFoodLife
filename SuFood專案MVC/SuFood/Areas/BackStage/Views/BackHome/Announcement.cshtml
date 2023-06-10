@@ -58,7 +58,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											<tr v-for="item in filteredAnnouncementes" :key="item.AnnouncementId">
+											<tr v-for="item in filteredAnnouncementes" :key="item.announcementId">
 												<template v-if="item.changeEdit == true">
 													<td>{{EditInfo.Id}}</td>
 													<td><input name="Img" v-on:change="previewImage" type="file" id="fileInput"></td>
@@ -125,20 +125,26 @@
 				<div class="modal-body container text-center">
 					<div class="row">
 						<div class="col-3">
+							類型選擇:
 							<select name="Type" class="form-control form-control-lg" aria-label=".form-control-lg example" v-model="createInfo.Type">
-								<option value="首頁" selected>首頁</option>
+								<option value="首頁">首頁</option>
 								<option>輪播圖</option>
 								<option>優惠公告</option>
 								<option>熱賣</option>
-							</select>
-						</div>
-						<div class="form-check form-switch">
-							<label class="form-check-label" for="flexSwitchCheckDefault">上架顯示</label>
-							<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="createInfo.Status" />
+							</select>							
 						</div>
 						<div class="col-3">
+							內容描述:
 							<input name="Context" class="form-control form-control-lg" type="text" placeholder="輸入內容" aria-label=".form-control-lg example" v-model="createInfo.Context">
 						</div>
+						<div class="col-3">
+							設置上下架:
+							<p class="form-check form-switch">
+								<label class="form-check-label" for="flexSwitchCheckDefault"></label>
+								<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" v-model="createInfo.Status" style="transform: scale(2)" />
+							</p>
+						</div>
+						
 
 					</div>
 					<div class="col-3">
@@ -148,13 +154,12 @@
 
 					<div class="imgPreview">
 						<i v-if="!uplodaImgPreview.preview" class='bx bx-image-add icon'></i>
-						<img v-if="uplodaImgPreview.preview" :src="uplodaImgPreview.preview" alt="">
+						<img v-if="uplodaImgPreview.preview" :src="uplodaImgPreview.preview" width="400px" alt="">
 
 					</div>
 					<div class="modal-footer">
 						<div>
-							<label name="Createtime">建立時間:</label>
-							<input name="Createtime" type="text" v-model="createInfo.Createtime">
+							<label name="Createtime">建立時間:自動填入</label>
 						</div>
 						<div>
 							<label name="Creator">建立者:</label>

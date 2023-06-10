@@ -131,7 +131,7 @@ new Vue({
             },
             data() {
                 return {
-                    selectedType: "",
+                    selectedType: "首頁",
                     filteredAnnouncementes: [],
                     Announcementes: [],
                     keyword: "",

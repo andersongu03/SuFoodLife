@@ -27,8 +27,7 @@ namespace SuFood.Controllers
         [HttpGet]
         public async Task<IEnumerable<VmRetailList>> GetRetial()
         {
-            var ProdcutsList = await _context.Products
-                .Where(p => p.StockQuantity >= 100)
+            var ProdcutsList = await _context.Products                
                 .Select(p => new VmRetailList
                 {
                     ProductId = p.ProductId,
@@ -43,7 +42,7 @@ namespace SuFood.Controllers
         public async Task<IEnumerable<VmRetailList>> SortProducts(string category)
         {
             var categoryProducts = await _context.Products
-                .Where(p => p.Category == category && p.StockQuantity >= 100)
+                .Where(p => p.Category == category )
                 .Select(p => new VmRetailList
                 {
                     ProductId = p.ProductId,
@@ -59,7 +58,6 @@ namespace SuFood.Controllers
         public async Task<IEnumerable<VmRetailList>> GetCategories()
         {
             var GroupCategories = _context.Products
-                 .Where(p => p.StockQuantity >= 100)
                 .GroupBy(p => p.Category)
                 .Select(p => new VmRetailList { Category = p.Key, CountCategory = p.Count() });
 

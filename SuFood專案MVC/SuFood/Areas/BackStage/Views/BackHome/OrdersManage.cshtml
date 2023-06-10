@@ -116,7 +116,7 @@
 						<td>{{o.orderStatus}}</td>
 						<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
 						<td>{{(o.subTotal)-(o.subDiscount)}}</td>
-						<td>{{(o.setOrdersDatetime).slice(0,19)}}</td>
+						<td>{{(o.setOrdersDatetime).split("T").join(" ").slice(0,19)}}</td>
 						<td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
 						<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
 						<td><i class='bx bx-trash sortIcon delete-item' @@click="deleteConfirm(o)"></i></td>
@@ -130,7 +130,7 @@
 						<td>{{o.orderStatus}}</td>
 						<td><i class='bx bx-file-find sortIcon orders-item' data-bs-toggle="modal" data-bs-target="#ordersModal" @@click="ordersConfirm(o)"></i></td>
 						<td>{{(o.subTotal)-(o.subDiscount)}}</td>
-						<td>{{ o.setOrdersDatetime.slice(0,19)}}</td>
+						<td>{{ o.setOrdersDatetime.split("T").join(" ").slice(0,19)}}</td>
 						<td><button type="button" class="btn btn-secondary" @@click="goComment(o.ordersId)">回覆</button></td>
 						<td><i class='bx bx bxs-edit sortIcon edit-item' data-bs-toggle="modal" data-bs-target="#editModal" @@click="editConfirm(o)"></i></td>
 						<td><i class='bx bx-trash sortIcon delete-item' @@click="deleteConfirm(o)"></i></td>

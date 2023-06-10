@@ -53,7 +53,7 @@ namespace SuFood.Controllers
 				ViewBag.Error = "新密碼輸入失敗";
 				return View("ModifyPassword");
 			}
-			if ( oldPassword == model.Password )
+			if ( oldPassword == model.NewPassword )
 			{
 				ViewBag.Error = "新密碼跟舊密碼不能一樣哦";
 				return View("ModifyPassword");

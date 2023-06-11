@@ -1,4 +1,6 @@
-﻿namespace SuFood.ViewModel
+﻿using SuFood.Models;
+
+namespace SuFood.ViewModel
 {
 	public class VmOrdersDetails
 	{
@@ -8,5 +10,7 @@
 		public int? Quantity { get; set; }
 		public int? CouponId { get; set; }
 		public int OrdersDetailsId { get; set; }
-	}
+
+        public virtual Orders Order { get; set; }
+    }
 }

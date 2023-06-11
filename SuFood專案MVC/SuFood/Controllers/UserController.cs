@@ -47,8 +47,11 @@ namespace SuFood.Controllers
         public IActionResult ForgetPassword4Email()
         {
             return PartialView();
+        }        
+        public IActionResult BadEnble()
+        {
+            return PartialView();
         }
-
         public IActionResult ValidGoogleLogin()
         {
             string? formCredential = Request.Form["credential"]; //回傳憑證
@@ -190,6 +193,7 @@ namespace SuFood.Controllers
             if (DateTime.Now > obj.ExpiredDate)
             {
                 return BadRequest("過期");
+                
             }
             var user = _context.Account.FirstOrDefault(x => x.Account1 == obj.Account);
             if (user != null)
@@ -197,14 +201,14 @@ namespace SuFood.Controllers
                 user.IsActive = true;
                 user.CreateDatetime = DateTime.Now;
 
-                CouponUsedList usedList = new CouponUsedList
-                {
-                    CouponUsedOrNot = 1,
-                    AccountId = user.AccountId,
-                    CouponId = 5, //目前新戶優惠是在CouponId = 5，所以直接寫死
-                };
-                await _context.CouponUsedList.AddAsync(usedList);
-                _context.SaveChanges();
+                //CouponUsedList usedList = new CouponUsedList
+                //{
+                //    CouponUsedOrNot = 1,
+                //    AccountId = user.AccountId,
+                //    CouponId = 5, //目前新戶優惠是在CouponId = 5，所以直接寫死
+                //};
+                //await _context.CouponUsedList.AddAsync(usedList);
+                //_context.SaveChanges();
             }
             //return Ok($@"code:{code}  str:{str}");
             return RedirectToAction("Enble", "User");
@@ -290,12 +294,12 @@ namespace SuFood.Controllers
             if (user == null)
             {
                 ViewBag.Error = "您還沒有建立帳號哦！！";
-                return View();
+                return PartialView("ForgetPassword4Email");
             }
             if (user.IsActive != true)
             {
                 ViewBag.Error = "您還沒有啟用帳號哦！！";
-                return View();
+                return PartialView("ForgetPassword4Email");
             }
 
             //寄信
@@ -339,7 +343,8 @@ namespace SuFood.Controllers
 
             if (DateTime.Now > obj.ExpiredDate)
             {
-                return BadRequest("過期");
+                //return BadRequest("過期");
+                return RedirectToAction("BadEnble", "User");
             }
 
             return RedirectToAction("EnterComfirmPassword", "User");
@@ -359,7 +364,8 @@ namespace SuFood.Controllers
 
             if (model.Password != model.ConfirmPwd)
             {
-                ViewBag.Error = "確認密碼不一致";
+                ViewBag.Error = "密碼不一致";
+                return PartialView("EnterComfirmPassword");
             }
             else if (user != null)
             {

@@ -87,8 +87,8 @@ namespace SuFood.Areas.BackStage.Controllers
 					AnnouncementImage = VMA.AnnouncementImage,
 					AnnouncementStatus = VMA.AnnouncementStatus,
 					AnnouncementType = VMA.AnnouncementType,
+					AnnouncementCreater = VMA.AnnouncementCreater,
 					AnnouncementStartDate = DateTime.Now,
-					//填入建立者
 				});
 				await _context.SaveChangesAsync();
 				return "新增成功";

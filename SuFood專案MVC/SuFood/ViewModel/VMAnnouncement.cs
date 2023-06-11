@@ -8,5 +8,7 @@
         public DateTime AnnouncementStartDate { get; set; }
         public byte[]? AnnouncementImage { get; set; }
         public string? AnnouncementType { get; set; }
-    }
+
+		public string? AnnouncementCreater { get; set; }
+	}
 }

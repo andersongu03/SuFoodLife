@@ -12,21 +12,30 @@ new Vue({
             '熱賣管理': { type: '熱賣' },
         },
         toast: "",     
+        EditInfo: {
+            id: 1,
+            Status: false,
+            Context: "請輸入內容",
+            Createtime: "",
+            Creator: 0,
+            Img: null,
+            Type: "",
+        },
+        EditId: 0,
+        Announcementes: [],
         oldImg: null,
         oldContext: "",
         oldCreatetime: "",
         oldStatus: null,
-        oldType: "",
+        oldType: "",       
         createInfo: {
             Id: 0,
             Status: false,
             Context: "",
-            Createtime: "",
-            Creator: "",
+            Creater: "",
             Img: null,
             Type: "",
         },
-        //EditOrDeleteorCreate = "Edit",
         uplodaImgPreview: {
             preview: null,
             image: null,
@@ -41,17 +50,11 @@ new Vue({
         activeTab:'首頁管理',
         selectedType:[],
     },
-    //components: {
-    //    'tab-content': tabContent,
-    //},
     computed: {
         tabContent() {
             return this.tabs[this.activeTab];
         },      
     },
-    //mounted() {
-    //    this.GetAnouncementDetail()
-    //},
     methods: {
         CreateAA() {
             this.createInfo.Createtime = Date.now();
@@ -75,6 +78,43 @@ new Vue({
                 eventBus.$emit('announcementesUpdated', AList);
             }).catch();         
         },
+        //取消
+        cancel() {
+            //alert("cancel")
+            let _this = this;
+            var AAList = [];
+            for (var i = 0; i < _this.Announcementes.length; i++) {
+                var item = _this.Announcementes[i];
+                if (item.changeEdit == true) {
+                    item.Img = _this.oldImg;
+                    item.Context = _this.oldContext;
+                    item.Createtime = _this.oldCreatetime;
+                    item.Status = _this.oldStatus;
+                    item.Type = _this.oldType;
+                }
+                AAList.push(item);
+            }
+            _this.Announcementes = AAList;
+        },
+        //編輯
+        EditAnnouncement() {
+            let _this = this;
+            let item = _this.EditInfo;
+            let formData = new FormData();
+
+            formData.append("AnnouncementId", item.id);
+            formData.append("AnnouncementImage", this.uplodaImgPreview.image);
+            formData.append("AnnouncementContent", item.Context);
+            formData.append("AnnouncementStatus", item.Status);
+            formData.append("AnnouncementType", item.Type);
+            axios.post("/BackStage/Announcement/Edit", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                _this.GetAnouncementDetail()
+            })
+        },
         //建立
         CreateAnnouncement() {
             let _this = this;
@@ -82,12 +122,12 @@ new Vue({
             formData.append("AnnouncementContent", _this.createInfo.Context);
             formData.append("AnnouncementType", _this.createInfo.Type);
             formData.append("AnnouncementStatus", _this.createInfo.Status);
+            formData.append("AnnouncementCreater", _this.createInfo.Creater);
 
             let fileInput = document.getElementById("fileInput");
             if (fileInput.files.length > 0) {
                 formData.append("AnnouncementImage", fileInput.files[0]);
             }
-          /*  if (AnnouncementImage != null && AnnouncementContent != null) {*/
             axios.post('/BackStage/Announcement/Create', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
@@ -97,13 +137,23 @@ new Vue({
                 var modal = document.getElementById("staticBackdrop");
                 var bsModal = bootstrap.Modal.getInstance(modal);
                 bsModal.hide(); 
-            })     
-    /*        }*/
-            //else {
-            //    alert("內容、圖片不可為空")
-            //}
-            //}).then(response => {
-            //    if (response.data == true) {           
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: '新增成功'
+                })
+            })          
         },
         previewImage: function (e) {
             var input = e.target;
@@ -117,12 +167,6 @@ new Vue({
                 reader.readAsDataURL(input.files[0]);
             }
         },
-        //openModal() {
-        //    this.modalContainerStyle.showModal = true;
-        //},
-        //closeModal() {
-        //    this.modalContainerStyle.showModal = false;
-        //},
     },
     components: {
         tabcontent: {
@@ -148,22 +192,7 @@ new Vue({
                         Img: null,
                         Type: "首頁",
                     },
-                    EditInfo: {
-                        id: 1,
-                        Status: false,
-                        Context: "請輸入內容",
-                        Createtime: "",
-                        Creator: 0,
-                        Img: null,
-                        Type: "",
-                    },
-                   EditId:0,
-                    Announcementes: [],
-                    oldImg: null,
-                    oldContext: "",
-                    oldCreatetime: "",
-                    oldStatus: null,
-                    oldType: "",                    
+                                 
                 };
             },          
             computed: {
@@ -265,77 +294,38 @@ new Vue({
                     })                   
                 },              
                 //編輯按鈕
-                EditAA(data) {
+                EditAA(item) {
                     //把item的值丟入EditInfo
-                    this.EditInfo.Context = data.announcementContent
-                    this.EditInfo.id = data.announcementId
-                    let _this = this;
-                    var AAList = [];
-                    for (var i = 0; i < _this.Announcementes.length; i++) {
-                        var item = _this.Announcementes[i];
-                        if (data.announcementId == item.announcementId) {
-                            item.changeEdit = true;
-                            _this.oldImg = item.Img;
-                            _this.oldContext = item.Context;
-                            _this.oldCreatetime = item.Createtime;
-                            _this.oldStatus = item.Status;
-                            _this.oldType = item.Type;
-                        }
-                        AAList.push(item);
-                    }
-                    _this.Announcementes = AAList;
+                    this.editImg = "data:image/png;base64," + item.img
+                    this.uplodaImgPreview.preview = "data:image/png;base64," + item.img
+                    this.EditOrDeleteorCreate = "Edit"
+                    this.modalContentStyle.w200 = false
+                    this.modalContentStyle.w800 = true
+                    this.EditProdcutItem = item
+                    this.editId = item.productId
+                    this.openModal()
+                    this.storeOldEditData(item)
                 },
-                //取消
-                cancel() {
-                    //alert("cancel")
-                    let _this = this;
-                    var AAList = [];
-                    for (var i = 0; i < _this.Announcementes.length; i++) {
-                        var item = _this.Announcementes[i];
-                        if (item.changeEdit == true) {
-                            item.changeEdit = false;
-                             item.Img = _this.oldImg;
-                            item.Context = _this.oldContext;
-                           item.Createtime =  _this.oldCreatetime;
-                            item.Status = _this.oldStatus;
-                            item.Type = _this.oldType;
-                        }
-                        AAList.push(item);
-                    }
-                    _this.Announcementes = AAList;
-                },
-                //編輯
-                EditAnnouncement() {
-                    let _this = this;
-                    let item = _this.EditInfo;
-                    let formData = new FormData();
-                   
-                        formData.append("AnnouncementId", item.id);
-                        formData.append("AnnouncementImage", this.uplodaImgPreview.image);
-                        formData.append("AnnouncementContent", item.Context);
-                        formData.append("AnnouncementStatus", item.Status);
-                        formData.append("AnnouncementStartDate", item.Createtime);
-                        formData.append("AnnouncementType", item.Type);
-                        axios.post("/BackStage/Announcement/Edit", formData, {
-                            headers: {
-                                'Content-Type': 'multipart/form-data'
-                            }                        
-                        }).then(response => {
-                            _this.GetAnouncementDetail()
-                        })
-                    if (item.changeEdit == true) {
-                        item.changeEdit = false;                      
-                    }
-                },
+                
                 //刪除資料
                 DeleteAnnouncement(id) {
                     let _this = this;
-                    //alert(id)
-                    axios.delete(`/BackStage/Announcement/DeleteAnnouncement/${id}`)
-                        .then(response => {
-                            _this.toast = response.data
-                           /* _this.closeModalWithHint()*/
-                            _this.GetAnouncementDetail()
+                    Swal.fire({
+                        title: `確認刪除編號${id}？`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: '確定'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            axios.delete(`/BackStage/Announcement/DeleteAnnouncement?id=${id}`).then(res => {
+                                Swal.fire(
+                                    '資料已成功刪除!',
+                                )
+                                _this.GetAnouncementDetail()
+                            });
+                        }                            
                         })
                 },
             },

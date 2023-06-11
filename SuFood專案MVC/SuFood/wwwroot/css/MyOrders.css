@@ -6,12 +6,17 @@
     background-color: #198754;
     color: white;
 }
+.btn-success{
+    flex-direction:column;
+    justify-content:center;
+    align-content:center;
+}
 .btn-primary:hover{
     background-color: #198754;
     color: black;
 }
 .btn-close {
-    background: red;
+    
     position: absolute;
     top: 15px;
     right: 15px;

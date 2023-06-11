@@ -1750,9 +1750,11 @@ section {
 }
 
 .user__management-container,
-.dashboard__management-container{
-  height: 100vh;
-  max-width: none;
+.dashboard__management-container {
+    height: 100vh;
+    max-width: none;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 .user__management-sidebar,

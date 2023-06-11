@@ -1,5 +1,19 @@
+
+body {
+    position: relative;
+    padding: 0 1rem;
+    font-family: var(--body-font);
+    font-size: var(--normal-font-size);
+    transition: .5s;
+    display: grid;
+    place-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+
 /*--------title--------*/
-.orders-container h4 {
+.orders-container h2 {
     font-weight: bold;
     margin-bottom: 60px;
     color: #555555;

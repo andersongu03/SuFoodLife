@@ -390,7 +390,6 @@ table {
 }*/
 
 .table__container {
-    height: 400px;
     overflow: hidden;
 }
 
@@ -449,7 +448,6 @@ table {
 }
 
 .table__container {
-    height: 500px;
     /*overflow: auto;*/
     overflow-x: hidden !important;
 }

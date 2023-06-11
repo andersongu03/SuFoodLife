@@ -1,12 +1,25 @@
-﻿@section Styles{
+﻿@section Styles
+{
 	<link href="~/css/accountmanagement.css" rel="stylesheet" />
 
+
+	<style>
+		.page-item.active .page-link {
+			z-index: 3;
+			color: #fff;
+			background-color: #529e9d;
+			border-color: #529e9d;
+		}
+		.table__container{
+			height: fit-content;
+		}
+	</style>
 }
 
 
 <div class="account-container col-10" id="accountManagement">
 	<div class="d-flex align-items-center justify-content-between mb-2">
-		<h4>會員列表</h4>
+		<h2>會員列表</h2>
 	</div>
 
 	<!-- 1.搜尋列 -->
@@ -217,6 +230,9 @@
 					};
 					axios.post(`/BackStage/AccountManagement/EditAccounts`, request).then(res => {
 						$("#editModal").modal('hide');
+						Swal.fire(
+								'修改成功！'
+							)
 						_this.getAccounts();
 						//_this.toast = "修改成功";
 						//_this.toastHint();
@@ -254,8 +270,7 @@
 						if (result.isConfirmed) {
 							axios.delete(`/backstage/accountmanagement/deleteaccounts/${this.delAcc.accid}`).then(res => {
 								Swal.fire(
-									'Deleted Success!',
-									
+									'Deleted Success!',									
 								)
 								_this.getAccounts();
 							});

@@ -31,13 +31,20 @@
 			box-shadow: 0 2px 4px rgba(0, 0, 0, .3);
 		}
 
+		.page-item.active .page-link {
+			z-index: 3;
+			color: #fff;
+			background-color: #529e9d;
+			border-color: #529e9d;
+		}
+
 	</style>
 }
 
 
 <div class="orders-container col-10" id="ordersManagement">
 	<div class="d-flex align-items-center justify-content-between mb-2">
-		<h4>訂單列表</h4>
+		<h2>訂單列表</h2>
 	</div>
 
 
@@ -421,6 +428,9 @@
 					};
 					axios.post(`/BackStage/OrdersManagement/EditRecipientInfo`, request).then(res => {
 						$("#editModal").modal('hide');
+						Swal.fire(
+							'修改成功！'
+						),
 						_this.getOrders();
 					});
 				},
@@ -501,7 +511,10 @@
 				},
 				search: function () {
 					if (this.endDate < this.startDate) {
-						alert("結束日期不得小於開始日期");
+						Swal.fire({
+							icon: 'error',
+							title: '結束日期不得小於開始日期！',
+						})
 						return;
 					}
 

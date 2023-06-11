@@ -131,18 +131,16 @@
 							</tr>
 							<tr>
 								<th>性別</th>
-								<td v-if="info.gender == null">
+								<td >
 									<input type="radio" name="gender" id="gender" value="男" v-model="info.gender">男
 									<input type="radio" name="gender" id="gender" value="女" v-model="info.gender">女
 								</td>
-								<td v-else>{{info.gender}}</td>
 							</tr>
 							<tr>
 								<th>生日</th>
 								<td>
 									<input type="date" name="birthdate" id="birthdate" v-model="info.birthDate">
-								</td>
-								@*<td v-else>{{info.birthDate}}</td>*@
+								</td>								
 							</tr>
 							<tr>
 								<th>手機號碼</th>
@@ -222,14 +220,14 @@
 					let _this = this;
 					axios.get(`/PersonalInfo/GetAccount`,).then(res => {
 						_this.info = res.data[0];
-						_this.info.birthDate = new Date(_this.info.birthDate).toISOString().substr(0, 10);
+						_this.info.birthDate = _this.info.birthDate.split('T')[0];
 					})
 				},
 				edit: function () {
 					let _this = this;
 					this.infoEdit = true;
 					_this.oldfirstName = this.info.firstName;
-					_this.oldbirthdate = this.info.birthDate;
+					_this.oldbirthdate = this.info.birthDate.split('T')[0];
 					_this.oldgender = this.info.gender;
 					_this.oldphone = this.info.phone;
 					_this.olddefaultshipaddress = this.info.defaultShipAddress;
@@ -245,8 +243,7 @@
 				},
 				update: function () {
 					let _this = this;
-					//var date = new Date(this.info.birthDate);
-					//var birthDay = date.toISOString().split('T')[0];  轉換為 'yyyy-MM-dd' 格式
+					console.log(this.info.birthDate);
 
 					var request = {
 						AccountId: this.info.accountId,

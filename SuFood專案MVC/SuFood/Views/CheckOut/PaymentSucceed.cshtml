@@ -30,8 +30,11 @@
 	new Vue({
 		el:'#app',
 		methods:{
-				goHomePage(){
-				return window.location.href="/Home/Index";
+			goHomePage(){
+					return window.location.href="/Home/Index";
+			},
+			goOrderPage(){
+					return window.location.href = "/Members/MyOrders";
 			}
 		},
 	})

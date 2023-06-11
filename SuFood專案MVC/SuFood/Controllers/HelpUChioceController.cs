@@ -7,6 +7,7 @@ using SuFood.ViewModel;
 using System.Net.Mail;
 using System.Net;
 using System.Text;
+using Hangfire.Server;
 
 namespace SuFood.Controllers
 {
@@ -159,6 +160,7 @@ namespace SuFood.Controllers
 		}
 
 
+
 		public void CheckSendEmail()
 		{
 			//RecurringJob.AddOrUpdate("myrecurringjob", () => SendEmails(), Cron.Daily(18, 30));
@@ -173,11 +175,22 @@ namespace SuFood.Controllers
 			{
 				var orders = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Today && x.OrdersId == check).ToList();
 
+				var recyleOrder = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == check).FirstOrDefault();
+
+				recyleOrder.ShipStatus = "配送中";
+				_context.Update(recyleOrder);
+				_context.SaveChanges();
+
 				foreach (var order in orders)
 				{
 					var o = _context.Orders.Where(x => x.OrdersId == order.OrdersId).FirstOrDefault();
 					var recyleOrderId = _context.RecyleSubscribeOrders.Where(x => x.OrdersId == o.OrdersId).Select(x => x.ReSubOrdersId).FirstOrDefault();
 					var countShipTimes = _context.RecyleOrderDetails.Count(x => x.ReSubOrdersId == recyleOrderId);
+					
+
+					recyleOrder.ShipStatus= "配送中";
+					_context.Update(recyleOrder);
+					_context.SaveChanges();
 
 					var mail = new MailMessage()
 					{
@@ -206,7 +219,6 @@ namespace SuFood.Controllers
 
 
 		}
-
 
 	}
 }

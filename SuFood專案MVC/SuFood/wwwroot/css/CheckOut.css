@@ -437,8 +437,9 @@ label {
     transform: translate(-50%, -50%) scale(1);
     width: 100vw;
     height: 80%;
-    background-color: hsla(240, 18%, 75%, .97);
-    z-index:10000;
+    /*background-color: hsla(240, 18%, 75%, .97);*/
+    background-color: hsla(var(--hue), 18%, 75%, .8);
+    z-index: 10000;
 }
 .closeMark{
     cursor:pointer;

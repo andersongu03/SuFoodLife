@@ -405,6 +405,7 @@ input[type="file"] {
     padding: 3%;
     width: 650px;
     height: 650px;
+    margin-bottom: 10%;
 }
 
 .showPopup {
@@ -412,11 +413,12 @@ input[type="file"] {
     justify-content: center;
     align-items: center;
     visibility: visible;
-    top: 50%;
+    top: 63%;
     transform: translate(-50%, -50%) scale(1);
     width: 100vw;
     height: 100vh;
-    background-color: hsla(240, 18%, 75%, .97);
+    /*background-color: hsla(240, 18%, 75%, .97);*/
+    background-color: hsla(var(--hue), 18%, 75%, .8);
 }
 
 /* Message */

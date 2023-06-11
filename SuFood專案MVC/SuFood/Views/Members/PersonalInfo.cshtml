@@ -66,28 +66,37 @@
 			width: 80%;
 		}
 
-		#update-btn{ 
+		#update-btn {
 			background-color: cadetblue;
 			color: white;
-			border-radius:2px;
-			border:none !important;
+			border-radius: 2px;
+			border: none !important;
 		}
 
-		#cancel-btn{
+		#cancel-btn {
 			background-color: darkgray;
 			color: white;
 			border-radius: 2px;
 			border: none !important;
 		}
 
-		#edit-btn{
-			margin-top:10%;
+		#edit-btn {
+			margin-top: 10%;
 			background-color: #4f8180;
 			color: white;
 			border-radius: 2px;
 			border: none !important;
 		}
 
+		h2 {
+			font-size: 2.5rem;
+			font-weight: bold;
+			margin-bottom: 2rem;
+		}
+
+		.personalInfo-container {
+			height: 84vh;
+		}
 	</style>
 
 }
@@ -102,7 +111,7 @@
 			<!-- 內容 -->
 			<div class="col-7  personalInfo-container" id="main">
 				<div class="profile">
-					<h3>個人資料</h3>
+					<h2>個人資料</h2>
 				</div>
 				<table class="table">
 					<tbody>
@@ -129,7 +138,9 @@
 							</tr>
 							<tr>
 								<th>生日</th>
-								<td><input type="date" name="birthdate" id="birthdate" v-model="info.birthDate"></td>
+								<td>
+									<input type="date" name="birthdate" id="birthdate" v-model="info.birthDate">
+								</td>
 							</tr>
 							<tr>
 								<th>手機號碼</th>
@@ -137,7 +148,7 @@
 							</tr>
 							<tr>
 								<th>聯絡地址</th>
-								<td><input type="text" name="address" id="address"  size="30" v-model="info.defaultShipAddress"></td>
+								<td><input type="text" name="address" id="address" size="30" v-model="info.defaultShipAddress"></td>
 							</tr>
 
 							<div class="btn-block">
@@ -192,6 +203,7 @@
 	{
 	<script src="~/js/vue.js"></script>
 	<script src="~/axios/axios.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<script>
 
 		const vm = new Vue({
@@ -208,13 +220,14 @@
 					let _this = this;
 					axios.get(`/PersonalInfo/GetAccount`,).then(res => {
 						_this.info = res.data[0];
+						_this.info.birthDate = _this.info.birthDate.split('T')[0];
 					})
 				},
 				edit: function () {
 					let _this = this;
 					this.infoEdit = true;
 					_this.oldfirstName = this.info.firstName;
-					_this.oldbirthdate = this.info.birthDate;
+					_this.oldbirthdate = this.info.birthDate.split('T')[0];
 					_this.oldgender = this.info.gender;
 					_this.oldphone = this.info.phone;
 					_this.olddefaultshipaddress = this.info.defaultShipAddress;
@@ -241,14 +254,16 @@
 					axios.post(`/PersonalInfo/EditAccount/${_this.info.accountId}`, request)
 						.then(res => {
 							//alert(res.data); //update成功
+							Swal.fire(
+								'修改成功！'
+							)
 							_this.getInfos();
 							this.infoEdit = false;
 						})
 				},
 			},
-			computed: {
 
-			}
+
 		})
 
 	</script>

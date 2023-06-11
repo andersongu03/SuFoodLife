@@ -50,7 +50,7 @@
 
 	<!-- body-->
 	<div>
-		<table class="table table-striped table-hover">
+		<table class="table table-striped table-hover" style="line-height: 1.5;">
 			<thead>
 				<tr class="table tr bgc">
 					<th scope="col">評論ID</th>
@@ -99,13 +99,12 @@
 		@*---------------edit---------------*@
 		<template v-if="CreateOrEditOrDelete === 'Edit'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
-				<div class="cardPopup-body">
-					<div class="cardPopup">
+				<div class="cardPopup-body" style="overflow: auto;">
+					<div class="cardPopup" style="height: 100%;">
 						<form id="form">
 							<div class="topic">
 								<h3>修改評論</h3>
 							</div>
-							
 							<div class="form-group">
 								<label class="form-label">評論ID:<span>{{editCommentList.reviewId}}</span></label>
 							</div>
@@ -118,10 +117,12 @@
 								<input class="form-control" type="text" v-model="editCommentList.comment" />
 							</div>
 							<div>
-								<button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
 								<button type="button" class="btn btn-primary saveBtn" @@click="EditComment(editCommentList)"> 保存 </button>
 							</div>
 						</form>
+						<div>
+							<i class="fi fi-rs-circle-xmark btn-close" @@click="CloseComment"></i>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -129,8 +130,8 @@
 		@*----------------delete------------*@
 		<template v-if="CreateOrEditOrDelete === 'Delete'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
-				<div class="cardPopup-body">
-					<div class="cardPopup">
+				<div class="cardPopup-body" style="overflow: auto;">
+					<div class="cardPopup" style="height: 100%;">
 						<form id="form">
 							<div class="topic">
 								<h3>你真的要刪除此評論嗎?</h3>
@@ -145,10 +146,12 @@
 								<label class="form-label">評論:<span>{{editCommentList.comment}}</span></label>
 							</div>
 							<div>
-								<button type="button" class="btn btn-primary" @@click="CloseComment">取消 </button>
 								<button type="button" class="btn btn-danger ssaveBtn" @@click="DeleteComment(editCommentList.ordersId)"> 刪除</button>
 							</div>
 						</form>
+						<div>
+							<i class="fi fi-rs-circle-xmark btn-close" @@click="CloseComment"></i>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -156,8 +159,8 @@
 		@*-----------------create--------------*@
 		<template v-if="CreateOrEditOrDelete === 'Create'">
 			<div class="cardContent" id="" :class="popupShowing" v-for="c in or ">
-				<div class="cardPopup-body">
-					<div class="cardPopup">
+				<div class="cardPopup-body" style="overflow: auto;">
+					<div class="cardPopup" style="height: 100%;">
 						<form id="form">
 							<div class="topic">
 								<h3>回覆客戶的評論囉</h3>
@@ -166,10 +169,12 @@
 								<textarea v-model="createCommentList.recomment" class="textarea"></textarea>
 							</div>
 							<div>
-								<button type="button" class="btn btn-danger" @@click="CloseComment"> 關閉 </button>
 								<button type="button" class="btn btn-success ssaveBtn" @@click="CreateComment(createCommentList)"> 新增 </button>
 							</div>
 						</form>
+						<div>
+							<i class="fi fi-rs-circle-xmark btn-close" @@click="CloseComment"></i>
+						</div>
 					</div>
 				</div>
 			</div>

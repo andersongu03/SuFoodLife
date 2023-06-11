@@ -201,14 +201,14 @@ namespace SuFood.Controllers
                 user.IsActive = true;
                 user.CreateDatetime = DateTime.Now;
 
-                CouponUsedList usedList = new CouponUsedList
-                {
-                    CouponUsedOrNot = 1,
-                    AccountId = user.AccountId,
-                    CouponId = 5, //目前新戶優惠是在CouponId = 5，所以直接寫死
-                };
-                await _context.CouponUsedList.AddAsync(usedList);
-                _context.SaveChanges();
+                //CouponUsedList usedList = new CouponUsedList
+                //{
+                //    CouponUsedOrNot = 1,
+                //    AccountId = user.AccountId,
+                //    CouponId = 5, //目前新戶優惠是在CouponId = 5，所以直接寫死
+                //};
+                //await _context.CouponUsedList.AddAsync(usedList);
+                //_context.SaveChanges();
             }
             //return Ok($@"code:{code}  str:{str}");
             return RedirectToAction("Enble", "User");

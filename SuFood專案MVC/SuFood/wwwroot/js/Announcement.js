@@ -68,15 +68,8 @@ new Vue({
             let _this = this;
             axios.get("/BackStage/Announcement/GetAnnouncement").then(response => {
                 _this.Announcementes = response.data
-                let AList = []
-                for (var i = 0; i < _this.Announcementes.length; i++) {
-                    var item = _this.Announcementes[i];
-                    AList.push(item);
-                }
-                
-                this.Announcementes = AList
                 eventBus.$emit('announcementesUpdated', AList);
-            }).catch();         
+            })       
         },
         //取消
         cancel() {
@@ -107,13 +100,50 @@ new Vue({
             formData.append("AnnouncementContent", item.Context);
             formData.append("AnnouncementStatus", item.Status);
             formData.append("AnnouncementType", item.Type);
+            formData.append("AnnouncementCreater", item.Creater);
             axios.post("/BackStage/Announcement/Edit", formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             }).then(response => {
-                _this.GetAnouncementDetail()
-            })
+                _this.GetAnouncementDetail();
+                var modal = document.getElementById("staticBackdrop");
+                var bsModal = bootstrap.Modal.getInstance(modal);
+                bsModal.hide();
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 1500,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'success',
+                    title: '修改成功'
+                })
+            }).catch(error => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'error',
+                    title: '修改失敗!欄位勿空白'
+                })
+            })         
         },
         //建立
         CreateAnnouncement() {
@@ -152,6 +182,23 @@ new Vue({
                 Toast.fire({
                     icon: 'success',
                     title: '新增成功'
+                })
+            }).catch(error => {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({
+                    icon: 'error',
+                    title: '新增失敗!欄位勿空白'
                 })
             })          
         },
@@ -285,12 +332,6 @@ new Vue({
                     let _this = this;
                     axios.get("/BackStage/Announcement/GetAnnouncement").then(response => {
                         _this.Announcementes = response.data;
-                        let AList = []
-                        for (var i = 0; i < _this.Announcementes.length; i++) {
-                            var item = _this.Announcementes[i];
-                            AList.push(item);
-                        }
-                        _this.Announcementes = AList
                     })                   
                 },              
                 //編輯按鈕
@@ -298,9 +339,6 @@ new Vue({
                     //把item的值丟入EditInfo
                     this.editImg = "data:image/png;base64," + item.img
                     this.uplodaImgPreview.preview = "data:image/png;base64," + item.img
-                    this.EditOrDeleteorCreate = "Edit"
-                    this.modalContentStyle.w200 = false
-                    this.modalContentStyle.w800 = true
                     this.EditProdcutItem = item
                     this.editId = item.productId
                     this.openModal()

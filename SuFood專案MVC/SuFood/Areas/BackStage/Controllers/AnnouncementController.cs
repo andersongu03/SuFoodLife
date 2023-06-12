@@ -35,8 +35,9 @@ namespace SuFood.Areas.BackStage.Controllers
 				AnnouncementStatus = VMA.AnnouncementStatus,
 				AnnouncementStartDate = VMA.AnnouncementStartDate,
 				AnnouncementImage = VMA.AnnouncementImage,
-				AnnouncementType = VMA.AnnouncementType
-			});
+				AnnouncementType = VMA.AnnouncementType,
+                AnnouncementCreater = VMA.AnnouncementCreater
+            });
 		}
 		[HttpGet]
 		public ActionResult<IEnumerable<Announcement>> GetFilteredAnnouncement(string keyword, string type)
@@ -68,38 +69,48 @@ namespace SuFood.Areas.BackStage.Controllers
 		[HttpPost]
 		public async Task<string> Create(VMAnnouncement VMA, IFormFile AnnouncementImage)
 		{
-			if (ModelState.IsValid)
+			try
 			{
-				if (AnnouncementImage != null)
+				if (ModelState.IsValid)
 				{
-					byte[] data = null;
-					using (BinaryReader br = new BinaryReader(AnnouncementImage.OpenReadStream()))
+					if (AnnouncementImage != null)
 					{
-						data = br.ReadBytes((int)AnnouncementImage.Length);
-						VMA.AnnouncementImage = data;
-					}
+						byte[] data = null;
+						using (BinaryReader br = new BinaryReader(AnnouncementImage.OpenReadStream()))
+						{
+							data = br.ReadBytes((int)AnnouncementImage.Length);
+							VMA.AnnouncementImage = data;
+						}
 
+					}
+					_context.Announcement.Add(new Models.Announcement()
+					{
+						AnnouncementId = VMA.AnnouncementId,
+						AnnouncementContent = VMA.AnnouncementContent,
+						AnnouncementImage = VMA.AnnouncementImage,
+						AnnouncementStatus = VMA.AnnouncementStatus,
+						AnnouncementType = VMA.AnnouncementType,
+						AnnouncementCreater = VMA.AnnouncementCreater,
+						AnnouncementStartDate = DateTime.Now,
+					});
+					await _context.SaveChangesAsync();
+					return "新增成功";
 				}
-				_context.Announcement.Add(new Models.Announcement()
-				{
-					AnnouncementId = VMA.AnnouncementId,
-					AnnouncementContent = VMA.AnnouncementContent,
-					AnnouncementImage = VMA.AnnouncementImage,
-					AnnouncementStatus = VMA.AnnouncementStatus,
-					AnnouncementType = VMA.AnnouncementType,
-					AnnouncementCreater = VMA.AnnouncementCreater,
-					AnnouncementStartDate = DateTime.Now,
-				});
-				await _context.SaveChangesAsync();
-				return "新增成功";
 			}
-			return "新增失敗";
-		}
+			catch (Exception ex)
+            {
+                return $"新增失敗：{ex.Message}";
+            }
+            return "新增失敗";
+        }
+    
 
 		[HttpPost]
 		public async Task<string> Edit(VMAnnouncement VMA, IFormFile AnnouncementImage)
 		{
-			if (AnnouncementImage != null)
+            try
+            {
+                if (AnnouncementImage != null)
 			{
 				{
 					byte[] data = null;
@@ -117,13 +128,18 @@ namespace SuFood.Areas.BackStage.Controllers
 					Edititem.AnnouncementStatus = VMA.AnnouncementStatus;
 					Edititem.AnnouncementType = VMA.AnnouncementType;
 					Edititem.AnnouncementStartDate = DateTime.Now;
-					//填入建立者
+					Edititem.AnnouncementCreater = VMA.AnnouncementCreater;
 				};
 				await _context.SaveChangesAsync();
 				return "修改成功";
 			}
-			return "修改失敗";
-		}
+            }
+            catch (Exception ex)
+            {
+                return $"新增失敗：{ex.Message}";
+            }
+            return "新增失敗";
+        }
 
 		[HttpDelete]
 		public async Task<string> DeleteAnnouncement(int id)
@@ -147,4 +163,6 @@ namespace SuFood.Areas.BackStage.Controllers
 			return (_context.Announcement?.Any(e => e.AnnouncementId == id)).GetValueOrDefault();
 		}
 	}
+
 }
+

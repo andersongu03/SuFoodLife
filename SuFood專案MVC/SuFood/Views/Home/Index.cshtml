@@ -8,6 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Amatic+SC:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
       rel="stylesheet">
 }
+<style>
+    .swiper-container {
+        width: 100%;
+        height: 100%;
+    }
+
+    .custom-row {
+        --bs-gutter-x: 12rem;
+    }
+</style>
+
 
 <!-- ======= Hero Section ======= -->
 <div id="homePage">
@@ -17,15 +28,14 @@
                 <div class="col-lg-5 order-2 order-lg-1 d-flex flex-column justify-content-center align-items-center align-items-lg-start text-center text-lg-start">
                     <h2 data-aos="fade-up">蔬食人生<br>&nbsp&nbsp舒服一生</h2>
                     <p data-aos="fade-up" data-aos-delay="100">
-                        Sed autem laudantium dolores. Voluptatem itaque ea consequatur
-                        eveniet. Eum quas beatae cumque eum quaerat.
+                        品味生活，尋找味蕾的極致享受！在每一口美味中，牽絆著所有喜悅與幸福，歡迎加入SuFood，引領您走進口感的奇蹟世界！
                     </p>
                     <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
-                        <a href="#book-a-table" class="btn-book-a-table">Start Your HealthLife</a>
+                        <a href="#book-a-table" class="btn-book-a-table">開始啟程您的SuFood人生</a>
                         <a href="https://www.youtube.com/watch?v=LXb3EKWsInQ"
                            class="glightbox btn-watch-video d-flex align-items-center">
                             <i class="bi bi-play-circle"></i><span>
-                                Watch
+                                觀看
                                 Demo
                             </span>
                         </a>
@@ -76,20 +86,30 @@
                     <div class="col-lg-5 d-flex align-items-end" data-aos="fade-up" data-aos-delay="300">
                         <div class="content ps-0 ps-lg-5">
                             <p class="fst-italic">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                                dolore
-                                magna aliqua.
+                                親愛的顧客們，
+
+                                感謝您一直以來對SuFood的支持與愛護！我們非常高興地宣布一個令人興奮的優惠活動，讓您在夏天的炎熱日子中盡情享受新鮮水果的美味和營養。
+
+                                從即日起到本月底，我們將舉辦「水果盛宴」優惠活動，為您提供以下優惠：
                             </p>
                             <ul>
-                                <li><i class="bi bi-check2-all"></i>THM101 Team2  </li>
-                                <li><i class="bi bi-check2-all"></i>2023/05/21~2023/06/14</li>
+                                <li><i class="bi bi-check2-all"></i>超值組合套餐:  </li>
                                 <li>
-                                    <i class="bi bi-check2-all"></i>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deserunt, rerum magnam quaerat accusantium numquam odio amet repellendus minima corrupti enim optio, officia id rem iusto obcaecati ut porro excepturi. Pariatur.
+                                    <i class="bi bi-check2-all"></i>購買任意三種商品，即可享受折扣優惠！無論您喜歡的是甜美的草莓、清爽的西瓜還是多汁的蜜桃，您都可以根據自己的喜好選擇組合套餐，並享受三種水果的超值價格!
+                                </li>
+                                <li><i class="bi bi-check2-all"></i>會員專屬優惠:</li>
+                                <li>
+                                    <i class="bi bi-check2-all"></i>只需出示會員卡，即可享受所有水果類別的額外折扣。如果您還不是我們的會員，現在就加入我們的會員團隊，以享受這項特別優惠!!!
+                                </li>
+                                <li><i class="bi bi-check2-all"></i>每週限時特價: </li>
+                                <li>
+                                    <i class="bi bi-check2-all"></i>每週我們將選擇一種特定的水果，並以特價方式供應。新驚喜正等待著您。請密切關注我們的店鋪和網站，以了解每週的限時特價產品!
                                 </li>
                             </ul>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illum minima doloremque sapiente, optio aut quaerat porro, accusantium qui quia animi soluta adipisci itaque, sit aspernatur? Corporis a mollitia culpa laborum.
-                            </p>
+                                請注意，以上優惠僅限本店實體店鋪有效，並且數量有限，售完即止。此外，我們也提供線上訂購和外送服務，方便您在家中也能品味到我們的水果。
+
+                                謝謝您一直以來的支持和惠顧！我們期待著您的光臨，與您一同分享新鮮水果的美好！
 
                             <div class="position-relative mt-4">
                                 <img v-if="AnnouncementArr[1] && AnnouncementArr[1].announcementImage" :src="'data:image/jpeg;base64,'+AnnouncementArr[1].announcementImage" width="500px">
@@ -137,83 +157,8 @@
                             </div>
                         </div><!-- End testimonial item -->
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <div class="row gy-4 justify-content-center">
-                                    <div class="col-lg-6">
-                                        <div class="testimonial-content">
-                                            <p>
-                                                <i class="bi bi-quote quote-icon-left"></i>
-                                                Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram
-                                                malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.
-                                                <i class="bi bi-quote quote-icon-right"></i>
-                                            </p>
-                                            <h3>Sara Wilsson</h3>
-                                            <h4>Designer</h4>
-                                            <div class="stars">
-                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 text-center">
-                                        <img src="assets/img/testimonials/testimonials-2.jpg" class="img-fluid testimonial-img" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End testimonial item -->
 
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <div class="row gy-4 justify-content-center">
-                                    <div class="col-lg-6">
-                                        <div class="testimonial-content">
-                                            <p>
-                                                <i class="bi bi-quote quote-icon-left"></i>
-                                                Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis
-                                                minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.
-                                                <i class="bi bi-quote quote-icon-right"></i>
-                                            </p>
-                                            <h3>Jena Karlis</h3>
-                                            <h4>Store Owner</h4>
-                                            <div class="stars">
-                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 text-center">
-                                        <img src="assets/img/testimonials/testimonials-3.jpg" class="img-fluid testimonial-img" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End testimonial item -->
-
-                        <div class="swiper-slide">
-                            <div class="testimonial-item">
-                                <div class="row gy-4 justify-content-center">
-                                    <div class="col-lg-6">
-                                        <div class="testimonial-content">
-                                            <p>
-                                                <i class="bi bi-quote quote-icon-left"></i>
-                                                Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim
-                                                culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum
-                                                quid.
-                                                <i class="bi bi-quote quote-icon-right"></i>
-                                            </p>
-                                            <h3>John Larson</h3>
-                                            <h4>Entrepreneur</h4>
-                                            <div class="stars">
-                                                <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 text-center">
-                                        <img src="assets/img/testimonials/testimonials-4.jpg" class="img-fluid testimonial-img" alt="">
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End testimonial item -->
-
-                    </div>
+                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
 
@@ -234,60 +179,41 @@
                         </div>
                     </div><!-- End Stats Item -->
 
-                    <div class="col-lg-3 col-md-6">
-                        <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1"
-                                  class="purecounter"></span>
-                            <p></p>
-                        </div>
-                    </div><!-- End Stats Item -->
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end="1453" data-purecounter-duration="1"
-                                  class="purecounter"></span>
-                            <p></p>
-                        </div>
-                    </div><!-- End Stats Item -->
-
-                    <div class="col-lg-3 col-md-6">
-                        <div class="stats-item text-center w-100 h-100">
-                            <span data-purecounter-start="0" data-purecounter-end="32" data-purecounter-duration="1"
-                                  class="purecounter"></span>
-                            <p></p>
-                        </div>
-                    </div><!-- End Stats Item -->
-
+               
                 </div>
 
             </div>
         </section><!-- End Stats Counter Section -->
         <!-- ======= Gallery Section ======= -->
         <section id="gallery" class="gallery section-bg">
-            <div class="container" data-aos="fade-up">
+            <div class="container " >
 
                 <div class="section-header">
                     <h2>選擇障礙?</h2>
                     <p>看看這些 <span>熱銷商品</span></p>
                 </div>
 
-                
-                <div class="gallery-slider swiper" >
-                <div class="swiper-wrapper align-items-center">
-                        <div class="swiper-slide" v-for="(item, index) in HotSaleArr" :key="item.announcementId">
-                            <a class="glightbox" data-gallery="images-gallery" :href="item.announcementImage">
-                                <img :src="'data:image/jpeg;base64,'+item.announcementImage" class="img-fluid announcementImage" alt="" width="100px" height="200px">
-                </a>
+                <div class="row custom-row">
+					<div class="col-1" v-for="(item, index) in HotSaleArr" :key="item.announcementId">
+                                <a class="glightbox" data-gallery="images-gallery" href="https://localhost:54331/Retail/Retail">
+                                    <img :src="'data:image/jpeg;base64,'+item.announcementImage" width="160px" height="230px">
+                                </a>
+                     </div>
+			    </div>
+
                 </div>
+        </section><!-- End Gallery Section -->@*<template>
+            <div class="swiper-container">
+                <div class="swiper-wrapper align-items-center">
+                    <div class="swiper-slide" v-for="(item, index) in HotSaleArr" :key="item.announcementId">
+                        <a class="glightbox" data-gallery="images-gallery" href="https://localhost:54331/Retail/Retail">
+                            <img :src="'data:image/jpeg;base64,'+item.announcementImage" width="160px" height="230px">
+                        </a>
+                    </div>
                 </div>
                 <div class="swiper-pagination"></div>
-                </div>
-
-
-
-
-            
-        </section><!-- End Gallery Section -->
+            </div>
+        </template>*@
 	</div>
         <!-- ======= Contact Section ======= -->
         <section id="contact" class="contact">
@@ -307,11 +233,13 @@
 
 
             </div>
-        </section><!-- End Contact Section -->
+    </section><!-- End Contact Section -->
 
     </div><!-- End #main -->
 @section Scripts{
-    <script src="~/assets/vendor/swiper/swiper-bundle.min.js"></script>
-    <script src="~/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/index.js"></script>
+
+    <script>
+     
+    </script>
+       
 }

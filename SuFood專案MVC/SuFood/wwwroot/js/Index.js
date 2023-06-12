@@ -1,4 +1,5 @@
 ﻿const homePage = new Vue({
+   
     el: '#homePage',
     data: {
         homePageArr: [],
@@ -57,6 +58,8 @@
             })
         },
     },
+
+
      mounted() {
          this.GethomePageDetail();
          this.GetCarouselDetail();

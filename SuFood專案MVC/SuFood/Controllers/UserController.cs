@@ -208,8 +208,11 @@ namespace SuFood.Controllers
                 //    CouponId = 5, //目前新戶優惠是在CouponId = 5，所以直接寫死
                 //};
                 //await _context.CouponUsedList.AddAsync(usedList);
-                //_context.SaveChanges();
+
+                _context.Account.Update(user);
+                _context.SaveChanges();
             }
+            
             //return Ok($@"code:{code}  str:{str}");
             return RedirectToAction("Enble", "User");
         }

@@ -1,4 +1,4 @@
-﻿    @section Styles{
+﻿@section Styles{
     <link href="~/css/model.css" rel="stylesheet" />
     <link href="~/css/freechoicemanagement.css" rel="stylesheet" />
 }
@@ -80,7 +80,12 @@
                 </tr>
             </thead>
             <tbody>
-                <template v-if="filterproducts">
+                <template v-if ="loading">
+                    <div  class="loading-overlay">
+                        <div class="spinner"></div>
+                    </div>
+                </template>
+                <template v-else>
                     <tr v-for="p in filterproducts" :key="p.productId">
                         <td>
                             <span>{{p.productId}}</span>
@@ -127,7 +132,7 @@
         </template>
     </div>
     <div v-if="products.length > 5" class="arrow-down">
-        <i class='bx bx-chevrons-down'></i>
+        <i class='bx bx-chevrons-down' @@click="scrollToBottom"></i>
     </div>
 
     <div class="modal__container" :class="modalContainerStyle" id="modal-container">
@@ -143,7 +148,7 @@
                     <form class="row g-5">
                         <div class="col-6 imgPreview-container">
                             <div class="imgPreview">
-@*                                <i v-if="!uplodaImgPreview.preview" class='bx bx-image-add icon'></i>*@
+                                @*                                <i v-if="!uplodaImgPreview.preview" class='bx bx-image-add icon'></i>*@
                                 <img :src="EditPreviewImg" alt="">
                             </div>
                             <div class="custom-file-upload-container">

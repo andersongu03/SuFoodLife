@@ -61,6 +61,10 @@ namespace SuFood.Areas.BackStage.Controllers
         {// 檢查使用者是否已驗證
             return View();
         }
+        public IActionResult Announcement()
+        {// 檢查使用者是否已驗證
+            return View();
+        }
 
         // <示範> 生成自己功能頁面的Controller統一放在這裡。 例如: 優惠券管理頁面如下
         //public IActionResult Coupoun()

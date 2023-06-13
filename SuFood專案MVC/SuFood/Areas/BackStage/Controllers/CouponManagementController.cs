@@ -57,10 +57,10 @@ namespace SuFood.Areas.BackStage.Controllers
 				return "新增失敗";
 			}
 			
-			if(vmCoupons.CouponStartDate <= DateTime.Now || vmCoupons.CouponEndDate <= DateTime.Now)
-			{
-				return "新增失敗";
-			}
+			//if(vmCoupons.CouponStartDate < DateTime.Now || vmCoupons.CouponEndDate <= DateTime.Now)
+			//{
+			//	return "新增失敗";
+			//}
 
 			Coupon coupon = new Coupon
 			{
@@ -101,10 +101,10 @@ namespace SuFood.Areas.BackStage.Controllers
 				return "修改失敗";
 			};
 
-			if (vmCoupons.CouponStartDate < DateTime.Now || vmCoupons.CouponEndDate < DateTime.Now)
-			{
-				return "修改失敗";
-			}
+			//if (vmCoupons.CouponStartDate < DateTime.Now || vmCoupons.CouponEndDate < DateTime.Now)
+			//{
+			//	return "修改失敗";
+			//}
 
 			Coupon coupon = new Coupon
 			{

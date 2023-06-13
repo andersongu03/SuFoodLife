@@ -165,7 +165,7 @@ namespace SuFood.Controllers
             {
                 From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
                 Subject = "啟用帳號驗證", //主旨
-                Body = (@$"請點<a href='https://localhost:50720/User/enable?code={code}'>這裡</a>來啟用你的帳號"),
+                Body = (@$"請點<a href='https://localhost:54290/User/enable?code={code}'>這裡</a>來啟用你的帳號"),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
             };
@@ -201,14 +201,15 @@ namespace SuFood.Controllers
                 user.IsActive = true;
                 user.CreateDatetime = DateTime.Now;
 
-                //CouponUsedList usedList = new CouponUsedList
-                //{
-                //    CouponUsedOrNot = 1,
-                //    AccountId = user.AccountId,
-                //    CouponId = 5, //目前新戶優惠是在CouponId = 5，所以直接寫死
-                //};
-                //await _context.CouponUsedList.AddAsync(usedList);
-                //_context.SaveChanges();
+                CouponUsedList usedlist = new CouponUsedList
+                {
+                    CouponUsedOrNot = 1,
+                    AccountId = user.AccountId,
+                    CouponId= 1, //目前新戶優惠是在couponid = 5，所以直接寫死
+                };
+                 _context.CouponUsedList.Add(usedlist);
+                _context.Update(user);
+                _context.SaveChanges();
             }
             //return Ok($@"code:{code}  str:{str}");
             return RedirectToAction("Enble", "User");
@@ -311,7 +312,7 @@ namespace SuFood.Controllers
             {
                 From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
                 Subject = "啟用帳號驗證", //主旨
-                Body = (@$"請點<a href='https://localhost:50720/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
+                Body = (@$"請點<a href='https://localhost:54290/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
             };

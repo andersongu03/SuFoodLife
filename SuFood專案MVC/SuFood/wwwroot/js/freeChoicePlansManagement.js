@@ -21,11 +21,11 @@
             productsOfPlans: []
         },
         CreateProductsList: {
-            planName: "測試方案001",
-            planDescription: "熱門商品50選",
-            planTotalCount: "50",
-            planCanChoiceCount: "25",
-            planPrice: "600",
+            planName: "高級方案",
+            planDescription: "熱門商品20選",
+            planTotalCount: "20",
+            planCanChoiceCount: "10",
+            planPrice: "990",
             planStatus: "",
             productsOfPlans: []
         },

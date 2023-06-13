@@ -347,9 +347,9 @@ section {
   position: relative;
 }
 
-.cartsBox::after {
-  content: "10";
-  font-size: 10px;
+/*.cartsBox::after {*/
+/*  content: "10";*/
+  /*font-size: 10px;
   width: 20px;
   height: 20px;
   display: grid;
@@ -360,7 +360,7 @@ section {
   position: absolute;
   right: -3px;
   top: -7px;
-}
+}*/
 
 .userBox {
   position: relative;

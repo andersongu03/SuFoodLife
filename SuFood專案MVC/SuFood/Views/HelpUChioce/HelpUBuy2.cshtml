@@ -69,6 +69,12 @@
         <div class="StatusBar">
             <input type="date" id="start" name="trip-start" :min="setStartDate" value="" v-model="helpOrder2Back.StartOrderDate" required>
         </div>
+        <div>
+            <h4>我們會依據您選擇的預算隨機搭配每次配送的商品，再根據您選擇的配送頻率及時長配送。</h4><br />
+            <h4>每次配送的商品數量：{{productsCount}}</h4><br />
+            <h4>總配送次數：{{totalShipTime}}</h4><br />
+
+        </div>
     </div>
     <div class="right col-9">
         <div>
@@ -180,6 +186,31 @@
                 },
                 allProductList() {
                     return helpUChioce.helpOrder2Back.UserChioce.map(x => x.ProductName)
+                },
+                productsCount() {
+                    let temp = this.helpOrder2Back.OrderTotalPay;
+
+                    if (temp != "請輸入你每次配送的預算") {
+                        return temp / 50
+                    } else {
+                        return 0
+                    }
+                },
+                totalShipTime() {
+                    let x = this.helpOrder2Back.TimeRange
+                    let y = this.helpOrder2Back.OrderFrequency
+                    if (x == "請輸入您想訂閱的時間") {
+                        return x = 0;
+                    }
+                    if (y == "請輸入您配送的頻率") {
+                        return y = 0;
+                    }
+                    let temp = (x * 28) / (y * 7)
+                    if (temp != 0) {
+                        return temp
+                    } else {
+                        return 0
+                    }
                 }
             },
             mounted() {

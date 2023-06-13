@@ -1,23 +1,22 @@
 const eventBus = new Vue;
-new Vue({
+var vm = new Vue({
     el: '#app',
     data: {
         announcementImage:"",
         Announcementes: [],
         message: 'Hello',
         tabs: {
-            '首頁管理': { type: '首頁' },
-            '輪播圖管理': { type: '輪播圖' },
-            '優惠公告管理': { type: '優惠公告' },
-            '熱賣管理': { type: '熱賣' },
+            '首頁管理': { tabType: '首頁' },
+            '輪播圖管理': { tabType: '輪播圖' },
+            '優惠公告管理': { tabType: '優惠公告' },
+            '熱賣管理': { tabType: '熱賣' },
         },
         toast: "",     
         EditInfo: {
             id: 1,
             Status: false,
             Context: "請輸入內容",
-            Createtime: "",
-            Creator: 0,
+            Creater: "",
             Img: null,
             Type: "",
         },
@@ -25,9 +24,9 @@ new Vue({
         Announcementes: [],
         oldImg: null,
         oldContext: "",
-        oldCreatetime: "",
+        oldCreater: "",
         oldStatus: null,
-        oldType: "",       
+        oldType: "",
         createInfo: {
             Id: 0,
             Status: false,
@@ -48,21 +47,21 @@ new Vue({
             showModal: false,
         },
         activeTab:'首頁管理',
-        selectedType:[],
+        selectedType:"",
     },
     computed: {
         tabContent() {
             return this.tabs[this.activeTab];
-        },      
+        },
     },
     methods: {
         CreateAA() {
             this.createInfo.Createtime = Date.now();
         },   
-        setTabActive(tabName, selectedType) {           
-                this.activeTab = tabName;
-            this.selectedType = selectedType;
-            eventBus.$emit('tabChanged', selectedType);
+        setTabActive(tabName, tabType) {           
+            this.activeTab = tabName;
+            this.selectedType = tabType;
+            eventBus.$emit('tabChanged', tabType);
         },
         GetAnouncementDetail() {
             let _this = this;
@@ -81,7 +80,7 @@ new Vue({
                 if (item.changeEdit == true) {
                     item.Img = _this.oldImg;
                     item.Context = _this.oldContext;
-                    item.Createtime = _this.oldCreatetime;
+                    item.Creater = _this.oldCreater;
                     item.Status = _this.oldStatus;
                     item.Type = _this.oldType;
                 }
@@ -218,11 +217,11 @@ new Vue({
     components: {
         tabcontent: {
             props: {
-                data: Object,
+                tabData: Object,
             },
             data() {
                 return {
-                    selectedType: "首頁",
+                    selectedType: "",
                     filteredAnnouncementes: [],
                     Announcementes: [],
                     keyword: "",
@@ -243,64 +242,16 @@ new Vue({
                 };
             },          
             computed: {
-                //filterAnnouncementes() {
-                //    //搜尋篩選
-                //    arr = this.Announcementes.filter(a => {
-                //        return a.AnnouncementContent.indexOf(this.keyword) != -1;
-                //    })
-                //    //用狀態篩選
-                //    switch (this.selectedType) {
-                //        case "首頁":
-                //            arr = arr.filter(a => {
-                //                return a.AnnouncementType.indexOf(this.selectedType) !== -1;
-                //            })
-                //            break;
-                //        case "輪播圖":
-                //            arr = arr.filter(a => {
-                //                return a.AnnouncementType.indexOf(this.selectedType) !== -1;
-                //            })
-                //            break;
-                //        case "優惠公告":
-                //            arr = arr.filter(a => {
-                //                return a.AnnouncementType.indexOf(this.selectedType) !== -1;
-                //            })
-                //            break;
-                //        case "熱賣":
-                //            arr = arr.filter(a => {
-                //                return a.AnnouncementType.indexOf(this.selectedType) !== -1;
-                //            })
-                //            break;
-                //    }
-               /* }*/
+                getType() {
+                    return this.data.type;
+                },               
             },
-            methods: {
-                //handleTabChanged(selectedType) {
-                //    this.selectedType = selectedType;
-                //    this.GetSearchDetail();
-                //},
-                //changeTab(tabName) {
-                //    // 根据不同的分页标签设置不同的selectedType值
-                //    if (tabName === '首頁管理') {
-                //        this.selectedType = '首頁';
-                //    } else if (tabName === '輪播圖管理') {
-                //        this.selectedType = '輪播圖';
-                //    } else if (tabName === '優惠公告管理') {
-                //        this.selectedType = '優惠公告';
-                //    } else if (tabName === '熱賣管理') {
-                //        this.selectedType = '熱賣';
-                //    }
-                //    // 调用GetSearchDetail()方法进行搜索
-                //    this.GetSearchDetail();
-                //},
-                //filterAnnouncementes() {
-                //    if (this.type) {
-                //        this.filteredAnnouncementes = this.Announcementes.filter(announcement => {
-                //            return announcement.announcementType.indexOf(this.type) !== -1;
-                //        });
-                //    } else {
-                //        this.filteredAnnouncementes = this.Announcementes;
-                //    }
-                //},
+            watch: {
+                computedType(newValue) {
+                    this.selectedType = newValue;
+                },
+            },
+            methods: {                
                 previewImage: function (e) {
                     var input = e.target;
                     if (input.files) {

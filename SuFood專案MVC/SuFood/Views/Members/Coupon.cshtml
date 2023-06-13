@@ -40,11 +40,11 @@
 					</div>
 				</div>
 				<!--========== Messge toast ==========-->
-				@*<div class="message-toast-wrapper" :class="toastHintStyle">
+				<div class="message-toast-wrapper" :class="toastHintStyle">
 					<i v-if="toast=='新增成功' || toast=='修改成功' || toast=='刪除成功'" class='bx bxs-check-circle message-toast-icon'></i>
 					<i v-else class='bx bxs-x-circle message-toast-icon-error' style='color:#f00e0e'></i>
 					<p class="message-toast-title">{{toast}}</p>
-				</div>*@
+				</div>
 			</div>
 		</div>
 	</div>
@@ -60,20 +60,23 @@
 				pageName: '我的優惠券',
 				couponList: [],
 				couponName:'',
-				//toast:'',
-				//toastHintStyle: {
-				//	fadeInUp: false
+				toast:'',
+				toastHintStyle: {
+					fadeInUp: false
+				},
+				//popupShowing: {
+				//	showPopup: false,
 				//},
 			},
 			methods: {
-				//toastHint() {
-				//	this.toastHintStyle.fadeInUp = true;
-				//	setTimeout(() => {
-				//		this.toastHintStyle.fadeInUp = false
-				//	}, 2100)
-				//},
+				toastHint() {
+					this.toastHintStyle.fadeInUp = true;
+					setTimeout(() => {
+						this.toastHintStyle.fadeInUp = false
+					}, 2100)
+				},
 				closePopupShowHint() {
-					this.popupShowing.showPopup = false;
+					//this.popupShowing.showPopup = false;
 					this.toastHint();
 				},
 				GetCouponFromDb() {
@@ -83,6 +86,7 @@
 					});
 				},
 				insertExistCoupon() {
+					let _this = this;
 					let tempData = {
 						couponName: this.couponName
 					}
@@ -91,17 +95,18 @@
 							'Content-Type': 'application/json'
 						}
 					}).then(response =>{ 
-						//this.toast = response.data;
-						//this.closePopupShowHint();
-						//_this.GetCouponFromDb();
+						this.toast = response.data;
+						//console.log("resonse", response);
+						//console.log("data", response.data);
+						this.closePopupShowHint();
+						_this.GetCouponFromDb();
 
-						if (response.data){
-							this.GetCouponFromDb();
-						}else {
-							alert('你已經有此優惠券');
-							this.GetCouponFromDb();
-						}
-						console.log(response.data);
+						//if (response.data){
+						//	this.GetCouponFromDb();
+						//}else {
+						//	this.GetCouponFromDb();
+						//}
+						//console.log(response.data);
 					})
 				},
 			},

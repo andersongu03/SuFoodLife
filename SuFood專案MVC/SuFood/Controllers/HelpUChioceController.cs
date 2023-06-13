@@ -173,9 +173,9 @@ namespace SuFood.Controllers
 
             foreach (var check in paidOrders)
             {
-                var orders = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Now.Date.AddDays(1) && x.OrdersId == check).ToList();
+                var orders = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Now.Date && x.OrdersId == check).ToList();
 
-                var recyleOrder = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Now.Date.AddDays(1) && x.OrdersId == check).FirstOrDefault();
+                var recyleOrder = _context.RecyleSubscribeOrders.Where(x => x.ShipDate.Date == DateTime.Now.Date && x.OrdersId == check).FirstOrDefault();
 
 
                 foreach (var order in orders)

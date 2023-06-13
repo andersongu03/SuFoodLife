@@ -1,5 +1,5 @@
 const eventBus = new Vue;
-var vm = new Vue({
+new Vue({
     el: '#app',
     data: {
         announcementImage:"",
@@ -26,7 +26,7 @@ var vm = new Vue({
         oldContext: "",
         oldCreater: "",
         oldStatus: null,
-        oldType: "",
+        oldType: "",       
         createInfo: {
             Id: 0,
             Status: false,
@@ -39,20 +39,13 @@ var vm = new Vue({
             preview: null,
             image: null,
         },
-        modalContentStyle: {
-            w200: true,
-            w800: false
-        },
-        modalContainerStyle: {
-            showModal: false,
-        },
         activeTab:'首頁管理',
         selectedType:"",
     },
     computed: {
         tabContent() {
             return this.tabs[this.activeTab];
-        },
+        },      
     },
     methods: {
         CreateAA() {
@@ -217,11 +210,11 @@ var vm = new Vue({
     components: {
         tabcontent: {
             props: {
-                tabData: Object,
+                data: ['tabType'],
             },
             data() {
                 return {
-                    selectedType: "",
+                    selectedType: "首頁",
                     filteredAnnouncementes: [],
                     Announcementes: [],
                     keyword: "",
@@ -242,16 +235,10 @@ var vm = new Vue({
                 };
             },          
             computed: {
-                getType() {
-                    return this.data.type;
-                },               
+   
             },
-            watch: {
-                computedType(newValue) {
-                    this.selectedType = newValue;
-                },
-            },
-            methods: {                
+            methods: {
+            
                 previewImage: function (e) {
                     var input = e.target;
                     if (input.files) {

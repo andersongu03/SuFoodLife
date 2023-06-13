@@ -9,7 +9,11 @@
     <!--==================== Boxicons ====================-->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
     <link href="~/css/homePageMain.css" rel="stylesheet" />
+	
+	<link href="~/lib/swiper/swiper-bundle.min.css" rel="stylesheet" />
+	
     @*引用區*@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -284,7 +288,7 @@
     </a>
 
     @*<div id="preloader"></div>*@
-    <!-- Vendor JS Files -->
+	<!-- Vendor JS Files -->
 
     <script src="~/lib/php-email-form/validate.js"></script>
     <script src="~/lib/glightbox/js/glightbox.min.js"></script>
@@ -293,9 +297,10 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/axios/axios.min.js"></script>
-    <script src="~/js/vue.js"></script>
 
+	<script src="~/axios/axios.min.js"></script>
+	<script src="~/js/vue.js"></script>
+	<script src="~/js/index.js"></script>
     <script>
         const cartttt = new Vue({
             el: '#header',

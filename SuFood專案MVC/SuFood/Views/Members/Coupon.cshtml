@@ -7,9 +7,9 @@
 	<div class="user__management-container container row">
 		<partial name="_SidebarPartial" />
 
-		<div class="col-10 user__management-content">
+		<div class="col-10 user__management-content" id="app">
 			<!-- 內容 -->
-			<div class="couponDetails col-sm-12 col-md-10 col-xl-10">
+			<div class="couponDetails col-sm-12 col-md-10 col-xl-10" v-cloak>
 				<div class="myCoupon">
 					<span>{{ pageName }}</span>
 				</div>
@@ -55,7 +55,7 @@
 	<script src="~/js/vue.js"></script>
 	<script>
 		const vm = new Vue({
-			el: '.couponDetails',
+			el: '#app',
 			data: {
 				pageName: '我的優惠券',
 				couponList: [],

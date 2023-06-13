@@ -1,6 +1,7 @@
 const vm = new Vue({
     el: ".Recent-order",
     data: {
+        loading: false,
         isNowEditHelp: false,
         tobeEditedHelpList:[],
         deleteId: undefined,
@@ -41,13 +42,13 @@ const vm = new Vue({
         },
         request: {
             productId: 0,
-            ProductName: "",
-            ProductDescription: "",
-            StockUnit: "",
-            Category: "",
-            Cost: "",
-            Price: "",
-            StockQuantity: "",
+            ProductName: "西瓜",
+            ProductDescription: "香甜多汁",
+            StockUnit: "顆",
+            Category: "水果",
+            Cost: "60",
+            Price: "99",
+            StockQuantity: "110",
             Img: null
         },
         warmMessage: {
@@ -59,12 +60,22 @@ const vm = new Vue({
             errPrice: false,
             errorStockQuantity: false,
             error: false,
-        }
+        },
+        //自動滑動到最下方
+        scrollToBottom() {
+            this.$nextTick(() => {
+                const productsTable = this.$refs.productsTable;
+                productsTable.scrollTo({
+                    top: productsTable.scrollHeight,
+                    behavior: "smooth" // 可选：平滑滚动
+                });
+            });
+        },
     },
     computed: {
         filterproducts() {
             //搜尋篩選
-            arr = this.products.filter(p => {
+            let arr = this.products.filter(p => {
                 return p.productName.indexOf(this.keyword) != -1;
             })
             //用狀態篩選
@@ -72,12 +83,12 @@ const vm = new Vue({
                 case "all":
                     break;
                 case "active":
-                    arr = this.products.filter(p => {
+                    arr = arr.filter(p => {
                         return p.stockQuantity > 100
                     })
                     break;
                 case "frozen":
-                    arr = this.products.filter(p => {
+                    arr = arr.filter(p => {
                         return p.stockQuantity < 100
                     })
                     break;
@@ -108,13 +119,6 @@ const vm = new Vue({
                     break;
                 default:
                     break;
-            }
-
-            ////判斷是否需要排序
-            if (this.sorttype) {
-                arr.sort((p1, p2) => {
-                    return this.sorttype === 1 ? p2.amount - p1.amount : 0;
-                })
             }
             return arr
         },
@@ -225,7 +229,9 @@ const vm = new Vue({
         //查詢資料的方法
         GetProductDetail() {
             let _this = this;
+            this.loading = true;
             axios.get("/BackStage/FreeChoiceProductManagement/GetProducts").then(response => {
+                this.loading = false;
                 this.products = response.data
                 let productsList = []
                 for (var i = 0; i < _this.products.length; i++) {
@@ -328,7 +334,9 @@ const vm = new Vue({
 
             axios.post("/BackStage/FreeChoiceProductManagement/EditHelpChoiceList", result)
                 .then(response => {
-                    console.log(response)
+                    this.toast = response.data
+                    this.closeModalWithHint()
+                    _this.GetProductDetail()
             })
         }
     },

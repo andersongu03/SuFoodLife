@@ -37,78 +37,80 @@
         }
     </style>
     <link href="~/css/helpuchoice.css.css" rel="stylesheet" />
+    <link href="~/css/loading.css" rel="stylesheet" />
 }
 <div class="app row">
-    <div class="left col-2">
-        <h2>選擇訂閱週期</h2>
-        <div class="StatusBar">
-            <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.OrderTotalPay" required>
-                <option selected>請輸入你每次配送的預算</option>
-                <option value="200">200</option>
-                <option value="300">300</option>
-                <option value="500">500</option>
-            </select>
+    <template v-if="loading">
+        <div class="loading-overlay">
+            <div class="spinner"></div>
         </div>
-        <div class="StatusBar">
-            <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.TimeRange" required>
-                <option selected>請輸入您想訂閱的時間</option>
-                <option value="3">3個月</option>
-                <option value="2">2個月</option>
-                <option value="1">1個月</option>
-            </select>
+    </template>
+    <template v-else>
+        <div class="left col-2">
+            <h2>選擇訂閱週期</h2>
+            <div class="StatusBar">
+                <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.OrderTotalPay" required>
+                    <option selected>請輸入你每次配送的預算</option>
+                    <option value="200">200</option>
+                    <option value="300">300</option>
+                    <option value="500">500</option>
+                </select>
+            </div>
+            <div class="StatusBar">
+                <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.TimeRange" required>
+                    <option selected>請輸入您想訂閱的時間</option>
+                    <option value="3">3個月</option>
+                    <option value="2">2個月</option>
+                    <option value="1">1個月</option>
+                </select>
+            </div>
+            <div class="StatusBar">
+                <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.OrderFrequency" required>
+                    <option selected>請輸入您配送的頻率</option>
+                    <option value="1">一周一次</option>
+                    <option value="2">兩周一次</option>
+                    <option value="4">一個月一次</option>
+                </select>
+            </div>
+            <label for="start">請輸入訂購起始日</label>
+            <div class="StatusBar">
+                <input type="date" id="start" name="trip-start" :min="setStartDate" value="" v-model="helpOrder2Back.StartOrderDate" required>
+            </div>
         </div>
-        <div class="StatusBar">
-            <select class="" aria-label=".form-select-sm example" v-model="helpOrder2Back.OrderFrequency" required>
-                <option selected>請輸入您配送的頻率</option>
-                <option value="1">一周一次</option>
-                <option value="2">兩周一次</option>
-                <option value="4">一個月一次</option>
-            </select>
-        </div>
-        <label for="start">請輸入訂購起始日</label>
-        <div class="StatusBar">
-            <input type="date" id="start" name="trip-start" :min="setStartDate" value="" v-model="helpOrder2Back.StartOrderDate" required>
-        </div>
-        <div>
-            <h4>我們會依據您選擇的預算隨機搭配每次配送的商品，再根據您選擇的配送頻率及時長配送。</h4><br />
-            <h4>每次配送的商品數量：{{productsCount}}</h4><br />
-            <h4>總配送次數：{{totalShipTime}}</h4><br />
-
-        </div>
-    </div>
-    <div class="right col-9">
-        <div>
-            <h2>選擇不要的商品</h2>
-        </div>
-        <!-- ==================== CARDS ==================== -->
-        <div class="cards__container" id="cardsContainer">
-            <label v-for="h in helpList" class="box" :for="h.productId" @@click.prevent="SeeUProductName(h)" :class="{checked: notWantedList.includes(h.productName)}">
-                <input type="checkbox" :id="h.productId">
-                <div class="noChoice"></div>
-                <p>NO</p>
-                <img :src="'data:image/png;base64,'+h.img" alt="零售商品圖片">
-                <div class="content">
-                    <div class="price">
-                        <span>{{ h.productName }}</span>
-                        <span class="tag">$20</span>
+        <div class="right col-9">
+            <div>
+                <h2>選擇不要的商品</h2>
+            </div>
+            <!-- ==================== CARDS ==================== -->
+            <div class="cards__container" id="cardsContainer">
+                <label v-for="h in helpList" class="box" :for="h.productId" @@click.prevent="SeeUProductName(h)" :class="{checked: notWantedList.includes(h.productName)}">
+                    <input type="checkbox" :id="h.productId">
+                    <div class="noChoice"></div>
+                    <p>NO</p>
+                    <img :src="'data:image/png;base64,'+h.img" alt="零售商品圖片">
+                    <div class="content">
+                        <div class="price">
+                            <span>{{ h.productName }}</span>
+                            <span class="tag">$20</span>
+                        </div>
                     </div>
-                </div>
-            </label>
+                </label>
+            </div>
+
+            @*<table class="table">
+            <input class="form-check-input" type="checkbox" id="flexCheckDefault"  @@click="SeeUProductName(h.ProductName)">
+
+            </table>*@
+            <div>
+                <button type="button" class="btn btn-danger shake" @@click="createHelpOrder">送出訂單</button>
+            </div>
         </div>
 
-        @*<table class="table">
-        <input class="form-check-input" type="checkbox" id="flexCheckDefault"  @@click="SeeUProductName(h.ProductName)">
-
-        </table>*@
-        <div>
-            <button type="button" class="btn btn-danger shake" @@click="createHelpOrder">送出訂單</button>
+        <div class="message-toast-wrapper" id="toastWrapper" :class="toastHintStlye">
+            <i class='bx bx-x-circle' style='color:#e91111'></i>
+            <p class="message-toast-title">你還沒登入喔</p>
         </div>
-    </div>
-
-    <div class="message-toast-wrapper" id="toastWrapper" :class="toastHintStlye">
-        <i class='bx bx-x-circle' style='color:#e91111'></i>
-        <p class="message-toast-title">你還沒登入喔</p>
-    </div>
+    </template>
 </div>
 
 @section Scripts {
@@ -116,6 +118,7 @@
         const helpUChioce = new Vue({
             el: ".app",
             data: {
+                loading: false,                
                 helpList: [],
                 notWantedList: [],
                 helpOrder2Back: {
@@ -132,7 +135,10 @@
             methods: {
                 GetHelpList: function () {
                     let _this = this;
+                    this.loading = true;
+                    
                     axios.get("/HelpUChioce/GetHelpProduct").then(response => {
+                        this.loading = false;
                         this.helpList = response.data;
                         this.helpOrder2Back.UserChioce = this.helpList.map(x => ({ ProductName: x.productName }));
                     }).catch(error => {
@@ -186,31 +192,6 @@
                 },
                 allProductList() {
                     return helpUChioce.helpOrder2Back.UserChioce.map(x => x.ProductName)
-                },
-                productsCount() {
-                    let temp = this.helpOrder2Back.OrderTotalPay;
-
-                    if (temp != "請輸入你每次配送的預算") {
-                        return temp / 50
-                    } else {
-                        return 0
-                    }
-                },
-                totalShipTime() {
-                    let x = this.helpOrder2Back.TimeRange
-                    let y = this.helpOrder2Back.OrderFrequency
-                    if (x == "請輸入您想訂閱的時間") {
-                        return x = 0;
-                    }
-                    if (y == "請輸入您配送的頻率") {
-                        return y = 0;
-                    }
-                    let temp = (x * 28) / (y * 7)
-                    if (temp != 0) {
-                        return temp
-                    } else {
-                        return 0
-                    }
                 }
             },
             mounted() {

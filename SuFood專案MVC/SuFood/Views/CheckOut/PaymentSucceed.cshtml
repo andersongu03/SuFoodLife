@@ -17,7 +17,7 @@
 				<img src="~/img/productmanagement/vegetable.png" />
 				<div class="buttons__container">
 					<button class="gohome" @@click="goHomePage">回到首頁</button>
-					<button class="checkOrders">查看訂單</button>
+					<button class="checkOrders" @@click="goOrderPage">查看訂單</button>
 				</div>
 			</div>
 		</div>
@@ -34,7 +34,7 @@
 					return window.location.href="/Home/Index";
 			},
 			goOrderPage(){
-					return window.location.href = "/Members/MyOrders";
+					return window.location.href = "https://37e2-2407-4d00-1c01-7e46-e8ca-2878-c98a-149f.ngrok-free.app/Members/MyOrders";
 			}
 		},
 	})

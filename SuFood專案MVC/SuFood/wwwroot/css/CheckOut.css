@@ -416,8 +416,9 @@ label {
     transform: translate(-50%, -50%) scale(0.1);
     visibility: hidden;
     transition: transform 0.4s, top 0.4s;
-    z-index: 1000;
+    z-index: 10000;
     position: fixed;
+    background-color: hsla(240, 18%, 75%, .97);
 }
 
 .cardPopup-body {
@@ -437,8 +438,8 @@ label {
     transform: translate(-50%, -50%) scale(1);
     width: 100vw;
     height: 80%;
-    /*background-color: hsla(240, 18%, 75%, .97);*/
-    background-color: hsla(var(--hue), 18%, 75%, .8);
+    background-color: hsla(240, 18%, 75%, .97)
+    /*background-color: hsla(var(--hue), 18%, 75%, .8);*/
     z-index: 10000;
 }
 .closeMark{

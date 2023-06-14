@@ -99,7 +99,7 @@
          "ObjectType": 0
       }
    ],
-   "UiHint": "(localdb)\\ProjectModels.SuFoodDB",
+   "UiHint": "(localdb)\\ProjectModels.SufoodDB2",
    "UncountableWords": null,
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,

@@ -200,7 +200,7 @@ namespace SuFood.Controllers
 						IsBodyHtml = true,
 						BodyEncoding = Encoding.UTF8,
 					};
-					mail.To.Add(new MailAddress(o.Email)); //寄給哪位   
+					mail.To.Add(new MailAddress(o.Email)); //寄給哪位
 					try
 					{
 						using (var sm = new SmtpClient("smtp.gmail.com", 587)) //465 ssl

@@ -89,7 +89,7 @@ namespace SuFood
             }
             
             app.UseHangfireServer();
-            BackgroundJob.Enqueue<HelpUChioceController>(x => x.CheckSendEmail()); 
+            //BackgroundJob.Enqueue<HelpUChioceController>(x => x.CheckSendEmail()); 
 
             app.UseSession();
             

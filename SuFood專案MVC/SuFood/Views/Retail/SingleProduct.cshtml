@@ -82,7 +82,9 @@
                             </p>
 
 
-                            <input type="hidden" name="product-title" value="Activewear" />
+                            <input type="hidden"
+                                       name="product-title"
+                                       value="Activewear" />
                             <div class="row">
                                 <div class="col-auto">
                                     <ul class="list-inline pb-3">
@@ -93,7 +95,7 @@
                                             <button class="btn btn-danger" id="btn-minus" @@click="minusItem()">-</button>
                                         </li>
                                         <li class="list-inline-item">
-                                            <span class="badge bg-secondary" @*id="var-value"*@>{{buyQuantity}}</span>
+                                            <span class="badge bg-secondary"@* id="var-value"*@>{{buyQuantity}}</span>
                                         </li>
                                         <li class="list-inline-item">
                                             <button class="btn btn-danger" id="btn-plus" @@click="addItem()">+</button>
@@ -192,7 +194,7 @@
                     let _this = this;
                     this.cart = {
                         ProductId: productId,
-                        CartQuantity: this.buyQuantity,
+                        CartQuantity: this.buyQuantity+1,
                     };
                     axios.post("/Retail/AddSingle2Cart", this.cart, {
                         headers: {

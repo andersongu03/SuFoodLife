@@ -45,7 +45,7 @@ namespace SuFood.Controllers
         {
             var StrsenderId = HttpContext.Session.GetString("GetAccountId");
             int senderId = Convert.ToInt32(StrsenderId);
-            return _context.Account.Where(a => a.AccountId != senderId && a.AccountId == 22).Select(a => new
+            return _context.Account.Where(a => a.AccountId != senderId && a.AccountId == 1).Select(a => new
             {
                 Id = a.AccountId,
                 Name = $"{a.FirstName}{a.LastName}",

@@ -9,7 +9,9 @@
     font-family: 'Mukta';
     margin-top: 2rem;
 }
-
+[v-cloak] {
+    display: none;
+}
 /* 我的優惠券text */
 .myCoupon {
     font-size: 2.5rem;
@@ -202,4 +204,58 @@
     position: relative;
     font-weight: 600;
     margin-bottom: 10px;
+}
+
+/* Message */
+.message-toast-wrapper {
+    position: fixed;
+    top: 70px;
+    left: calc(50% - 125px);
+    z-index: 1100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-color: #fff;
+    width: 250px;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0px 0px 15px hsl(0, 0%, 0.3);
+    transition: all .3s;
+    opacity: 0;
+}
+
+.message-toast-icon {
+    color: green;
+    font-size: 2rem;
+    height: 100%;
+}
+
+.message-toast-title {
+    font-size: 2rem;
+    font-weight: bolder;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.fadeInUp {
+    opacity: 0; /* 初始透明度为0 */
+    animation: fadeInUp 2s ease-in-out forwards; /* 使用fadeInUp动画，持续1秒，缓入缓出效果，并保持动画结束后的状态 */
+}
+
+@keyframes fadeInUp {
+    0% {
+        opacity: 0; /* 起始透明度为0 */
+        transform: translateY(30px); /* 初始状态下元素往上偏移30px */
+    }
+
+    50% {
+        opacity: 1; /* 结束透明度为1 */
+        transform: translateY(0); /* 元素回到原位 */
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-30px)
+    }
 }

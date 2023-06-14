@@ -11,7 +11,7 @@ namespace SuFood.Services
         private readonly string Key;
         private readonly string IV;
 
-        public EncryptService(IConfiguration configuration)
+        public EncryptService(IConfiguration configuration) 
         {
             this.configuration = configuration;
             Key = configuration.GetSection("AesKey").Value;

@@ -19,13 +19,18 @@ namespace SuFood.Controllers
     [AllowAnonymous]
     public class UserController : Controller
     {
+        private readonly IConfiguration configuration;
         private readonly SuFoodDBContext _context;
         private readonly EncryptService encryptService;
         public VerifyGoogleTokenService _verifyGoogle = new VerifyGoogleTokenService();
-        public UserController(SuFoodDBContext context, EncryptService encryptService)
+
+        public UserController(SuFoodDBContext context, EncryptService encryptService, IConfiguration configuration)
         {
             this._context = context;
             this.encryptService = encryptService;
+            this.configuration = configuration;
+            var Url = configuration.GetSection("HostURL").Value;
+
         }
         [HttpGet]
         public IActionResult Login()
@@ -160,12 +165,13 @@ namespace SuFood.Controllers
             var jString = JsonSerializer.Serialize(obj);
             var code = Convert.ToBase64String(Encoding.UTF8.GetBytes(jString));
 
+            
 
             var mail = new MailMessage()
             {
                 From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
                 Subject = "啟用帳號驗證", //主旨
-                Body = (@$"請點<a href='https://localhost:54290/User/enable?code={code}'>這裡</a>來啟用你的帳號"),
+                Body = (@$"請點<a href='{Url}/User/enable?code={code}'>這裡</a>來啟用你的帳號"),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
             };
@@ -312,7 +318,7 @@ namespace SuFood.Controllers
             {
                 From = new MailAddress("SuFood2u@gmail.com"), //寄信的信箱
                 Subject = "啟用帳號驗證", //主旨
-                Body = (@$"請點<a href='https://localhost:54290/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
+                Body = (@$"請點<a href='{Url}/User/enableChangePassword?code={code}'>這裡</a>來修改你的密碼"),
                 IsBodyHtml = true,
                 BodyEncoding = Encoding.UTF8,
             };

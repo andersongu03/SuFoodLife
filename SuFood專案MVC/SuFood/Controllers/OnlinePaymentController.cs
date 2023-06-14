@@ -22,10 +22,12 @@ namespace SuFood.Controllers
 		private readonly SuFoodDBContext _context;
 		private readonly IConfiguration _configuration;
 		public AesService _aes = new AesService();
+		
 		public OnlinePaymentController(SuFoodDBContext context, IConfiguration configuration)
 		{
 			_context = context;
 			_configuration = configuration;
+			var Url = configuration.GetSection("HostUrl").Value;
 		}
 		
 		//傳送訂單付款
@@ -50,7 +52,7 @@ namespace SuFood.Controllers
 				new KeyValuePair<string, string>("Amt", TP.ToJson()),
 				new KeyValuePair<string, string>("ItemDesc", productName.ToJson()),
 				//new KeyValuePair<string, string>("Credit", inModel.PayType.ToLower() == "credit" ? "1" : null),
-				new KeyValuePair<string, string>("ReturnURL", "https://82bb-36-224-14-177.ngrok-free.app/OnlinePayment/GetPaymentReturn")
+				new KeyValuePair<string, string>("ReturnURL", "https://sufoodlife.azurewebsites.net/OnlinePayment/GetPaymentReturn")
 			};
 			string TradeInfoParam = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
 
